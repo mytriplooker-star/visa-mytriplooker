@@ -2,18 +2,44 @@
 import { useState, useEffect, useRef } from "react";
 
 const destinations = [
-  { name: "Dubai & UAE",       flag: "🇦🇪", type: "eVisa",   days: "3–5",   price: "₹2,499",  popular: true  },
-  { name: "Thailand",          flag: "🇹🇭", type: "eVisa",   days: "5–7",   price: "₹1,899",  popular: true  },
-  { name: "Singapore",         flag: "🇸🇬", type: "eVisa",   days: "3–5",   price: "₹3,299",  popular: true  },
-  { name: "France / Schengen", flag: "🇫🇷", type: "Sticker", days: "15–20", price: "₹8,999",  popular: true  },
-  { name: "United Kingdom",    flag: "🇬🇧", type: "Sticker", days: "15–20", price: "₹9,499",  popular: false },
-  { name: "Japan",             flag: "🇯🇵", type: "Sticker", days: "10–15", price: "₹4,299",  popular: false },
-  { name: "Malaysia",          flag: "🇲🇾", type: "Free",    days: "Instant",price: "Free",    popular: false },
-  { name: "USA",               flag: "🇺🇸", type: "Sticker", days: "30–60", price: "₹12,999", popular: false },
-  { name: "Australia",         flag: "🇦🇺", type: "eVisa",   days: "7–10",  price: "₹7,499",  popular: false },
-  { name: "Canada",            flag: "🇨🇦", type: "Sticker", days: "30–60", price: "₹11,499", popular: false },
-  { name: "Indonesia / Bali",  flag: "🇮🇩", type: "VOA",     days: "Instant",price: "₹1,299", popular: false },
-  { name: "Vietnam",           flag: "🇻🇳", type: "eVisa",   days: "3–5",   price: "₹1,599",  popular: false },
+  // Popular (shown on homepage cards)
+  { name:"Dubai & UAE",       slug:"uae",          flag:"🇦🇪", type:"eVisa",   days:"3–5",    price:"₹2,499",  popular:true  },
+  { name:"Bali / Indonesia",  slug:"indonesia",    flag:"🇮🇩", type:"VOA",     days:"Instant",price:"₹1,299",  popular:true  },
+  { name:"Thailand",          slug:"thailand",     flag:"🇹🇭", type:"eVisa",   days:"5–7",    price:"₹1,899",  popular:true  },
+  { name:"Vietnam",           slug:"vietnam",      flag:"🇻🇳", type:"eVisa",   days:"3–5",    price:"₹1,599",  popular:true  },
+  { name:"Malaysia",          slug:"malaysia",     flag:"🇲🇾", type:"Free",    days:"Instant",price:"Free",    popular:true  },
+  { name:"Singapore",         slug:"singapore",    flag:"🇸🇬", type:"eVisa",   days:"3–5",    price:"₹3,299",  popular:true  },
+  // All countries (searchable in hero)
+  { name:"Japan",             slug:"japan",        flag:"🇯🇵", type:"Sticker", days:"5–7",    price:"₹4,299",  popular:false },
+  { name:"South Korea",       slug:"south-korea",  flag:"🇰🇷", type:"Sticker", days:"5–7",    price:"₹4,999",  popular:false },
+  { name:"France / Schengen", slug:"france",       flag:"🇫🇷", type:"Sticker", days:"15–20",  price:"₹8,999",  popular:false },
+  { name:"United Kingdom",    slug:"united-kingdom",flag:"🇬🇧",type:"Sticker", days:"15–20",  price:"₹9,499",  popular:false },
+  { name:"Australia",         slug:"australia",    flag:"🇦🇺", type:"eVisa",   days:"7–15",   price:"₹7,499",  popular:false },
+  { name:"New Zealand",       slug:"new-zealand",  flag:"🇳🇿", type:"eVisa",   days:"15–25",  price:"₹7,999",  popular:false },
+  { name:"Canada",            slug:"canada",       flag:"🇨🇦", type:"Sticker", days:"30–60",  price:"₹11,499", popular:false },
+  { name:"USA",               slug:"usa",          flag:"🇺🇸", type:"Sticker", days:"30–60",  price:"₹12,999", popular:false },
+  { name:"South Africa",      slug:"south-africa", flag:"🇿🇦", type:"Sticker", days:"7–10",   price:"₹4,799",  popular:false },
+  { name:"Saudi Arabia",      slug:"saudi-arabia", flag:"🇸🇦", type:"eVisa",   days:"3–5",    price:"₹4,199",  popular:false },
+  { name:"Qatar",             slug:"qatar",        flag:"🇶🇦", type:"eVisa",   days:"2–4",    price:"₹2,599",  popular:false },
+  { name:"Oman",              slug:"oman",         flag:"🇴🇲", type:"eVisa",   days:"2–4",    price:"₹2,399",  popular:false },
+  { name:"Bahrain",           slug:"bahrain",      flag:"🇧🇭", type:"eVisa",   days:"1–3",    price:"₹2,099",  popular:false },
+  { name:"Kuwait",            slug:"kuwait",       flag:"🇰🇼", type:"Sticker", days:"7–14",   price:"₹4,099",  popular:false },
+  { name:"Germany",           slug:"germany",      flag:"🇩🇪", type:"Schengen",days:"15–20",  price:"₹8,999",  popular:false },
+  { name:"Italy",             slug:"italy",        flag:"🇮🇹", type:"Schengen",days:"15–20",  price:"₹8,999",  popular:false },
+  { name:"Spain",             slug:"spain",        flag:"🇪🇸", type:"Schengen",days:"15–20",  price:"₹8,999",  popular:false },
+  { name:"Netherlands",       slug:"netherlands",  flag:"🇳🇱", type:"Schengen",days:"15–20",  price:"₹8,999",  popular:false },
+  { name:"Greece",            slug:"greece",       flag:"🇬🇷", type:"Schengen",days:"15–20",  price:"₹8,999",  popular:false },
+  { name:"Switzerland",       slug:"switzerland",  flag:"🇨🇭", type:"Schengen",days:"15–20",  price:"₹8,999",  popular:false },
+  { name:"Austria",           slug:"austria",      flag:"🇦🇹", type:"Schengen",days:"15–20",  price:"₹8,999",  popular:false },
+  { name:"Portugal",          slug:"portugal",     flag:"🇵🇹", type:"Schengen",days:"15–20",  price:"₹8,999",  popular:false },
+  { name:"Philippines",       slug:"philippines",  flag:"🇵🇭", type:"Free",    days:"Instant",price:"Free",    popular:false },
+  { name:"Hong Kong",         slug:"hong-kong",    flag:"🇭🇰", type:"Free",    days:"Instant",price:"Free",    popular:false },
+  { name:"Maldives",          slug:"maldives",     flag:"🇲🇻", type:"VOA",     days:"Instant",price:"Free",    popular:false },
+  { name:"Sri Lanka",         slug:"sri-lanka",    flag:"🇱🇰", type:"ETA",     days:"1–2",    price:"₹1,699",  popular:false },
+  { name:"Nepal",             slug:"nepal",        flag:"🇳🇵", type:"Free",    days:"Instant",price:"Free",    popular:false },
+  { name:"Bhutan",            slug:"bhutan",       flag:"🇧🇹", type:"Permit",  days:"Instant",price:"₹1,499",  popular:false },
+  { name:"Myanmar",           slug:"myanmar",      flag:"🇲🇲", type:"eVisa",   days:"3–5",    price:"₹2,199",  popular:false },
+  { name:"Cambodia",          slug:"cambodia",     flag:"🇰🇭", type:"eVisa",   days:"3–5",    price:"₹1,699",  popular:false },
 ];
 
 const steps = [
@@ -31,26 +57,32 @@ const stats = [
 ];
 
 function MTLLogo({ height = 38 }: { height?: number }) {
-  const [imgFailed, setImgFailed] = useState(false);
+  const scale = height / 48;
   return (
-    <a href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none", gap: 10 }}>
-      {!imgFailed ? (
-        <img
-          src="/logo.png"
-          alt="MyTripLooker"
-          height={height}
-          style={{ height, width: "auto", objectFit: "contain", display: "block" }}
-          onError={() => setImgFailed(true)}
-        />
-      ) : (
-        <>
-          <div style={{ width: height, height, borderRadius: 8, background: "linear-gradient(135deg,#1EC8F0,#D4AF6A)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: height * 0.5, flexShrink: 0 }}>🔭</div>
-          <div>
-            <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: height * 0.47, fontWeight: 800, color: "#1EC8F0", lineHeight: 1, letterSpacing: "-0.5px" }}>mytriplooker</div>
-            <div style={{ fontSize: 9, color: "#8A8A9A", letterSpacing: "2px", textTransform: "uppercase" }}>visa services</div>
-          </div>
-        </>
-      )}
+    <a href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none", gap: 0 }}>
+      <svg width={Math.round(220 * scale)} height={height} viewBox="0 0 220 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        {/* MY */}
+        <text x="0" y="36" fontFamily="'Outfit',sans-serif" fontWeight="900" fontSize="38" fill="#1EC8F0" letterSpacing="-1">MY</text>
+        {/* TRIP */}
+        <text x="72" y="36" fontFamily="'Outfit',sans-serif" fontWeight="900" fontSize="38" fill="#1EC8F0" letterSpacing="-1">TRIP</text>
+        {/* L */}
+        <text x="0" y="48" fontFamily="'Outfit',sans-serif" fontWeight="900" fontSize="0" fill="transparent">L</text>
+        {/* Binoculars icon replacing OO in LOOKER */}
+        <g transform="translate(0, 22) scale(0.72)">
+          {/* L */}
+          <text x="0" y="28" fontFamily="'Outfit',sans-serif" fontWeight="900" fontSize="38" fill="#1EC8F0" letterSpacing="-1">L</text>
+          {/* Left lens */}
+          <circle cx="52" cy="16" r="12" fill="#D4AF6A"/>
+          <circle cx="52" cy="16" r="7" fill="#08080F"/>
+          {/* Bridge */}
+          <rect x="61" y="13" width="8" height="5" rx="2" fill="#D4AF6A"/>
+          {/* Right lens */}
+          <circle cx="76" cy="16" r="12" fill="#D4AF6A"/>
+          <circle cx="76" cy="16" r="7" fill="#08080F"/>
+          {/* KER */}
+          <text x="91" y="28" fontFamily="'Outfit',sans-serif" fontWeight="900" fontSize="38" fill="#1EC8F0" letterSpacing="-1">KER</text>
+        </g>
+      </svg>
     </a>
   );
 }
@@ -177,7 +209,7 @@ export default function HomePage() {
                 {results.map((d,i) => {
                   const tc = typeColor(d.type);
                   return (
-                    <a key={i} href={`/apply?country=${encodeURIComponent(d.name)}`} className="result-row"
+                    <a key={i} href={`/apply?country=${d.slug}`} className="result-row"
                       style={{ display:"flex", alignItems:"center", gap:14, padding:"13px 16px", borderTop:i===0?"none":"1px solid rgba(255,255,255,0.03)", textDecoration:"none" }}
                       onClick={()=>{setQuery(d.name);setOpen(false);}}>
                       <span style={{ fontSize:26, flexShrink:0 }}>{d.flag}</span>
@@ -242,7 +274,7 @@ export default function HomePage() {
                       <div style={{ fontSize:10, color:"#8A8A9A", textTransform:"uppercase", letterSpacing:"0.5px", marginBottom:3 }}>Starting from</div>
                       <div style={{ fontFamily:"'Cormorant Garant',serif", fontSize:26, fontWeight:600, color:"#D4AF6A", lineHeight:1 }}>{d.price}</div>
                     </div>
-                    <a href={`/apply?country=${encodeURIComponent(d.name)}`} className="apply-btn"
+                    <a href={`/apply?country=${d.slug}`} className="apply-btn"
                       style={{ background:"rgba(212,175,106,0.1)", border:"1px solid rgba(212,175,106,0.25)", color:"#D4AF6A", padding:"10px 20px", borderRadius:9, fontSize:13, fontWeight:700, textDecoration:"none", display:"inline-block", transition:"all 0.15s" }}>
                       Apply →
                     </a>

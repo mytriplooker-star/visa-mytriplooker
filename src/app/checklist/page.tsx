@@ -216,11 +216,11 @@ function CountryModal({ country, onClose }: { country: Country; onClose: () => v
 
           {/* CTA */}
           <a href={`/apply?country=${country.slug}`} style={{
-            display: "block", textAlign: "center",
-            background: "linear-gradient(135deg,#D4AF6A,#E8C977)", color: "#08080F",
-            padding: "16px", borderRadius: 12, textDecoration: "none",
-            fontWeight: 800, fontSize: 17, fontFamily: "'Outfit',sans-serif",
-          }}>
+              display: "block", textAlign: "center",
+              background: "linear-gradient(135deg,#D4AF6A,#E8C977)", color: "#08080F",
+              padding: "16px", borderRadius: 12, textDecoration: "none",
+              fontWeight: 800, fontSize: 17, fontFamily: "'Outfit',sans-serif",
+            }}>
             Start My {country.name} Visa Application →
           </a>
         </div>
@@ -262,6 +262,12 @@ export default function ChecklistPage() {
 
   return (
     <div style={{ minHeight: "100vh", background: "#08080F", color: "#F5F0E8", fontFamily: "'Outfit',sans-serif" }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garant:ital,wght@0,300;0,500;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600;700;800&display=swap');
+        *,*::before,*::after{box-sizing:border-box;}
+        ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:#08080F;}::-webkit-scrollbar-thumb{background:#3A3A4E;border-radius:2px;}
+        input::placeholder{color:#3A3A4E;}
+      `}</style>
       {/* Nav */}
       <nav style={{ borderBottom: "1px solid #1A1A28", padding: "0 32px", display: "flex", justifyContent: "space-between", alignItems: "center", height: 64, position: "sticky", top: 0, background: "#08080FEE", backdropFilter: "blur(12px)", zIndex: 100 }}>
         <a href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
