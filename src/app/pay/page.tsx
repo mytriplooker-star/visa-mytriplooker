@@ -153,7 +153,7 @@ export default function PaymentPage() {
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <MTLLogo height={38} />
           <div style={{ fontFamily: "'Cormorant Garant', serif", fontSize: 18, fontWeight: 600, color: "#D4AF6A" }}>
-            mytriplooker <span style={{ fontSize: 12, color: "#8A8A9A", fontFamily: "'Outfit', sans-serif", fontWeight: 400 }}>/ payment</span>
+
           </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
