@@ -1,0 +1,99 @@
+"use client";
+import { useEffect, useState } from "react";
+import { createClient } from "@/lib/supabase-client";
+
+export default function DashboardPage() {
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => {
+      if (!data.user) {
+        window.location.href = "/login";
+      } else {
+        setUser(data.user);
+        setLoading(false);
+      }
+    });
+  }, []);
+
+  const handleLogout = async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    window.location.href = "/login";
+  };
+
+  if (loading) {
+    return (
+      <div style={{ fontFamily: "'Outfit', sans-serif", background: "#08080F", color: "#F5F0E8", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ textAlign: "center" }}>
+          <div style={{ fontSize: 40, marginBottom: 16 }}>✈</div>
+          <div style={{ color: "#8A8A9A", fontSize: 14 }}>Loading your dashboard...</div>
+        </div>
+      </div>
+    );
+  }
+
+  const name = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Traveller";
+  const email = user?.email;
+  const avatar = user?.user_metadata?.avatar_url;
+
+  return (
+    <div style={{ fontFamily: "'Outfit', sans-serif", background: "#08080F", color: "#F5F0E8", minHeight: "100vh" }}>
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garant:ital,wght@0,500;0,600;1,400&family=Outfit:wght@300;400;500;600;700&display=swap'); *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; } @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }`}</style>
+
+      {/* Nav */}
+      <nav style={{ height: 60, background: "rgba(8,8,15,0.95)", backdropFilter: "blur(20px)", borderBottom: "1px solid rgba(212,175,106,0.12)", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 32px", position: "sticky", top: 0, zIndex: 100 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{ width: 30, height: 30, borderRadius: 7, background: "linear-gradient(135deg, #D4AF6A, #E8C977)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>✈</div>
+          <div style={{ fontFamily: "'Cormorant Garant', serif", fontSize: 18, fontWeight: 600, color: "#D4AF6A" }}>mytriplooker</div>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+          {avatar && <img src={avatar} style={{ width: 32, height: 32, borderRadius: "50%", border: "2px solid rgba(212,175,106,0.3)" }} />}
+          <span style={{ fontSize: 13, color: "#8A8A9A" }}>{email}</span>
+          <button onClick={handleLogout} style={{ background: "transparent", border: "1px solid rgba(255,255,255,0.1)", color: "#8A8A9A", padding: "6px 16px", borderRadius: 6, fontSize: 13, cursor: "pointer", fontFamily: "'Outfit', sans-serif" }}>Sign Out</button>
+        </div>
+      </nav>
+
+      <div style={{ maxWidth: 900, margin: "0 auto", padding: "60px 24px", animation: "fadeUp 0.5s ease both" }}>
+
+        {/* Welcome */}
+        <div style={{ marginBottom: 48 }}>
+          <p style={{ fontSize: 13, color: "#D4AF6A", fontWeight: 700, letterSpacing: "1.5px", textTransform: "uppercase", marginBottom: 8 }}>Welcome back</p>
+          <h1 style={{ fontFamily: "'Cormorant Garant', serif", fontSize: 48, fontWeight: 500, color: "#F5F0E8", lineHeight: 1.1 }}>
+            Hello, <em style={{ color: "#D4AF6A" }}>{name}</em> 👋
+          </h1>
+          <p style={{ fontSize: 15, color: "#8A8A9A", marginTop: 10 }}>Your visa applications and documents are managed here.</p>
+        </div>
+
+        {/* Empty state */}
+        <div style={{ background: "#141420", border: "2px dashed rgba(212,175,106,0.2)", borderRadius: 20, padding: "60px 40px", textAlign: "center", marginBottom: 32 }}>
+          <div style={{ fontSize: 64, marginBottom: 20 }}>📋</div>
+          <h2 style={{ fontFamily: "'Cormorant Garant', serif", fontSize: 28, fontWeight: 500, color: "#F5F0E8", marginBottom: 10 }}>No applications yet</h2>
+          <p style={{ fontSize: 14, color: "#8A8A9A", marginBottom: 28, maxWidth: 400, margin: "0 auto 28px" }}>Start your visa application and we will guide you through every step — from documents to approval.</p>
+          <a href="/apply" style={{ display: "inline-block", background: "linear-gradient(135deg, #D4AF6A, #E8C977)", color: "#08080F", fontWeight: 700, padding: "14px 32px", borderRadius: 10, textDecoration: "none", fontSize: 15 }}>
+            Apply for a Visa →
+          </a>
+        </div>
+
+        {/* Quick links */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
+          {[
+            { icon: "🌍", label: "Visa Checklist", desc: "See exact documents needed", href: "/checklist" },
+            { icon: "📁", label: "Upload Documents", desc: "Submit your files securely", href: "/upload" },
+            { icon: "🔍", label: "Track Application", desc: "Check your visa status", href: "/track" },
+          ].map(card => (
+            <a key={card.label} href={card.href} style={{ background: "#141420", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 14, padding: "24px 20px", textDecoration: "none", display: "block", transition: "border-color 0.2s" }}
+              onMouseEnter={e => (e.currentTarget.style.borderColor = "rgba(212,175,106,0.3)")}
+              onMouseLeave={e => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)")}>
+              <div style={{ fontSize: 32, marginBottom: 12 }}>{card.icon}</div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: "#F5F0E8", marginBottom: 4 }}>{card.label}</div>
+              <div style={{ fontSize: 12, color: "#8A8A9A" }}>{card.desc}</div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}

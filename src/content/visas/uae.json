@@ -1,0 +1,29 @@
+{
+  "country": "United Arab Emirates",
+  "slug": "uae",
+  "flag": "🇦🇪",
+
+  "visaTypes": [
+    {
+      "name": "Tourist eVisa 30 Days",
+      "processingTime": "3-5 days",
+      "validity": "60 days from issue",
+      "maxStay": "30 days",
+      "entries": "Single",
+
+      "fees": {
+        "embassy": 0,
+        "service": 6999
+      },
+
+      "documents": [
+        "Passport copy (valid 6 months)",
+        "Passport size photo",
+        "Confirmed return flight",
+        "Hotel booking",
+        "Bank statement (last 3 months)",
+        "PAN card copy"
+      ]
+    }
+  ]
+}
