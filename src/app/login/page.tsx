@@ -4,6 +4,28 @@ import { createClient } from "@/lib/supabase-client";
 
 type Mode = "login" | "signup" | "forgot";
 
+
+function MTLLogo({ height = 36 }: { height?: number }) {
+  const scale = height / 48;
+  return (
+    <a href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none", gap: 0 }}>
+      <svg width={Math.round(220 * scale)} height={height} viewBox="0 0 220 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <text x="0" y="36" fontFamily="'Outfit',sans-serif" fontWeight="900" fontSize="38" fill="#1EC8F0" letterSpacing="-1">MY</text>
+        <text x="72" y="36" fontFamily="'Outfit',sans-serif" fontWeight="900" fontSize="38" fill="#1EC8F0" letterSpacing="-1">TRIP</text>
+        <g transform="translate(0,22) scale(0.72)">
+          <text x="0" y="28" fontFamily="'Outfit',sans-serif" fontWeight="900" fontSize="38" fill="#1EC8F0" letterSpacing="-1">L</text>
+          <circle cx="52" cy="16" r="12" fill="#D4AF6A"/>
+          <circle cx="52" cy="16" r="7" fill="#08080F"/>
+          <rect x="61" y="13" width="8" height="5" rx="2" fill="#D4AF6A"/>
+          <circle cx="76" cy="16" r="12" fill="#D4AF6A"/>
+          <circle cx="76" cy="16" r="7" fill="#08080F"/>
+          <text x="91" y="28" fontFamily="'Outfit',sans-serif" fontWeight="900" fontSize="38" fill="#1EC8F0" letterSpacing="-1">KER</text>
+        </g>
+      </svg>
+    </a>
+  );
+}
+
 export default function AuthPage() {
   const [mode, setMode] = useState<Mode>("login");
   const [email, setEmail] = useState("");
@@ -82,7 +104,7 @@ export default function AuthPage() {
       {/* ── NAV ── */}
       <nav style={{ height: 60, background: "rgba(8,8,15,0.95)", backdropFilter: "blur(20px)", borderBottom: "1px solid rgba(212,175,106,0.1)", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 32px", flexShrink: 0 }}>
         <a href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
-          <div style={{ width: 30, height: 30, borderRadius: 7, background: "linear-gradient(135deg, #D4AF6A, #E8C977)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>✈</div>
+          <MTLLogo height={38} />
           <div style={{ fontFamily: "'Cormorant Garant', serif", fontSize: 18, fontWeight: 600, color: "#D4AF6A" }}>mytriplooker</div>
         </a>
         <a href="/" style={{ fontSize: 13, color: "#8A8A9A", textDecoration: "none" }}>← Back to Home</a>
@@ -101,7 +123,7 @@ export default function AuthPage() {
 
             {/* Header */}
             <div style={{ textAlign: "center", marginBottom: 32 }}>
-              <div style={{ width: 52, height: 52, borderRadius: 14, background: "linear-gradient(135deg, #D4AF6A, #E8C977)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24, margin: "0 auto 16px" }}>✈</div>
+              <div style={{ display: "flex", justifyContent: "center", margin: "0 auto 16px" }}><img src="/logo.png" alt="MyTripLooker" height={52} style={{ height: 52, width: "auto" }} /></div>
               <h1 style={{ fontFamily: "'Cormorant Garant', serif", fontSize: 30, fontWeight: 500, color: "#F5F0E8", marginBottom: 6 }}>
                 {mode === "login" && <>Welcome <em style={{ color: "#D4AF6A" }}>back</em></>}
                 {mode === "signup" && <>Create your <em style={{ color: "#D4AF6A" }}>account</em></>}

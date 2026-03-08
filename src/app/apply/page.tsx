@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { COUNTRIES, getTotalFee, formatINR } from "@/lib/visaData";
 
@@ -16,10 +16,10 @@ const EMPTY: FormData = {
   purpose:"",portOfEntry:"",hotelName:"",hotelAddress:"",notes:"",
 };
 const STEPS = [
-  {n:1,label:"Destination",icon:"🌍"},
-  {n:2,label:"Personal Info",icon:"🪪"},
-  {n:3,label:"Travel Details",icon:"✈️"},
-  {n:4,label:"Review & Pay",icon:"💳"},
+  {n:1,label:"Destination",icon:"1"},
+  {n:2,label:"Personal Info",icon:"2"},
+  {n:3,label:"Travel Details",icon:"3"},
+  {n:4,label:"Review & Pay",icon:"4"},
 ];
 
 // ── Field components ──────────────────────────────────────────────────────
@@ -104,21 +104,22 @@ const Textarea = ({ label, value, onChange, placeholder="", hint="" }: any) => (
 
 // ── MTL Logo ──────────────────────────────────────────────────────────────
 function MTLLogo({height=36}:{height?:number}) {
+  const scale = height / 48;
   return (
-    <a href="/" style={{display:"flex",alignItems:"center",textDecoration:"none"}}>
-      <img src="/logo.png" alt="MyTripLooker" height={height}
-        style={{height,width:"auto",objectFit:"contain"}}
-        onError={e=>{
-          const t=e.currentTarget as HTMLImageElement;
-          t.style.display="none";
-          const next=t.nextElementSibling as HTMLElement;
-          if(next) next.style.display="flex";
-        }}
-      />
-      <div style={{display:"none",alignItems:"center",gap:8}}>
-        <div style={{width:height,height,borderRadius:8,background:"linear-gradient(135deg,#1EC8F0,#D4AF6A)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:height*0.5}}>🔭</div>
-        <span style={{fontFamily:"'Outfit',sans-serif",fontSize:height*0.47,fontWeight:800,color:"#1EC8F0"}}>mytriplooker</span>
-      </div>
+    <a href="/" style={{display:"flex",alignItems:"center",textDecoration:"none",gap:0}}>
+      <svg width={Math.round(220*scale)} height={height} viewBox="0 0 220 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <text x="0" y="36" fontFamily="'Outfit',sans-serif" fontWeight="900" fontSize="38" fill="#1EC8F0" letterSpacing="-1">MY</text>
+        <text x="72" y="36" fontFamily="'Outfit',sans-serif" fontWeight="900" fontSize="38" fill="#1EC8F0" letterSpacing="-1">TRIP</text>
+        <g transform="translate(0,22) scale(0.72)">
+          <text x="0" y="28" fontFamily="'Outfit',sans-serif" fontWeight="900" fontSize="38" fill="#1EC8F0" letterSpacing="-1">L</text>
+          <circle cx="52" cy="16" r="12" fill="#D4AF6A"/>
+          <circle cx="52" cy="16" r="7" fill="#08080F"/>
+          <rect x="61" y="13" width="8" height="5" rx="2" fill="#D4AF6A"/>
+          <circle cx="76" cy="16" r="12" fill="#D4AF6A"/>
+          <circle cx="76" cy="16" r="7" fill="#08080F"/>
+          <text x="91" y="28" fontFamily="'Outfit',sans-serif" fontWeight="900" fontSize="38" fill="#1EC8F0" letterSpacing="-1">KER</text>
+        </g>
+      </svg>
     </a>
   );
 }
@@ -144,6 +145,7 @@ export default function ApplyPage() {
   const searchParams = useSearchParams();
   const [step, setStep] = useState(1);
   const [form, setForm] = useState<FormData>(EMPTY);
+  const [countrySearch, setCountrySearch] = useState("");
 
   // Pre-select country from URL ?country=slug-or-name
   useEffect(() => {
@@ -199,25 +201,30 @@ export default function ApplyPage() {
       </nav>
 
       {/* STEPPER */}
-      <div style={{background:"#0E0E1A",borderBottom:"1px solid rgba(255,255,255,0.05)",padding:"20px 32px"}}>
-        <div style={{maxWidth:760,margin:"0 auto",display:"flex",alignItems:"center"}}>
+      <div style={{background:"#0E0E1A",borderBottom:"1px solid rgba(255,255,255,0.05)",padding:"0 32px"}}>
+        <div style={{maxWidth:760,margin:"0 auto",display:"flex",alignItems:"stretch"}}>
           {STEPS.map((s,i)=>{
             const done=step>s.n, active=step===s.n;
             return (
-              <div key={s.n} style={{display:"flex",alignItems:"center",flex:i<STEPS.length-1?1:"none"}}>
-                <div style={{display:"flex",alignItems:"center",gap:10,cursor:done?"pointer":"default"}} onClick={()=>done&&setStep(s.n)}>
-                  <div style={{width:36,height:36,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:done?16:14,fontWeight:700,flexShrink:0,
-                    background:done?"#2ECC8B":active?"linear-gradient(135deg,#D4AF6A,#E8C977)":"#1A1A28",
-                    color:done||active?"#08080F":"#3A3A4E",
-                    border:done||active?"none":"1px solid rgba(255,255,255,0.08)",transition:"all 0.3s"}}>
-                    {done?"✓":s.icon}
+              <div key={s.n} style={{display:"flex",alignItems:"center",flex:i<STEPS.length-1?1:"none",padding:"18px 0"}}>
+                <div style={{display:"flex",alignItems:"center",gap:10,cursor:done?"pointer":"default",flexShrink:0}} onClick={()=>done&&setStep(s.n)}>
+                  <div style={{
+                    width:32,height:32,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",
+                    fontSize:13,fontWeight:800,flexShrink:0,transition:"all 0.3s",
+                    background: done ? "#2ECC8B" : active ? "linear-gradient(135deg,#D4AF6A,#E8C977)" : "#1A1A28",
+                    color: done || active ? "#08080F" : "#5A5A6E",
+                    border: done || active ? "none" : "1.5px solid #2A2A3E",
+                  }}>
+                    {done ? "✓" : s.n}
                   </div>
                   <div style={{display:"flex",flexDirection:"column"}}>
-                    <span style={{fontSize:10,color:"#3A3A4E",fontWeight:600,letterSpacing:"0.5px",textTransform:"uppercase"}}>Step {s.n}</span>
-                    <span style={{fontSize:13,fontWeight:700,color:active?"#D4AF6A":done?"#2ECC8B":"#3A3A4E"}}>{s.label}</span>
+                    <span style={{fontSize:10,color:active?"#D4AF6A":done?"#2ECC8B":"#3A3A4E",fontWeight:700,letterSpacing:"0.5px",textTransform:"uppercase"}}>Step {s.n}</span>
+                    <span style={{fontSize:12,fontWeight:700,color:active?"#F5F0E8":done?"#2ECC8B":"#3A3A4E"}}>{s.label}</span>
                   </div>
                 </div>
-                {i<STEPS.length-1&&<div style={{flex:1,height:1,background:done?"#2ECC8B":"rgba(255,255,255,0.06)",margin:"0 16px",transition:"background 0.3s"}}/>}
+                {i<STEPS.length-1&&(
+                  <div style={{flex:1,height:1.5,background:done?"#2ECC8B":"#1A1A28",margin:"0 12px",transition:"background 0.4s",borderRadius:2}}/>
+                )}
               </div>
             );
           })}
@@ -232,6 +239,7 @@ export default function ApplyPage() {
           <Step1
             form={form} setForm={setForm} set={set}
             selectedCountry={selectedCountry} selectedVisa={selectedVisa}
+            countrySearch={countrySearch} setCountrySearch={setCountrySearch}
           />
         )}
 
@@ -423,14 +431,22 @@ export default function ApplyPage() {
 }
 
 // ── Step 1 extracted for cleanliness ─────────────────────────────────────
-function Step1({ form, setForm, set, selectedCountry, selectedVisa }: any) {
-  const [countrySearch, setCountrySearch] = useState("");
+function Step1({ form, setForm, set, selectedCountry, selectedVisa, countrySearch, setCountrySearch }: any) {
+  const visaRef = useRef<HTMLDivElement>(null);
 
   const filtered = COUNTRIES.filter(c => {
     if (!countrySearch.trim()) return true;
     const q = countrySearch.toLowerCase();
     return c.name.toLowerCase().includes(q) || c.tagline.toLowerCase().includes(q) || c.isoCode.toLowerCase().includes(q);
   });
+
+  const handleSelectCountry = (c: any) => {
+    setForm((p: FormData) => ({ ...p, countrySlug: c.slug, visaTypeId: c.visaTypes[0].id }));
+    // Scroll to visa section after short delay
+    setTimeout(() => {
+      visaRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 100);
+  };
 
   return (
     <div style={{animation:"fadeUp 0.4s ease both"}}>
@@ -457,14 +473,15 @@ function Step1({ form, setForm, set, selectedCountry, selectedVisa }: any) {
           const selected = form.countrySlug===c.slug;
           return (
             <div key={c.slug} className="country-card"
-              onClick={()=>setForm((p:FormData)=>({...p,countrySlug:c.slug,visaTypeId:c.visaTypes[0].id}))}
-              style={{background:selected?"rgba(212,175,106,0.08)":"#141420",border:`1px solid ${selected?"rgba(212,175,106,0.5)":"rgba(255,255,255,0.06)"}`,borderRadius:12,padding:"14px 16px",display:"flex",alignItems:"center",gap:12}}>
+              onClick={()=>handleSelectCountry(c)}
+              style={{background:selected?"rgba(212,175,106,0.1)":"#141420",border:`1px solid ${selected?"rgba(212,175,106,0.7)":"rgba(255,255,255,0.06)"}`,borderRadius:12,padding:"14px 16px",display:"flex",alignItems:"center",gap:12,
+                boxShadow: selected ? "0 0 0 2px rgba(212,175,106,0.2)" : "none"}}>
               <span style={{fontSize:28,flexShrink:0}}>{c.flag}</span>
               <div style={{minWidth:0}}>
                 <div style={{fontSize:13,fontWeight:700,color:selected?"#D4AF6A":"#F5F0E8",lineHeight:1.2}}>{c.name}</div>
                 <div style={{fontSize:11,color:"#5A5A6E",marginTop:2,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{c.tagline}</div>
               </div>
-              {selected&&<span style={{marginLeft:"auto",color:"#D4AF6A",fontSize:16,flexShrink:0}}>✓</span>}
+              {selected&&<span style={{marginLeft:"auto",background:"#D4AF6A",color:"#08080F",borderRadius:"50%",width:20,height:20,display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,fontWeight:900,flexShrink:0}}>✓</span>}
             </div>
           );
         })}
@@ -477,8 +494,17 @@ function Step1({ form, setForm, set, selectedCountry, selectedVisa }: any) {
       </div>
 
       {/* Visa type selector */}
+      <div ref={visaRef}>
       {selectedCountry&&(
         <div style={{animation:"fadeUp 0.3s ease both"}}>
+          {/* Selected country banner */}
+          <div style={{background:"rgba(46,204,139,0.08)",border:"1px solid rgba(46,204,139,0.3)",borderRadius:10,padding:"12px 16px",marginBottom:16,display:"flex",alignItems:"center",gap:12}}>
+            <span style={{fontSize:24}}>{selectedCountry.flag}</span>
+            <div>
+              <div style={{fontSize:14,fontWeight:700,color:"#2ECC8B"}}>✓ {selectedCountry.name} selected</div>
+              <div style={{fontSize:12,color:"#5A5A6E"}}>Now choose your visa type below</div>
+            </div>
+          </div>
           <div style={{fontSize:11,fontWeight:700,letterSpacing:"1.2px",textTransform:"uppercase",color:"#8A8A9A",marginBottom:12}}>Select Visa Type</div>
           <div style={{display:"flex",flexDirection:"column",gap:10}}>
             {selectedCountry.visaTypes.map((v:any)=>{
@@ -507,6 +533,7 @@ function Step1({ form, setForm, set, selectedCountry, selectedVisa }: any) {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }
