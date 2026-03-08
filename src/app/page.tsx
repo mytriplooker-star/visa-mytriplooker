@@ -117,18 +117,18 @@ export default function HomePage() {
         </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: 32 }}>
-          {["Destinations", "How It Works", "Track Application"].map(l => (
-            <a key={l} className="nav-link" href="#" style={{ fontSize: 13, color: "#8A8A9A", textDecoration: "none", fontWeight: 500 }}>{l}</a>
+          {([["/checklist", "Destinations"], ["#how-it-works", "How It Works"], ["/track", "Track Application"]] as [string,string][]).map(([href, l]) => (
+            <a key={l} className="nav-link" href={href} style={{ fontSize: 13, color: "#8A8A9A", textDecoration: "none", fontWeight: 500 }}>{l}</a>
           ))}
         </div>
 
         <div style={{ display: "flex", gap: 10 }}>
-          <button style={{ background: "transparent", border: "1px solid rgba(212,175,106,0.3)", color: "#D4AF6A", padding: "8px 20px", borderRadius: 7, fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "'Outfit', sans-serif" }}>
+          <a href="/login" style={{ background: "transparent", border: "1px solid rgba(212,175,106,0.3)", color: "#D4AF6A", padding: "8px 20px", borderRadius: 7, fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "'Outfit', sans-serif", textDecoration: "none", display: "inline-block" }}>
             Sign In
-          </button>
-          <button className="gold-btn" style={{ padding: "8px 20px", borderRadius: 7, fontSize: 13, fontFamily: "'Outfit', sans-serif" }}>
+          </a>
+          <a href="/apply" className="gold-btn" style={{ padding: "8px 20px", borderRadius: 7, fontSize: 13, fontFamily: "'Outfit', sans-serif", textDecoration: "none", display: "inline-block" }}>
             Apply Now
-          </button>
+          </a>
         </div>
       </nav>
 
@@ -188,9 +188,9 @@ export default function HomePage() {
                   fontFamily: "'Outfit', sans-serif", fontWeight: 400,
                 }}
               />
-              <button className="gold-btn" style={{ margin: 6, padding: "12px 28px", borderRadius: 10, fontSize: 14, fontFamily: "'Outfit', sans-serif", flexShrink: 0 }}>
+              <a href="/checklist" className="gold-btn" style={{ margin: 6, padding: "12px 28px", borderRadius: 10, fontSize: 14, fontFamily: "'Outfit', sans-serif", flexShrink: 0, textDecoration: "none", display: "inline-block" }}>
                 Check Visa →
-              </button>
+              </a>
             </div>
 
             {/* Dropdown */}
@@ -276,11 +276,11 @@ export default function HomePage() {
                       <div style={{ fontSize: 11, color: "#8A8A9A" }}>Starting from</div>
                       <div style={{ fontFamily: "'Cormorant Garant', serif", fontSize: 22, fontWeight: 600, color: "#D4AF6A" }}>{d.price}</div>
                     </div>
-                    <button style={{ background: "rgba(212,175,106,0.08)", border: "1px solid rgba(212,175,106,0.2)", color: "#D4AF6A", padding: "8px 16px", borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "'Outfit', sans-serif", transition: "all 0.15s" }}
-                      onMouseEnter={e => { (e.target as HTMLButtonElement).style.background = "rgba(212,175,106,0.16)"; }}
-                      onMouseLeave={e => { (e.target as HTMLButtonElement).style.background = "rgba(212,175,106,0.08)"; }}>
+                    <a href="/apply" style={{ background: "rgba(212,175,106,0.08)", border: "1px solid rgba(212,175,106,0.2)", color: "#D4AF6A", padding: "8px 16px", borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "'Outfit', sans-serif", transition: "all 0.15s", textDecoration: "none", display: "inline-block" }}
+                      onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = "rgba(212,175,106,0.16)"; }}
+                      onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = "rgba(212,175,106,0.08)"; }}>
                       Apply →
-                    </button>
+                    </a>
                   </div>
                 </div>
               );
@@ -288,11 +288,11 @@ export default function HomePage() {
           </div>
 
           <div style={{ textAlign: "center", marginTop: 36 }}>
-            <button style={{ background: "transparent", border: "1px solid rgba(212,175,106,0.25)", color: "#D4AF6A", padding: "12px 32px", borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "'Outfit', sans-serif", transition: "all 0.2s" }}
-              onMouseEnter={e => { (e.target as HTMLButtonElement).style.borderColor = "rgba(212,175,106,0.6)"; }}
-              onMouseLeave={e => { (e.target as HTMLButtonElement).style.borderColor = "rgba(212,175,106,0.25)"; }}>
+            <a href="/checklist" style={{ background: "transparent", border: "1px solid rgba(212,175,106,0.25)", color: "#D4AF6A", padding: "12px 32px", borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "'Outfit', sans-serif", transition: "all 0.2s", textDecoration: "none", display: "inline-block" }}
+              onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(212,175,106,0.6)"; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(212,175,106,0.25)"; }}>
               View All 50+ Countries →
-            </button>
+            </a>
           </div>
         </div>
       </section>
@@ -342,9 +342,9 @@ export default function HomePage() {
               </p>
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 12, alignItems: "flex-start" }}>
-              <button className="gold-btn" style={{ padding: "16px 40px", borderRadius: 10, fontSize: 15, fontFamily: "'Outfit', sans-serif", whiteSpace: "nowrap" }}>
+              <a href="/apply" className="gold-btn" style={{ padding: "16px 40px", borderRadius: 10, fontSize: 15, fontFamily: "'Outfit', sans-serif", whiteSpace: "nowrap", textDecoration: "none", display: "inline-block" }}>
                 Start My Application →
-              </button>
+              </a>
               <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
                 {["🔒 100% Secure", "✓ Expert Review", "📱 WhatsApp Updates"].map(t => (
                   <span key={t} style={{ fontSize: 12, color: "#8A8A9A" }}>{t}</span>
