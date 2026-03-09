@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import { COUNTRIES, getTotalFee, formatINR } from "@/lib/visaData";
 
 interface FormData {
@@ -141,7 +142,7 @@ function resolveSlug(raw: string): string {
 }
 
 // ── Main ──────────────────────────────────────────────────────────────────
-export default function ApplyPage() {
+function ApplyPageInner() {
   const searchParams = useSearchParams();
   const [step, setStep] = useState(1);
   const [form, setForm] = useState<FormData>(EMPTY);
@@ -535,5 +536,20 @@ function Step1({ form, setForm, set, selectedCountry, selectedVisa, countrySearc
       )}
       </div>
     </div>
+  );
+}
+
+// Next.js 16 requires useSearchParams() to be wrapped in Suspense
+export default function ApplyPage() {
+  return (
+    <Suspense fallback={
+      <div style={{ background: "#08080F", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ textAlign: "center" }}>
+          <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 16, color: "#8A8A9A" }}>Loading...</div>
+        </div>
+      </div>
+    }>
+      <ApplyPageInner />
+    </Suspense>
   );
 }
