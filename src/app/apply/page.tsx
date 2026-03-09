@@ -88,7 +88,7 @@ const SelectField = ({ label, value, onChange, options, required=false }: { labe
       }}
       onFocus={e=>(e.target.style.borderColor="rgba(212,175,106,0.6)")}
       onBlur={e=>(e.target.style.borderColor="rgba(255,255,255,0.1)")}>
-      {options.map((o: { value: string; label: string })=><option key={o.value} value={o.value} style={{background:"#1A1A28",color:"#F5F0E8"}}>{o.label}</option>)}
+      {options.map(o=><option key={o.value} value={o.value} style={{background:"#1A1A28",color:"#F5F0E8"}}>{o.label}</option>)}
     </select>
   </div>
 );
@@ -217,7 +217,7 @@ function ApplyPageInner() {
 
         {/* STEP 1: DESTINATION */}
         {step===1&&(
-          <Step1 form={form} set={set}
+          <Step1 form={form} set={set} setForm={setForm}
             selectedCountry={selectedCountry}
             countrySearch={countrySearch} setCountrySearch={setCountrySearch}
           />
@@ -414,7 +414,7 @@ function ApplyPageInner() {
 }
 
 // ── Step 1 extracted for cleanliness ─────────────────────────────────────
-function Step1({ form, set, selectedCountry, countrySearch, setCountrySearch }: { form: FormData; set: (f: keyof FormData) => (v: string) => void; selectedCountry: typeof COUNTRIES[0] | undefined; countrySearch: string; setCountrySearch: (v: string) => void }) {
+function Step1({ form, set, setForm, selectedCountry, countrySearch, setCountrySearch }: { form: FormData; set: (f: keyof FormData) => (v: string) => void; setForm: React.Dispatch<React.SetStateAction<FormData>>; selectedCountry: typeof COUNTRIES[0] | undefined; countrySearch: string; setCountrySearch: (v: string) => void }) {
   const visaRef = useRef<HTMLDivElement>(null);
 
   const filtered = COUNTRIES.filter(c => {
@@ -424,7 +424,7 @@ function Step1({ form, set, selectedCountry, countrySearch, setCountrySearch }: 
   });
 
   const handleSelectCountry = (c: typeof COUNTRIES[0]) => {
-    setForm((p: FormData) => ({ ...p, countrySlug: c.slug, visaTypeId: c.visaTypes[0].id }));
+    setForm(p => ({ ...p, countrySlug: c.slug, visaTypeId: c.visaTypes[0].id }));
     // Scroll to visa section after short delay
     setTimeout(() => {
       visaRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -490,7 +490,7 @@ function Step1({ form, set, selectedCountry, countrySearch, setCountrySearch }: 
           </div>
           <div style={{fontSize:11,fontWeight:700,letterSpacing:"1.2px",textTransform:"uppercase",color:"#8A8A9A",marginBottom:12}}>Select Visa Type</div>
           <div style={{display:"flex",flexDirection:"column",gap:10}}>
-            {selectedCountry.visaTypes.map((v: { id: string; name: string; price: number; processingDays: string; description?: string })=>{
+            {selectedCountry.visaTypes.map((v)=>{
               const selected = form.visaTypeId===v.id;
               const fee = getTotalFee(v);
               return (

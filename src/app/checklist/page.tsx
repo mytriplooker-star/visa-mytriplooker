@@ -230,9 +230,6 @@ function CountryModal({ country, onClose }: { country: Country; onClose: () => v
   );
 }
 
-// ═══════════════════════════════════════════════════════════════════
-// SHARED COMPONENTS  (MTLLogo · NAV_LINKS · SharedNav · FOOTER_LINKS · SharedFooter)
-// ═══════════════════════════════════════════════════════════════════
 function MTLLogo({ height = 36 }: { height?: number }) {
   const s = height / 48;
   return (
@@ -280,14 +277,6 @@ function SharedNav({ current = "" }: { current?: string }) {
     </nav>
   );
 }
-
-const FOOTER_LINKS: [string,string][] = [
-  ["/#privacy","Privacy Policy"],["/#terms","Terms of Service"],
-  ["mailto:support@mytriplooker.com","Contact Us"],
-  ["/track","Track Application"],["/login","Sign In"],
-];
-
-// ═══════════════════════════════════════════════════════════════════
 
 export default function ChecklistPage() {
   const [activeRegion, setActiveRegion] = useState<Region | "all">("all");

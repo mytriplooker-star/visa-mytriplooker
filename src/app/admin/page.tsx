@@ -212,9 +212,6 @@ function AppDrawer({ app, onClose, onUpdate }: { app: Application; onClose: () =
 
 // ── Main Admin Panel ──────────────────────────────────────────────────────
 
-// ═══════════════════════════════════════════════════════════════════
-// SHARED COMPONENTS  (MTLLogo · NAV_LINKS · SharedNav · FOOTER_LINKS · SharedFooter)
-// ═══════════════════════════════════════════════════════════════════
 function MTLLogo({ height = 36 }: { height?: number }) {
   const s = height / 48;
   return (
@@ -235,21 +232,6 @@ function MTLLogo({ height = 36 }: { height?: number }) {
     </Link>
   );
 }
-
-const NAV_LINKS: [string,string][] = [
-  ["/checklist","Destinations"],
-  ["/track","Track"],
-  ["/upload","Upload Docs"],
-];
-
-
-const FOOTER_LINKS: [string,string][] = [
-  ["/#privacy","Privacy Policy"],["/#terms","Terms of Service"],
-  ["mailto:support@mytriplooker.com","Contact Us"],
-  ["/track","Track Application"],["/login","Sign In"],
-];
-
-// ═══════════════════════════════════════════════════════════════════
 
 export default function AdminPage() {
   const [apps, setApps] = useState<Application[]>(MOCK_APPS);
