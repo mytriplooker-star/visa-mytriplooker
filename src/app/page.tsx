@@ -154,7 +154,7 @@ export default function HomePage() {
       <nav style={{ position:"fixed", top:0, left:0, right:0, zIndex:200, padding:"0 40px", height:68, display:"flex", alignItems:"center", justifyContent:"space-between", background: scrolled ? "rgba(8,8,15,0.96)" : "rgba(8,8,15,0.7)", backdropFilter:"blur(20px)", borderBottom:"1px solid rgba(212,175,106,0.1)", transition:"background 0.3s" }}>
         <MTLLogo height={42} />
         <div style={{ display:"flex", alignItems:"center", gap:36 }}>
-          {([["/checklist","Destinations"],["#how-it-works","How It Works"],["/track","Track Application"]] as [string,string][]).map(([href,label]) => (
+          {([["/checklist","Destinations"],["#how-it-works","How It Works"],["/track","Track Application"],["/upload","Upload Docs"]] as [string,string][]).map(([href,label]) => (
             <a key={label} href={href} className="nav-link" style={{ fontSize:13, color:"#A0A0B8", textDecoration:"none", fontWeight:500 }}>{label}</a>
           ))}
         </div>
@@ -352,7 +352,7 @@ export default function HomePage() {
         <div style={{ maxWidth:1200, margin:"0 auto", display:"flex", justifyContent:"space-between", alignItems:"center", flexWrap:"wrap", gap:24 }}>
           <MTLLogo height={34} />
           <div style={{ display:"flex", gap:28, flexWrap:"wrap" }}>
-            {([["/","Privacy Policy"],["/","Terms of Service"],["/","Contact Us"],["/track","Track Application"],["/login","Sign In"]] as [string,string][]).map(([href,label])=>(
+            {([["/#privacy","Privacy Policy"],["/#terms","Terms of Service"],["mailto:support@mytriplooker.com","Contact Us"],["/track","Track Application"],["/login","Sign In"]] as [string,string][]).map(([href,label])=>(
               <a key={label} href={href} style={{ fontSize:12, color:"#3A3A4E", textDecoration:"none", transition:"color 0.15s" }}
                 onMouseEnter={e=>(e.currentTarget.style.color="#8A8A9A")}
                 onMouseLeave={e=>(e.currentTarget.style.color="#3A3A4E")}>{label}</a>

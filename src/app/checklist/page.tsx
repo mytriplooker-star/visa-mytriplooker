@@ -229,26 +229,98 @@ function CountryModal({ country, onClose }: { country: Country; onClose: () => v
   );
 }
 
+
+  ["/checklist", "Destinations"],
+  ["/track",     "Track"],
+  ["/upload",    "Upload Docs"],
+];
+
+
+  ["/#privacy","Privacy Policy"], ["/#terms","Terms of Service"],
+  ["mailto:support@mytriplooker.com","Contact Us"],
+  ["/track","Track Application"], ["/login","Sign In"],
+];
+
+// ═══════════════════════════════════════════════════════════════════
+
+
+// ═══════════════════════════════════════════════════════════════════
+// SHARED COMPONENTS  (MTLLogo · NAV_LINKS · SharedNav · FOOTER_LINKS · SharedFooter)
+// ═══════════════════════════════════════════════════════════════════
 function MTLLogo({ height = 36 }: { height?: number }) {
-  const scale = height / 48;
+  const s = height / 48;
   return (
-    <a href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none", gap: 0 }}>
-      <svg width={Math.round(220 * scale)} height={height} viewBox="0 0 220 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <text x="0" y="36" fontFamily="'Outfit',sans-serif" fontWeight="900" fontSize="38" fill="#1EC8F0" letterSpacing="-1">MY</text>
+    <a href="/" style={{ display:"flex", alignItems:"center", textDecoration:"none" }}>
+      <svg width={Math.round(220*s)} height={height} viewBox="0 0 220 48" fill="none">
+        <text x="0"  y="36" fontFamily="'Outfit',sans-serif" fontWeight="900" fontSize="38" fill="#1EC8F0" letterSpacing="-1">MY</text>
         <text x="72" y="36" fontFamily="'Outfit',sans-serif" fontWeight="900" fontSize="38" fill="#1EC8F0" letterSpacing="-1">TRIP</text>
         <g transform="translate(0,22) scale(0.72)">
-          <text x="0" y="28" fontFamily="'Outfit',sans-serif" fontWeight="900" fontSize="38" fill="#1EC8F0" letterSpacing="-1">L</text>
+          <text x="0"  y="28" fontFamily="'Outfit',sans-serif" fontWeight="900" fontSize="38" fill="#1EC8F0" letterSpacing="-1">L</text>
           <circle cx="52" cy="16" r="12" fill="#D4AF6A"/>
-          <circle cx="52" cy="16" r="7" fill="#08080F"/>
-          <rect x="61" y="13" width="8" height="5" rx="2" fill="#D4AF6A"/>
+          <circle cx="52" cy="16" r="7"  fill="#08080F"/>
+          <rect   x="61"  y="13" width="8" height="5" rx="2" fill="#D4AF6A"/>
           <circle cx="76" cy="16" r="12" fill="#D4AF6A"/>
-          <circle cx="76" cy="16" r="7" fill="#08080F"/>
+          <circle cx="76" cy="16" r="7"  fill="#08080F"/>
           <text x="91" y="28" fontFamily="'Outfit',sans-serif" fontWeight="900" fontSize="38" fill="#1EC8F0" letterSpacing="-1">KER</text>
         </g>
       </svg>
     </a>
   );
 }
+
+const NAV_LINKS: [string,string][] = [
+  ["/checklist","Destinations"],
+  ["/track","Track"],
+  ["/upload","Upload Docs"],
+];
+
+function SharedNav({ current = "" }: { current?: string }) {
+  return (
+    <nav style={{ height:64, background:"rgba(8,8,15,0.97)", backdropFilter:"blur(20px)", borderBottom:"1px solid rgba(212,175,106,0.12)", display:"flex", alignItems:"center", justifyContent:"space-between", padding:"0 40px", position:"sticky", top:0, zIndex:200 }}>
+      <MTLLogo height={38} />
+      <div style={{ display:"flex", alignItems:"center", gap:28 }}>
+        {NAV_LINKS.map(([href,label]) => (
+          <a key={href} href={href} style={{ fontSize:13, color:current===href?"#D4AF6A":"#A0A0B8", textDecoration:"none", fontWeight:500 }}
+            onMouseEnter={e=>(e.currentTarget.style.color="#D4AF6A")}
+            onMouseLeave={e=>(e.currentTarget.style.color=current===href?"#D4AF6A":"#A0A0B8")}>
+            {label}
+          </a>
+        ))}
+      </div>
+      <div style={{ display:"flex", gap:10, alignItems:"center" }}>
+        <a href="/login" style={{ background:"transparent", border:"1px solid rgba(212,175,106,0.35)", color:"#D4AF6A", padding:"8px 20px", borderRadius:8, fontSize:13, fontWeight:600, textDecoration:"none" }}>Sign In</a>
+        <a href="/apply" style={{ background:"linear-gradient(135deg,#D4AF6A,#E8C977)", color:"#08080F", padding:"8px 20px", borderRadius:8, fontSize:13, fontWeight:700, textDecoration:"none" }}>Apply Now</a>
+      </div>
+    </nav>
+  );
+}
+
+const FOOTER_LINKS: [string,string][] = [
+  ["/#privacy","Privacy Policy"],["/#terms","Terms of Service"],
+  ["mailto:support@mytriplooker.com","Contact Us"],
+  ["/track","Track Application"],["/login","Sign In"],
+];
+
+function SharedFooter() {
+  return (
+    <footer style={{ borderTop:"1px solid rgba(255,255,255,0.05)", padding:"40px 40px 28px", background:"#08080F" }}>
+      <div style={{ maxWidth:1200, margin:"0 auto", display:"flex", justifyContent:"space-between", alignItems:"center", flexWrap:"wrap", gap:20 }}>
+        <MTLLogo height={32} />
+        <div style={{ display:"flex", gap:24, flexWrap:"wrap" }}>
+          {FOOTER_LINKS.map(([href,label]) => (
+            <a key={label} href={href} style={{ fontSize:12, color:"#5A5A6E", textDecoration:"none" }}
+              onMouseEnter={e=>(e.currentTarget.style.color="#D4AF6A")}
+              onMouseLeave={e=>(e.currentTarget.style.color="#5A5A6E")}>
+              {label}
+            </a>
+          ))}
+        </div>
+        <div style={{ fontSize:12, color:"#3A3A4E" }}>© 2026 mytriplooker. All rights reserved.</div>
+      </div>
+    </footer>
+  );
+}
+// ═══════════════════════════════════════════════════════════════════
 
 export default function ChecklistPage() {
   const [activeRegion, setActiveRegion] = useState<Region | "all">("all");
@@ -289,17 +361,7 @@ export default function ChecklistPage() {
         ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:#08080F;}::-webkit-scrollbar-thumb{background:#3A3A4E;border-radius:2px;}
         input::placeholder{color:#3A3A4E;}
       `}</style>
-      {/* Nav */}
-      <nav style={{ borderBottom: "1px solid #1A1A28", padding: "0 32px", display: "flex", justifyContent: "space-between", alignItems: "center", height: 64, position: "sticky", top: 0, background: "#08080FEE", backdropFilter: "blur(12px)", zIndex: 100 }}>
-        <a href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
-          <img src="/logo.png" alt="MyTripLooker" height={36} style={{ height: 36, width: "auto" }} />
-        </a>
-        <div style={{ display: "flex", gap: 12 }}>
-          <a href="/track" style={{ fontSize: 14, color: "#8A8A9A", textDecoration: "none" }}>Track</a>
-          <a href="/login" style={{ fontSize: 14, color: "#8A8A9A", textDecoration: "none" }}>Sign In</a>
-          <a href="/apply" style={{ background: "linear-gradient(135deg,#D4AF6A,#E8C977)", color: "#08080F", padding: "8px 18px", borderRadius: 8, textDecoration: "none", fontWeight: 700, fontSize: 14 }}>Apply Now</a>
-        </div>
-      </nav>
+      <SharedNav current="/checklist" />
 
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "40px 24px" }}>
         {/* Hero */}
