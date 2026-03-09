@@ -139,8 +139,6 @@ function ApplyPageInner() {
     if (!slug) return;
     const country = COUNTRIES.find(c => c.slug === slug);
     if (!country) return;
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     setForm(p => ({ ...p, countrySlug: slug, visaTypeId: country.visaTypes[0].id }));
   }, [searchParams]);
 
