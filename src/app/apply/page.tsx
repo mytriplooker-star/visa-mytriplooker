@@ -139,7 +139,9 @@ function ApplyPageInner() {
     if (!slug) return;
     const country = COUNTRIES.find(c => c.slug === slug);
     if (!country) return;
-    setForm(p => ({ ...p, countrySlug: slug, visaTypeId: country.visaTypes[0].id }));
+    setTimeout(() => {
+      setForm(p => ({ ...p, countrySlug: slug, visaTypeId: country.visaTypes[0].id }));
+    }, 0);
   }, [searchParams]);
 
   const set = (field: keyof FormData) => (val: string) =>
