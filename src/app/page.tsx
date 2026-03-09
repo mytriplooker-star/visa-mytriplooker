@@ -90,7 +90,6 @@ function MTLLogo({ height = 38 }: { height?: number }) {
 
 export default function HomePage() {
   const [query,    setQuery]    = useState("");
-  const [results,  setResults]  = useState<typeof destinations>([]);
   const [open,     setOpen]     = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const dropRef = useRef<HTMLDivElement>(null);
