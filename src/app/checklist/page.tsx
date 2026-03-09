@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useState, useMemo } from "react";
-import { COUNTRIES, COUNTRY_REGIONS, REGION_META, Region, Country, getCountriesByRegion } from "@/lib/visaData";
+import { COUNTRIES, COUNTRY_REGIONS, REGION_META, Region, Country } from "@/lib/visaData";
 
 const ALL_REGIONS: Region[] = [
   'middle-east', 'schengen', 'europe', 'asia-pacific',
@@ -90,7 +90,6 @@ function CountryModal({ country, onClose }: { country: Country; onClose: () => v
   const grandTotal = totalFee + gst;
   const isFree = grandTotal === 0;
 
-  const categories = [...new Set(vt.documents.map(d => d.category))];
 
   return (
     <div
@@ -288,25 +287,6 @@ const FOOTER_LINKS: [string,string][] = [
   ["/track","Track Application"],["/login","Sign In"],
 ];
 
-function SharedFooter() {
-  return (
-    <footer style={{ borderTop:"1px solid rgba(255,255,255,0.05)", padding:"40px 40px 28px", background:"#08080F" }}>
-      <div style={{ maxWidth:1200, margin:"0 auto", display:"flex", justifyContent:"space-between", alignItems:"center", flexWrap:"wrap", gap:20 }}>
-        <MTLLogo height={32} />
-        <div style={{ display:"flex", gap:24, flexWrap:"wrap" }}>
-          {FOOTER_LINKS.map(([href,label]) => (
-            <a key={label} href={href} style={{ fontSize:12, color:"#5A5A6E", textDecoration:"none" }}
-              onMouseEnter={e=>(e.currentTarget.style.color="#D4AF6A")}
-              onMouseLeave={e=>(e.currentTarget.style.color="#5A5A6E")}>
-              {label}
-            </a>
-          ))}
-        </div>
-        <div style={{ fontSize:12, color:"#3A3A4E" }}>© 2026 mytriplooker. All rights reserved.</div>
-      </div>
-    </footer>
-  );
-}
 // ═══════════════════════════════════════════════════════════════════
 
 export default function ChecklistPage() {
@@ -472,7 +452,7 @@ export default function ChecklistPage() {
         {/* Result count */}
         {search.trim() && (
           <div style={{ textAlign: "center", marginTop: 24, fontSize: 13, color: "#8A8A9A" }}>
-            {filteredCountries.length} {filteredCountries.length === 1 ? "country" : "countries"} found for "{search}"
+            {filteredCountries.length} {filteredCountries.length === 1 ? "country" : "countries"} found for &quot;{search}&quot;
           </div>
         )}
       </div>

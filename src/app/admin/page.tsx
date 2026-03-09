@@ -242,26 +242,6 @@ const NAV_LINKS: [string,string][] = [
   ["/upload","Upload Docs"],
 ];
 
-function SharedNav({ current = "" }: { current?: string }) {
-  return (
-    <nav style={{ height:64, background:"rgba(8,8,15,0.97)", backdropFilter:"blur(20px)", borderBottom:"1px solid rgba(212,175,106,0.12)", display:"flex", alignItems:"center", justifyContent:"space-between", padding:"0 40px", position:"sticky", top:0, zIndex:200 }}>
-      <MTLLogo height={38} />
-      <div style={{ display:"flex", alignItems:"center", gap:28 }}>
-        {NAV_LINKS.map(([href,label]) => (
-          <a key={href} href={href} style={{ fontSize:13, color:current===href?"#D4AF6A":"#A0A0B8", textDecoration:"none", fontWeight:500 }}
-            onMouseEnter={e=>(e.currentTarget.style.color="#D4AF6A")}
-            onMouseLeave={e=>(e.currentTarget.style.color=current===href?"#D4AF6A":"#A0A0B8")}>
-            {label}
-          </a>
-        ))}
-      </div>
-      <div style={{ display:"flex", gap:10, alignItems:"center" }}>
-        <a href="/login" style={{ background:"transparent", border:"1px solid rgba(212,175,106,0.35)", color:"#D4AF6A", padding:"8px 20px", borderRadius:8, fontSize:13, fontWeight:600, textDecoration:"none" }}>Sign In</a>
-        <a href="/apply" style={{ background:"linear-gradient(135deg,#D4AF6A,#E8C977)", color:"#08080F", padding:"8px 20px", borderRadius:8, fontSize:13, fontWeight:700, textDecoration:"none" }}>Apply Now</a>
-      </div>
-    </nav>
-  );
-}
 
 const FOOTER_LINKS: [string,string][] = [
   ["/#privacy","Privacy Policy"],["/#terms","Terms of Service"],
@@ -269,25 +249,6 @@ const FOOTER_LINKS: [string,string][] = [
   ["/track","Track Application"],["/login","Sign In"],
 ];
 
-function SharedFooter() {
-  return (
-    <footer style={{ borderTop:"1px solid rgba(255,255,255,0.05)", padding:"40px 40px 28px", background:"#08080F" }}>
-      <div style={{ maxWidth:1200, margin:"0 auto", display:"flex", justifyContent:"space-between", alignItems:"center", flexWrap:"wrap", gap:20 }}>
-        <MTLLogo height={32} />
-        <div style={{ display:"flex", gap:24, flexWrap:"wrap" }}>
-          {FOOTER_LINKS.map(([href,label]) => (
-            <a key={label} href={href} style={{ fontSize:12, color:"#5A5A6E", textDecoration:"none" }}
-              onMouseEnter={e=>(e.currentTarget.style.color="#D4AF6A")}
-              onMouseLeave={e=>(e.currentTarget.style.color="#5A5A6E")}>
-              {label}
-            </a>
-          ))}
-        </div>
-        <div style={{ fontSize:12, color:"#3A3A4E" }}>© 2026 mytriplooker. All rights reserved.</div>
-      </div>
-    </footer>
-  );
-}
 // ═══════════════════════════════════════════════════════════════════
 
 export default function AdminPage() {
@@ -296,7 +257,6 @@ export default function AdminPage() {
   const [filterStatus, setFilterStatus] = useState<AppStatus | "all">("all");
   const [filterCountry, setFilterCountry] = useState("all");
   const [search, setSearch] = useState("");
-  const [activeTab, setActiveTab] = useState<"applications" | "stats">("applications");
 
   const updateApp = (id: string, patch: Partial<Application>) => {
     setApps(prev => prev.map(a => a.id === id ? { ...a, ...patch } : a));
@@ -414,7 +374,7 @@ export default function AdminPage() {
             onFocus={e => (e.target.style.borderColor = "rgba(212,175,106,0.4)")}
             onBlur={e => (e.target.style.borderColor = "rgba(255,255,255,0.08)")} />
 
-          <select value={filterStatus} onChange={e => setFilterStatus(e.target.value as any)}
+          <select value={filterStatus} onChange={e => setFilterStatus(e.target.value as AppStatus | "all")}
             style={{ background: "#141420", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 8, padding: "10px 14px", color: "#F5F0E8", fontSize: 13, fontFamily: "'Outfit', sans-serif", outline: "none", cursor: "pointer" }}>
             <option value="all">All Statuses</option>
             {ALL_STATUSES.map(s => <option key={s} value={s} style={{ background: "#141420" }}>{STATUS_CONFIG[s].icon} {STATUS_CONFIG[s].label}</option>)}

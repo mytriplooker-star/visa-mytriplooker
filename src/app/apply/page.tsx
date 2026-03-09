@@ -41,7 +41,7 @@ const labelStyle: React.CSSProperties = {
   marginBottom: 6, display: "block",
 };
 
-const Input = ({ label, value, onChange, placeholder="", type="text", required=false, hint="" }: any) => (
+const Input = ({ label, value, onChange, placeholder="", type="text", required=false, hint="" }: { label: string; value: string; onChange: (v: string) => void; placeholder?: string; type?: string; required?: boolean; hint?: string }) => (
   <div style={{display:"flex",flexDirection:"column"}}>
     <label style={labelStyle}>{label}{required&&<span style={{color:"#E85D4A",marginLeft:4}}>*</span>}</label>
     <input type={type} value={value} onChange={e=>onChange(e.target.value)} placeholder={placeholder}
@@ -78,7 +78,7 @@ const GenderPicker = ({ value, onChange }: { value: string; onChange: (v:string)
   </div>
 );
 
-const SelectField = ({ label, value, onChange, options, required=false }: any) => (
+const SelectField = ({ label, value, onChange, options, required=false }: { label: string; value: string; onChange: (v: string) => void; options: { value: string; label: string }[]; required?: boolean }) => (
   <div style={{display:"flex",flexDirection:"column"}}>
     <label style={labelStyle}>{label}{required&&<span style={{color:"#E85D4A",marginLeft:4}}>*</span>}</label>
     <select value={value} onChange={e=>onChange(e.target.value)}
@@ -88,12 +88,12 @@ const SelectField = ({ label, value, onChange, options, required=false }: any) =
       }}
       onFocus={e=>(e.target.style.borderColor="rgba(212,175,106,0.6)")}
       onBlur={e=>(e.target.style.borderColor="rgba(255,255,255,0.1)")}>
-      {options.map((o:any)=><option key={o.value} value={o.value} style={{background:"#1A1A28",color:"#F5F0E8"}}>{o.label}</option>)}
+      {options.map((o: { value: string; label: string })=><option key={o.value} value={o.value} style={{background:"#1A1A28",color:"#F5F0E8"}}>{o.label}</option>)}
     </select>
   </div>
 );
 
-const Textarea = ({ label, value, onChange, placeholder="", hint="" }: any) => (
+const Textarea = ({ label, value, onChange, placeholder="", hint="" }: { label: string; value: string; onChange: (v: string) => void; placeholder?: string; hint?: string }) => (
   <div style={{display:"flex",flexDirection:"column"}}>
     <label style={labelStyle}>{label}</label>
     <textarea value={value} onChange={e=>onChange(e.target.value)} placeholder={placeholder} rows={3}
@@ -139,6 +139,7 @@ function ApplyPageInner() {
     if (!slug) return;
     const country = COUNTRIES.find(c => c.slug === slug);
     if (!country) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setForm(p => ({ ...p, countrySlug: slug, visaTypeId: country.visaTypes[0].id }));
   }, [searchParams]);
 
@@ -216,9 +217,8 @@ function ApplyPageInner() {
 
         {/* STEP 1: DESTINATION */}
         {step===1&&(
-          <Step1
-            form={form} setForm={setForm} set={set}
-            selectedCountry={selectedCountry} selectedVisa={selectedVisa}
+          <Step1 form={form} set={set}
+            selectedCountry={selectedCountry}
             countrySearch={countrySearch} setCountrySearch={setCountrySearch}
           />
         )}
@@ -414,7 +414,7 @@ function ApplyPageInner() {
 }
 
 // ── Step 1 extracted for cleanliness ─────────────────────────────────────
-function Step1({ form, setForm, set, selectedCountry, selectedVisa, countrySearch, setCountrySearch }: any) {
+function Step1({ form, set, selectedCountry, countrySearch, setCountrySearch }: { form: FormData; set: (f: keyof FormData) => (v: string) => void; selectedCountry: typeof COUNTRIES[0] | undefined; countrySearch: string; setCountrySearch: (v: string) => void }) {
   const visaRef = useRef<HTMLDivElement>(null);
 
   const filtered = COUNTRIES.filter(c => {
@@ -423,7 +423,7 @@ function Step1({ form, setForm, set, selectedCountry, selectedVisa, countrySearc
     return c.name.toLowerCase().includes(q) || c.tagline.toLowerCase().includes(q) || c.isoCode.toLowerCase().includes(q);
   });
 
-  const handleSelectCountry = (c: any) => {
+  const handleSelectCountry = (c: typeof COUNTRIES[0]) => {
     setForm((p: FormData) => ({ ...p, countrySlug: c.slug, visaTypeId: c.visaTypes[0].id }));
     // Scroll to visa section after short delay
     setTimeout(() => {
@@ -471,7 +471,7 @@ function Step1({ form, setForm, set, selectedCountry, selectedVisa, countrySearc
         {filtered.length===0&&(
           <div style={{gridColumn:"1/-1",textAlign:"center",padding:"40px 20px",color:"#5A5A6E"}}>
             <div style={{fontSize:32,marginBottom:8}}>🔍</div>
-            No countries found for "{countrySearch}"
+            No countries found for &quot;{countrySearch}&quot;
           </div>
         )}
       </div>
@@ -490,7 +490,7 @@ function Step1({ form, setForm, set, selectedCountry, selectedVisa, countrySearc
           </div>
           <div style={{fontSize:11,fontWeight:700,letterSpacing:"1.2px",textTransform:"uppercase",color:"#8A8A9A",marginBottom:12}}>Select Visa Type</div>
           <div style={{display:"flex",flexDirection:"column",gap:10}}>
-            {selectedCountry.visaTypes.map((v:any)=>{
+            {selectedCountry.visaTypes.map((v: { id: string; name: string; price: number; processingDays: string; description?: string })=>{
               const selected = form.visaTypeId===v.id;
               const fee = getTotalFee(v);
               return (
