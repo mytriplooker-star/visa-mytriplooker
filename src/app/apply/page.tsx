@@ -140,6 +140,7 @@ function ApplyPageInner() {
     const country = COUNTRIES.find(c => c.slug === slug);
     if (!country) return;
     // eslint-disable-next-line react-hooks/set-state-in-effect
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     setForm(p => ({ ...p, countrySlug: slug, visaTypeId: country.visaTypes[0].id }));
   }, [searchParams]);
 
@@ -256,7 +257,7 @@ function ApplyPageInner() {
               <div style={{height:1,background:"rgba(255,255,255,0.05)"}}/>
               <div style={{fontSize:11,fontWeight:700,letterSpacing:"1.2px",textTransform:"uppercase",color:"#D4AF6A"}}>📞 Contact Details</div>
               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}}>
-                <Input label="Mobile Number" value={form.phone} onChange={set("phone")} placeholder="+91 98765 43210" type="tel" required hint="We'll send WhatsApp updates here" />
+                <Input label="Mobile Number" value={form.phone} onChange={set("phone")} placeholder="+91 98765 43210" type="tel" required hint="We&apos;ll send WhatsApp updates here" />
                 <Input label="Email Address" value={form.email} onChange={set("email")} placeholder="name@email.com" type="email" required hint="Visa approval sent here" />
               </div>
             </div>
