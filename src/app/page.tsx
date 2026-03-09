@@ -58,32 +58,13 @@ const stats = [
 ];
 
 function MTLLogo({ height = 38 }: { height?: number }) {
-  const scale = height / 48;
   return (
-    <Link href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none", gap: 0 }}>
-      <svg width={Math.round(220 * scale)} height={height} viewBox="0 0 220 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        {/* MY */}
-        <text x="0" y="36" fontFamily="'Outfit',sans-serif" fontWeight="900" fontSize="38" fill="#1EC8F0" letterSpacing="-1">MY</text>
-        {/* TRIP */}
-        <text x="72" y="36" fontFamily="'Outfit',sans-serif" fontWeight="900" fontSize="38" fill="#1EC8F0" letterSpacing="-1">TRIP</text>
-        {/* L */}
-        <text x="0" y="48" fontFamily="'Outfit',sans-serif" fontWeight="900" fontSize="0" fill="transparent">L</text>
-        {/* Binoculars icon replacing OO in LOOKER */}
-        <g transform="translate(0, 22) scale(0.72)">
-          {/* L */}
-          <text x="0" y="28" fontFamily="'Outfit',sans-serif" fontWeight="900" fontSize="38" fill="#1EC8F0" letterSpacing="-1">L</text>
-          {/* Left lens */}
-          <circle cx="52" cy="16" r="12" fill="#D4AF6A"/>
-          <circle cx="52" cy="16" r="7" fill="#08080F"/>
-          {/* Bridge */}
-          <rect x="61" y="13" width="8" height="5" rx="2" fill="#D4AF6A"/>
-          {/* Right lens */}
-          <circle cx="76" cy="16" r="12" fill="#D4AF6A"/>
-          <circle cx="76" cy="16" r="7" fill="#08080F"/>
-          {/* KER */}
-          <text x="91" y="28" fontFamily="'Outfit',sans-serif" fontWeight="900" fontSize="38" fill="#1EC8F0" letterSpacing="-1">KER</text>
-        </g>
-      </svg>
+    <Link href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
+      <img
+        src="/logo.png"
+        alt="MyTripLooker"
+        style={{ height: height, width: "auto", display: "block" }}
+      />
     </Link>
   );
 }
