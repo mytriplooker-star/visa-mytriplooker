@@ -192,7 +192,7 @@ export default function TrackPage() {
           travel_date: data.travel_date,
           current_status: data.current_status,
           created_at: data.created_at,
-          timeline: (data.status_history || []).map((h: any) => ({
+          timeline: (data.status_history || []).map((h: { status: string; date: string; note?: string }) => ({
             status: h.status,
             timestamp: h.created_at,
             note: h.note || "",
@@ -378,7 +378,7 @@ export default function TrackPage() {
                 onMouseLeave={e => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)")}>
                 📁 Upload Documents
               </a>
-              <a href="https://wa.me/919999999999" target="_blank" rel="noopener noreferrer"
+              <a href="https://wa.me/919012222901" target="_blank" rel="noopener noreferrer"
                 style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, background: "rgba(37,211,102,0.08)", border: "1px solid rgba(37,211,102,0.2)", borderRadius: 12, padding: "16px", textDecoration: "none", color: "#25D366", fontSize: 14, fontWeight: 600, transition: "border-color 0.2s" }}
                 onMouseEnter={e => (e.currentTarget.style.borderColor = "rgba(37,211,102,0.4)")}
                 onMouseLeave={e => (e.currentTarget.style.borderColor = "rgba(37,211,102,0.2)")}>

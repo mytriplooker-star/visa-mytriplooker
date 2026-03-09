@@ -24,6 +24,8 @@ const STEPS = [
   {n:4,label:"Review & Pay",icon:"4"},
 
 // ── Field components ──────────────────────────────────────────────────────
+];
+
 const fieldBase: React.CSSProperties = {
   background: "#1A1A28",
   border: "1px solid rgba(255,255,255,0.1)",

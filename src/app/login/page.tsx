@@ -185,7 +185,7 @@ export default function AuthPage() {
               <p style={{ fontSize: 13, color: "#8A8A9A" }}>
                 {mode === "login" && "Sign in to track your visa applications"}
                 {mode === "signup" && "Join 50,000+ Indian travellers on mytriplooker"}
-                {mode === "forgot" && "Enter your email and we'll send a reset link"}
+                {mode === "forgot" && "Enter your email and we&apos;ll send a reset link"}
               </p>
             </div>
 
@@ -289,7 +289,7 @@ export default function AuthPage() {
             {/* Mode switch */}
             <div style={{ textAlign: "center", marginTop: 24, fontSize: 13, color: "#8A8A9A" }}>
               {mode === "login" && (
-                <>Don't have an account?{" "}
+                <>Don&apos;t have an account?{" "}
                   <button className="link-btn" onClick={() => { setMode("signup"); reset(); }} style={{ color: "#D4AF6A", fontWeight: 700, fontSize: 13 }}>Create one free</button>
                 </>
               )}

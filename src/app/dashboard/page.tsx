@@ -82,7 +82,7 @@ function SharedFooter() {
 // ═══════════════════════════════════════════════════════════════════
 
 export default function DashboardPage() {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<{ email?: string; user_metadata?: { avatar_url?: string; full_name?: string } } | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -97,11 +97,6 @@ export default function DashboardPage() {
     });
   }, []);
 
-  const handleLogout = async () => {
-    const supabase = createClient();
-    await supabase.auth.signOut();
-    window.location.href = "/login";
-  };
 
   if (loading) {
     return (
@@ -115,8 +110,8 @@ export default function DashboardPage() {
   }
 
   const name = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Traveller";
-  const email = user?.email;
-  const avatar = user?.user_metadata?.avatar_url;
+  // const email = user?.email; // reserved for profile display
+  // const avatar = user?.user_metadata?.avatar_url; // reserved for profile display
 
   return (
     <div style={{ fontFamily: "'Outfit', sans-serif", background: "#08080F", color: "#F5F0E8", minHeight: "100vh" }}>

@@ -38,6 +38,8 @@ const DOC_SLOTS: DocSlot[] = [
   { id: "itr", label: "Income Tax Returns (ITR)", icon: "📊", accept: ".pdf", maxMB: 10, required: false, hint: "Last 2 years — required for UK, Singapore, Schengen", category: "Financial" },
   { id: "employment_letter", label: "Employment / Leave Letter", icon: "📋", accept: ".pdf,.jpg,.jpeg", maxMB: 5, required: false, hint: "Company letter with leave approval and salary details", category: "Employment" },
 
+];
+
 const CATEGORY_ORDER = ["Identity", "Photo", "Financial", "Employment", "Travel", "Insurance"];
 
 const EMPTY_FILE_STATE: FileState = { file: null, status: "idle", progress: 0, error: "", url: "" };

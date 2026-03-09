@@ -327,7 +327,7 @@ export default function HomePage() {
           <div style={{ background:"linear-gradient(135deg,#141420 0%,#1A1A28 100%)", border:"1px solid rgba(212,175,106,0.2)", borderRadius:22, padding:"52px 60px", display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:36 }}>
             <div>
               <h2 style={{ fontFamily:"'Cormorant Garant',serif", fontSize:"clamp(28px,3.5vw,44px)", fontWeight:400, color:"#F5F0E8", marginBottom:14, lineHeight:1.1 }}>
-                Ready to travel?<br /><em style={{ color:"#D4AF6A" }}>We'll handle the paperwork.</em>
+                Ready to travel?<br /><em style={{ color:"#D4AF6A" }}>We&apos;ll handle the paperwork.</em>
               </h2>
               <p style={{ fontSize:14, color:"#8A8A9A", lineHeight:1.65, maxWidth:440 }}>
                 Join 50,000+ Indian travellers who trust mytriplooker for stress-free visa processing.

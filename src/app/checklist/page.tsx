@@ -7,6 +7,8 @@ const ALL_REGIONS: Region[] = [
   'middle-east', 'schengen', 'europe', 'asia-pacific',
   'asia', 'indian-subcontinent', 'americas', 'africa',
 
+];
+
 const VISA_TYPE_BADGE: Record<string, { label: string; color: string }> = {
   evisa:   { label: "eVisa",   color: "#2ECC8B" },
   free:    { label: "Free",    color: "#4A8FE8" },

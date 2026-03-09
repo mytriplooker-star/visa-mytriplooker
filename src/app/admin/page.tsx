@@ -34,6 +34,8 @@ const MOCK_APPS: Application[] = [
   { id: "7", ref_id: "MTL-G5H1L3", applicant_name: "Rohit Joshi",         email: "rohit@email.com",   phone: "+91 32109 87654", country: "Singapore",            flag: "🇸🇬", visa_type: "Tourist Sticker 30D", travel_date: "12 May 2026", applied_on: "2 Mar 2026",  status: "draft",               amount: 3299, assigned_to: "Unassigned", documents: 0, notes: [] },
   { id: "8", ref_id: "MTL-H8P4S7", applicant_name: "Ananya Krishnan",     email: "ananya@email.com",  phone: "+91 21098 76543", country: "France (Schengen)",    flag: "🇫🇷", visa_type: "Schengen Tourist 90D", travel_date: "18 Jun 2026", applied_on: "1 Mar 2026",  status: "submitted",           amount: 8499, assigned_to: "Unassigned", documents: 5, notes: [] },
 
+];
+
 const STATUS_CONFIG: Record<AppStatus, { label: string; color: string; bg: string; border: string; icon: string }> = {
   draft:               { label: "Draft",               color: "#8A8A9A", bg: "rgba(138,138,154,0.1)", border: "rgba(138,138,154,0.2)", icon: "📝" },
   submitted:           { label: "Submitted",           color: "#4A8FE8", bg: "rgba(74,143,232,0.1)",  border: "rgba(74,143,232,0.2)",  icon: "📨" },

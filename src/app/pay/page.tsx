@@ -1,7 +1,6 @@
 "use client";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { createClient } from "@/lib/supabase-client";
 
 // ── Types ─────────────────────────────────────────────────────────────────
 interface OrderSummary {
@@ -151,7 +150,6 @@ export default function PaymentPage() {
   const [cardName, setCardName] = useState("");
   const [countdown, setCountdown] = useState(8);
 
-  // const supabase = createClient(); // TODO: wire to Supabase
 
   // Countdown after success
   useEffect(() => {
@@ -314,9 +312,9 @@ export default function PaymentPage() {
                     </div>
                   </div>
 
-                  {/* What's included */}
+                  {/* What&apos;s included */}
                   <div style={{ background: "#141420", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 14, padding: "20px 24px", marginBottom: 20 }}>
-                    <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "1.2px", textTransform: "uppercase", color: "#D4AF6A", marginBottom: 14 }}>What's Included</div>
+                    <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "1.2px", textTransform: "uppercase", color: "#D4AF6A", marginBottom: 14 }}>What&apos;s Included</div>
                     {[
                       "Embassy / Government visa fee",
                       "Expert document review by certified visa officers",
