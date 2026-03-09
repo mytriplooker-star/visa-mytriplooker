@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
@@ -21,7 +22,6 @@ const STEPS = [
   {n:2,label:"Personal Info",icon:"2"},
   {n:3,label:"Travel Details",icon:"3"},
   {n:4,label:"Review & Pay",icon:"4"},
-];
 
 // ── Field components ──────────────────────────────────────────────────────
 const fieldBase: React.CSSProperties = {
@@ -522,27 +522,13 @@ function Step1({ form, setForm, set, selectedCountry, selectedVisa, countrySearc
 
 // Next.js 16 requires useSearchParams() to be wrapped in Suspense
 
-  ["/checklist", "Destinations"],
-  ["/track",     "Track"],
-  ["/upload",    "Upload Docs"],
-];
-
-
-  ["/#privacy","Privacy Policy"], ["/#terms","Terms of Service"],
-  ["mailto:support@mytriplooker.com","Contact Us"],
-  ["/track","Track Application"], ["/login","Sign In"],
-];
-
-// ═══════════════════════════════════════════════════════════════════
-
-
 // ═══════════════════════════════════════════════════════════════════
 // SHARED COMPONENTS  (MTLLogo · NAV_LINKS · SharedNav · FOOTER_LINKS · SharedFooter)
 // ═══════════════════════════════════════════════════════════════════
 function MTLLogo({ height = 36 }: { height?: number }) {
   const s = height / 48;
   return (
-    <a href="/" style={{ display:"flex", alignItems:"center", textDecoration:"none" }}>
+    <Link href="/" style={{ display:"flex", alignItems:"center", textDecoration:"none" }}>
       <svg width={Math.round(220*s)} height={height} viewBox="0 0 220 48" fill="none">
         <text x="0"  y="36" fontFamily="'Outfit',sans-serif" fontWeight="900" fontSize="38" fill="#1EC8F0" letterSpacing="-1">MY</text>
         <text x="72" y="36" fontFamily="'Outfit',sans-serif" fontWeight="900" fontSize="38" fill="#1EC8F0" letterSpacing="-1">TRIP</text>
@@ -556,7 +542,7 @@ function MTLLogo({ height = 36 }: { height?: number }) {
           <text x="91" y="28" fontFamily="'Outfit',sans-serif" fontWeight="900" fontSize="38" fill="#1EC8F0" letterSpacing="-1">KER</text>
         </g>
       </svg>
-    </a>
+    </Link>
   );
 }
 

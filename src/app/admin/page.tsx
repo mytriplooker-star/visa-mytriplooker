@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useState } from "react";
 
 // ── Types ─────────────────────────────────────────────────────────────────
@@ -32,7 +33,6 @@ const MOCK_APPS: Application[] = [
   { id: "6", ref_id: "MTL-F2N7Q9", applicant_name: "Deepika Reddy",       email: "deepika@email.com", phone: "+91 43210 98765", country: "United Arab Emirates", flag: "🇦🇪", visa_type: "Tourist eVisa 60D",   travel_date: "5 May 2026",  applied_on: "3 Mar 2026",  status: "rejected",            amount: 3499, assigned_to: "Priya S.",   documents: 6, notes: ["Rejected — insufficient bank balance", "Offered reapplication"] },
   { id: "7", ref_id: "MTL-G5H1L3", applicant_name: "Rohit Joshi",         email: "rohit@email.com",   phone: "+91 32109 87654", country: "Singapore",            flag: "🇸🇬", visa_type: "Tourist Sticker 30D", travel_date: "12 May 2026", applied_on: "2 Mar 2026",  status: "draft",               amount: 3299, assigned_to: "Unassigned", documents: 0, notes: [] },
   { id: "8", ref_id: "MTL-H8P4S7", applicant_name: "Ananya Krishnan",     email: "ananya@email.com",  phone: "+91 21098 76543", country: "France (Schengen)",    flag: "🇫🇷", visa_type: "Schengen Tourist 90D", travel_date: "18 Jun 2026", applied_on: "1 Mar 2026",  status: "submitted",           amount: 8499, assigned_to: "Unassigned", documents: 5, notes: [] },
-];
 
 const STATUS_CONFIG: Record<AppStatus, { label: string; color: string; bg: string; border: string; icon: string }> = {
   draft:               { label: "Draft",               color: "#8A8A9A", bg: "rgba(138,138,154,0.1)", border: "rgba(138,138,154,0.2)", icon: "📝" },
@@ -210,28 +210,13 @@ function AppDrawer({ app, onClose, onUpdate }: { app: Application; onClose: () =
 
 // ── Main Admin Panel ──────────────────────────────────────────────────────
 
-
-  ["/checklist", "Destinations"],
-  ["/track",     "Track"],
-  ["/upload",    "Upload Docs"],
-];
-
-
-  ["/#privacy","Privacy Policy"], ["/#terms","Terms of Service"],
-  ["mailto:support@mytriplooker.com","Contact Us"],
-  ["/track","Track Application"], ["/login","Sign In"],
-];
-
-// ═══════════════════════════════════════════════════════════════════
-
-
 // ═══════════════════════════════════════════════════════════════════
 // SHARED COMPONENTS  (MTLLogo · NAV_LINKS · SharedNav · FOOTER_LINKS · SharedFooter)
 // ═══════════════════════════════════════════════════════════════════
 function MTLLogo({ height = 36 }: { height?: number }) {
   const s = height / 48;
   return (
-    <a href="/" style={{ display:"flex", alignItems:"center", textDecoration:"none" }}>
+    <Link href="/" style={{ display:"flex", alignItems:"center", textDecoration:"none" }}>
       <svg width={Math.round(220*s)} height={height} viewBox="0 0 220 48" fill="none">
         <text x="0"  y="36" fontFamily="'Outfit',sans-serif" fontWeight="900" fontSize="38" fill="#1EC8F0" letterSpacing="-1">MY</text>
         <text x="72" y="36" fontFamily="'Outfit',sans-serif" fontWeight="900" fontSize="38" fill="#1EC8F0" letterSpacing="-1">TRIP</text>
@@ -245,7 +230,7 @@ function MTLLogo({ height = 36 }: { height?: number }) {
           <text x="91" y="28" fontFamily="'Outfit',sans-serif" fontWeight="900" fontSize="38" fill="#1EC8F0" letterSpacing="-1">KER</text>
         </g>
       </svg>
-    </a>
+    </Link>
   );
 }
 

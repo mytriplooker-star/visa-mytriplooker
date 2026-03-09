@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 
 const destinations = [
@@ -59,7 +60,7 @@ const stats = [
 function MTLLogo({ height = 38 }: { height?: number }) {
   const scale = height / 48;
   return (
-    <a href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none", gap: 0 }}>
+    <Link href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none", gap: 0 }}>
       <svg width={Math.round(220 * scale)} height={height} viewBox="0 0 220 48" fill="none" xmlns="http://www.w3.org/2000/svg">
         {/* MY */}
         <text x="0" y="36" fontFamily="'Outfit',sans-serif" fontWeight="900" fontSize="38" fill="#1EC8F0" letterSpacing="-1">MY</text>
@@ -83,7 +84,7 @@ function MTLLogo({ height = 38 }: { height?: number }) {
           <text x="91" y="28" fontFamily="'Outfit',sans-serif" fontWeight="900" fontSize="38" fill="#1EC8F0" letterSpacing="-1">KER</text>
         </g>
       </svg>
-    </a>
+    </Link>
   );
 }
 
@@ -100,10 +101,10 @@ export default function HomePage() {
     return () => window.removeEventListener("scroll", fn);
   }, []);
 
-  useEffect(() => {
-    const q = query.trim().toLowerCase();
-    setResults(q ? destinations.filter(d => d.name.toLowerCase().includes(q)) : destinations.filter(d => d.popular));
-  }, [query]);
+  // Derived — no setState in effect needed
+  const results = query.trim()
+    ? destinations.filter(d => d.name.toLowerCase().includes(query.trim().toLowerCase()))
+    : destinations.filter(d => d.popular);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
