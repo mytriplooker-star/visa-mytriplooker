@@ -10,7 +10,7 @@ import Image from "next/image";
 
 /* ─── DATA ─── */
 const WHATSAPP_LINK =
-  "https://wa.me/919012222901?text=Hi%2C%20I%20need%20help%20with%20a%20visa%20for%20Indian%20passport";
+  "https://wa.me/919999999999?text=Hi%2C%20I%20need%20help%20with%20a%20visa%20for%20Indian%20passport";
 
 const DESTINATIONS = [
   { name: "UAE / Dubai",  flag: "🇦🇪", slug: "dubai",     type: "eVisa",           days: "2–4 days",   price: "₹2,499",  popular: true },
@@ -628,7 +628,7 @@ export default function HomePage() {
               >
                 <WhatsAppIcon /> Chat on WhatsApp
               </a>
-              <a href="mailto:sales@mytriplooker.com" className="btn-outline w-full sm:w-auto">
+              <a href="mailto:visa@mytriplooker.com" className="btn-outline w-full sm:w-auto">
                 Email Us
               </a>
             </div>
@@ -735,10 +735,10 @@ export default function HomePage() {
                 <li><a href="#faq" className="text-sm text-slate-500 hover:text-slate-200 transition-colors">FAQs</a></li>
                 <li>
                   <a
-                    href="mailto:sales@mytriplooker.com"
+                    href="mailto:visa@mytriplooker.com"
                     className="text-sm text-slate-500 hover:text-slate-200 transition-colors"
                   >
-                    sales@mytriplooker.com
+                    visa@mytriplooker.com
                   </a>
                 </li>
                 <li>

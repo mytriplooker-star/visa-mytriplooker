@@ -1,6 +1,5 @@
 "use client";
 import Link from "next/link";
-import Image from "next/image";
 import { useState, useEffect } from "react";
 
 // ── Types ─────────────────────────────────────────────────────────────────
@@ -67,17 +66,12 @@ function StepDot({ n, label, active, done }: { n: number; label: string; active:
 function MTLLogo({ height = 36 }: { height?: number }) {
   return (
     <Link href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
-      <Image
-        src="/logo.png"
-        alt="MyTripLooker"
-        width={150}
-        height={height}
-        style={{ width: "auto", height: height }}
-        priority
-      />
+      <img src="/logo.png" alt="MyTripLooker" style={{ height: height, width: "auto", display: "block" }} />
     </Link>
   );
 }
+
+
 
 const NAV_LINKS: [string,string][] = [
   ["/checklist","Destinations"],
@@ -153,7 +147,7 @@ export default function PaymentPage() {
       return () => clearTimeout(t);
     }
     if (step === "success" && countdown === 0) {
-      window.location.href = "/upload";
+      window.location.href = "/track";
     }
   }, [step, countdown]);
 
@@ -189,6 +183,14 @@ export default function PaymentPage() {
         @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
         @keyframes spin { to { transform: rotate(360deg); } }
         @keyframes successPop { 0% { transform:scale(0.5); opacity:0; } 60% { transform:scale(1.1); } 100% { transform:scale(1); opacity:1; } }
+        @media (max-width:767px) {
+          .pay-layout { padding:20px 16px 60px !important; }
+          .pay-grid { grid-template-columns:1fr !important; }
+          .pay-methods { grid-template-columns:1fr 1fr !important; }
+          .pay-card { padding:20px 16px !important; }
+          .success-btns { flex-direction:column !important; }
+          .success-btns a { width:100% !important; text-align:center !important; }
+        }
         @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
         .pay-input { background: #0F0F1A; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 12px 14px; color: #F5F0E8; font-size: 14px; font-family: 'Outfit', sans-serif; outline: none; width: 100%; transition: border-color 0.2s; }
         .pay-input:focus { border-color: rgba(212,175,106,0.5); }
@@ -239,12 +241,12 @@ export default function PaymentPage() {
           </div>
 
           <div style={{ fontSize: 13, color: "#8A8A9A", marginBottom: 20 }}>
-            Redirecting to tracking page in <strong style={{ color: "#D4AF6A" }}>{countdown}s</strong>...
+            Redirecting to your tracking page in <strong style={{ color: "#D4AF6A" }}>{countdown}s</strong>...
           </div>
 
-          <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-            <a href="/upload" style={{ display: "inline-block", background: "linear-gradient(135deg,#D4AF6A,#E8C977)", color: "#08080F", fontWeight: 800, padding: "14px 24px", borderRadius: 10, textDecoration: "none", fontSize: 14 }}>
-              📁 Upload Documents
+          <div className="success-btns" style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+            <a href="/track" style={{ display: "inline-block", background: "linear-gradient(135deg,#D4AF6A,#E8C977)", color: "#08080F", fontWeight: 800, padding: "14px 24px", borderRadius: 10, textDecoration: "none", fontSize: 14 }}>
+              📍 Track My Visa →
             </a>
             <a href="/track" style={{ display: "inline-block", background: "transparent", border: "1px solid rgba(212,175,106,0.4)", color: "#D4AF6A", fontWeight: 600, padding: "14px 24px", borderRadius: 10, textDecoration: "none", fontSize: 14 }}>
               📍 Track Application

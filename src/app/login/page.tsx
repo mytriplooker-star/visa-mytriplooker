@@ -1,6 +1,5 @@
 "use client";
 import Link from "next/link";
-import Image from "next/image";
 import { useState } from "react";
 import { createClient } from "@/lib/supabase-client";
 
@@ -14,17 +13,11 @@ type Mode = "login" | "signup" | "forgot";
 function MTLLogo({ height = 36 }: { height?: number }) {
   return (
     <Link href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
-      <Image
-        src="/logo.png"
-        alt="MyTripLooker"
-        width={150}
-        height={height}
-        style={{ width: "auto", height: height }}
-        priority
-      />
+      <img src="/logo.png" alt="MyTripLooker" style={{ height: height, width: "auto", display: "block" }} />
     </Link>
   );
 }
+
 
 const NAV_LINKS: [string,string][] = [
   ["/checklist","Destinations"],
@@ -34,7 +27,7 @@ const NAV_LINKS: [string,string][] = [
 
 function SharedNav({ current = "" }: { current?: string }) {
   return (
-    <nav style={{ height:64, background:"rgba(8,8,15,0.97)", backdropFilter:"blur(20px)", borderBottom:"1px solid rgba(212,175,106,0.12)", display:"flex", alignItems:"center", justifyContent:"space-between", padding:"0 40px", position:"sticky", top:0, zIndex:200 }}>
+    <nav style={{ height:64, background:"rgba(8,8,15,0.97)", backdropFilter:"blur(20px)", borderBottom:"1px solid rgba(212,175,106,0.12)", display:"flex", alignItems:"center", justifyContent:"space-between", padding:"0 clamp(16px,4vw,40px)", position:"sticky", top:0, zIndex:200 }}>
       <MTLLogo height={38} />
       <div style={{ display:"flex", alignItems:"center", gap:28 }}>
         {NAV_LINKS.map(([href,label]) => (
@@ -153,7 +146,33 @@ export default function AuthPage() {
         .link-btn { background: none; border: none; cursor: pointer; font-family: 'Outfit', sans-serif; transition: color 0.15s; padding: 0; }
         .link-btn:hover { color: #D4AF6A !important; }
         .spinner { width: 18px; height: 18px; border: 2px solid rgba(8,8,15,0.3); border-top-color: #08080F; border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; }
-      `}</style>
+      
+        /* ── Mobile responsive ─────────────────────────────── */
+        @media (max-width:767px) {
+          .mtl-inner { padding-left:16px !important; padding-right:16px !important; }
+          .form-card { padding:20px 16px !important; }
+          .form-row-2 { grid-template-columns:1fr !important; }
+          .nav-desktop-links { display:none !important; }
+          .nav-desktop-cta { display:none !important; }
+          .mobile-menu-btn { display:flex !important; }
+          .sidebar-panel { display:none !important; }
+          .footer-inner { flex-direction:column !important; gap:20px !important; }
+          .footer-links { flex-wrap:wrap !important; gap:14px !important; }
+          .page-main { padding-left:16px !important; padding-right:16px !important; }
+          .stepper-wrap { padding:0 12px !important; }
+          .step-label { display:none !important; }
+          .hero-section { padding-left:16px !important; padding-right:16px !important; }
+          .cta-wrap { flex-direction:column !important; }
+          .track-card { padding:20px 16px !important; }
+          .auth-card { padding:28px 20px !important; }
+          .checklist-sidebar { display:none !important; }
+          .upload-zone { padding:32px 16px !important; }
+        }
+        @media (max-width:480px) {
+          .gender-row { grid-template-columns:1fr !important; }
+          .pay-method-grid { grid-template-columns:1fr 1fr !important; }
+          .stat-grid { grid-template-columns:1fr 1fr !important; }
+        }`}</style>
 
       {/* ── NAV ── */}
       <SharedNav current="/login" />

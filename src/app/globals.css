@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+@theme {
+  --font-heading: "Outfit", system-ui, sans-serif;
+  --font-body: "DM Sans", system-ui, sans-serif;
+  --breakpoint-xs: 475px;
+}
+
+/* ================================================================
+   GLOBAL STYLES — visa.mytriplooker.com
+   Mobile-first · iOS + Android safe · Accessible
+   ================================================================ */
+
+/* ─── iOS & ANDROID TEXT-SIZE-ADJUST FIX ─── */
 html {
   -webkit-text-size-adjust: 100%;
   -moz-text-size-adjust: 100%;
@@ -9,14 +21,54 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
-body {
-  background-color: #00080F !important;
-  color: #e2e8f0 !important;
-  min-height: 100dvh;
-  overflow-x: hidden;
-  font-family: 'Outfit', 'DM Sans', system-ui, sans-serif;
+/* ─── BASE LAYER ─── */
+@layer base {
+  :root {
+    --font-heading: "Outfit", system-ui, sans-serif;
+    --font-body: "DM Sans", system-ui, sans-serif;
+
+    /* Brand palette — travel-premium dark */
+    --clr-primary: 217 91% 60%;       /* #3b82f6 */
+    --clr-primary-bright: 199 89% 48%;/* #06b6d4 cyan accent */
+    --clr-success: 160 84% 39%;       /* #10b981 */
+    --clr-warning: 38 92% 50%;        /* #f59e0b */
+    --clr-surface-0: 222 47% 4%;      /* #020617 deepest bg */
+    --clr-surface-1: 222 47% 7%;      /* #0f172a */
+    --clr-surface-2: 217 33% 13%;     /* #1e293b */
+    --clr-border: 217 19% 27%;        /* #334155 */
+
+    --radius-lg: 1rem;
+    --radius-xl: 1.25rem;
+    --radius-2xl: 1.5rem;
+  }
+
+  body {
+    font-family: var(--font-body);
+    background: #020617;
+    min-height: 100dvh; /* dynamic viewport for mobile browser chrome */
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    text-wrap: balance;
+  }
+
+  /* Fluid images by default */
+  img, video, svg {
+    max-width: 100%;
+    height: auto;
+  }
 }
 
+/* ─── iOS SMOOTH SCROLL ─── */
+@supports (-webkit-overflow-scrolling: touch) {
+  html {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* ─── SAFE AREA — notch / Dynamic Island / gesture bar ─── */
 @supports (padding: env(safe-area-inset-top)) {
   body {
     padding-left: env(safe-area-inset-left);
@@ -25,16 +77,230 @@ body {
   }
 }
 
-img, video, svg {
-  max-width: 100%;
-  height: auto;
+/* ================================================================
+   COMPONENT LAYER
+   ================================================================ */
+@layer components {
+  /* ─── CONTAINERS ─── */
+  .section-container {
+    @apply w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .section-narrow {
+    @apply w-full max-w-3xl mx-auto px-4 sm:px-6;
+  }
+
+  /* ─── BUTTONS ─── */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2
+           px-6 py-3.5 sm:px-8 sm:py-4
+           bg-blue-600 hover:bg-blue-500 active:bg-blue-700
+           text-white font-semibold text-[15px] sm:text-base
+           rounded-xl
+           transition-all duration-200 ease-out
+           shadow-lg shadow-blue-600/20 hover:shadow-blue-500/30
+           hover:-translate-y-0.5 active:translate-y-0
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950
+           touch-manipulation select-none
+           min-h-[48px]; /* Google recommended tap target */
+  }
+
+  .btn-whatsapp {
+    @apply inline-flex items-center justify-center gap-2
+           px-6 py-3.5 sm:px-8 sm:py-4
+           bg-[#25D366] hover:bg-[#20BD5A] active:bg-[#1DA851]
+           text-white font-semibold text-[15px] sm:text-base
+           rounded-xl
+           transition-all duration-200 ease-out
+           shadow-lg shadow-green-600/20 hover:shadow-green-500/30
+           hover:-translate-y-0.5 active:translate-y-0
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950
+           touch-manipulation select-none
+           min-h-[48px];
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2
+           px-6 py-3.5
+           border border-slate-600 hover:border-slate-400
+           text-slate-200 hover:text-white font-medium
+           rounded-xl
+           transition-all duration-200
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950
+           touch-manipulation select-none
+           min-h-[48px];
+  }
+
+  /* ─── CARDS ─── */
+  .card {
+    @apply bg-slate-900/50 backdrop-blur-sm
+           border border-slate-800/50
+           rounded-2xl p-5 sm:p-6
+           transition-all duration-300 ease-out;
+  }
+
+  .card-interactive {
+    @apply bg-slate-900/50 backdrop-blur-sm
+           border border-slate-800/50
+           rounded-2xl p-5 sm:p-6
+           transition-all duration-300 ease-out
+           hover:border-blue-500/30 hover:bg-slate-800/50
+           hover:shadow-xl hover:shadow-blue-500/5
+           hover:-translate-y-1
+           cursor-pointer;
+  }
+
+  /* ─── GRADIENTS ─── */
+  .gradient-text {
+    @apply bg-clip-text text-transparent
+           bg-gradient-to-r from-blue-400 via-cyan-300 to-blue-400;
+  }
+
+  .gradient-text-warm {
+    @apply bg-clip-text text-transparent
+           bg-gradient-to-r from-amber-300 via-orange-400 to-rose-400;
+  }
+
+  /* ─── HEADINGS ─── */
+  .heading-section {
+    @apply text-2xl sm:text-3xl lg:text-4xl font-bold font-heading tracking-tight;
+  }
+
+  .heading-sub {
+    @apply text-slate-400 text-base sm:text-lg max-w-2xl mx-auto mt-3 sm:mt-4 leading-relaxed;
+  }
+
+  /* ─── BADGE ─── */
+  .trust-badge {
+    @apply inline-flex items-center gap-2
+           px-3.5 py-1.5 sm:px-4 sm:py-2
+           bg-blue-500/10 border border-blue-500/20 rounded-full
+           text-blue-300 text-xs sm:text-sm font-medium;
+  }
 }
 
+/* ================================================================
+   UTILITY LAYER
+   ================================================================ */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* WCAG / Google: 48×48px touch targets */
+  .tap-target {
+    min-height: 48px;
+    min-width: 48px;
+  }
+
+  /* Hide scrollbar but allow scroll */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* ================================================================
+   ANIMATIONS
+   ================================================================ */
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slide-in-left {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.6; }
+}
+
+@keyframes scroll-marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out both;
+}
+
+.animate-slide-in-left {
+  animation: slide-in-left 0.6s ease-out both;
+}
+
+.animate-scroll-marquee {
+  animation: scroll-marquee 35s linear infinite;
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+/* Stagger utility */
+.stagger > *:nth-child(1) { animation-delay: 0ms; }
+.stagger > *:nth-child(2) { animation-delay: 60ms; }
+.stagger > *:nth-child(3) { animation-delay: 120ms; }
+.stagger > *:nth-child(4) { animation-delay: 180ms; }
+.stagger > *:nth-child(5) { animation-delay: 240ms; }
+.stagger > *:nth-child(6) { animation-delay: 300ms; }
+.stagger > *:nth-child(7) { animation-delay: 360ms; }
+.stagger > *:nth-child(8) { animation-delay: 420ms; }
+.stagger > *:nth-child(9) { animation-delay: 480ms; }
+.stagger > *:nth-child(10) { animation-delay: 540ms; }
+.stagger > *:nth-child(11) { animation-delay: 600ms; }
+.stagger > *:nth-child(12) { animation-delay: 660ms; }
+
+/* ================================================================
+   SCROLLBAR
+   ================================================================ */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #020617; }
+::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: #334155; }
+
+/* ================================================================
+   SELECTION
+   ================================================================ */
 ::selection {
   background: rgba(59, 130, 246, 0.3);
   color: #fff;
 }
 
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: #020617; }
-::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 999px; }
+/* ================================================================
+   DETAILS/SUMMARY NATIVE STYLING
+   ================================================================ */
+details summary::-webkit-details-marker,
+details summary::marker {
+  display: none;
+  content: "";
+}
+
+/* ================================================================
+   PRINT STYLES
+   ================================================================ */
+@media print {
+  body { background: #fff; color: #000; }
+  .no-print { display: none !important; }
+}

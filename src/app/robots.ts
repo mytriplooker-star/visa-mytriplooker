@@ -1,13 +1,4 @@
-import type { MetadataRoute } from "next";
-
-/* ═══════════════════════════════════════════════════════════════════
-   src/app/robots.ts — visa.mytriplooker.com
-   ─────────────────────────────────────────────
-   Next.js 14 native robots.txt generation.
-   This auto-generates /robots.txt at build time.
-   
-   AUDIT FIX: robots.txt was returning 404.
-   ═══════════════════════════════════════════════════════════════════ */
+import { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -15,18 +6,10 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: [
-          "/admin",
-          "/dashboard",
-          "/login",
-          "/auth",
-          "/pay",
-          "/track",
-          "/upload",
-          "/api",
-        ],
+        disallow: ["/admin", "/dashboard", "/api/"],
       },
     ],
     sitemap: "https://visa.mytriplooker.com/sitemap.xml",
+    host:    "https://visa.mytriplooker.com",
   };
 }

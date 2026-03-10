@@ -1,6 +1,5 @@
 "use client";
 import Link from "next/link";
-import Image from "next/image";
 import { useState } from "react";
 import { createClient } from "@/lib/supabase-client";
 
@@ -76,17 +75,11 @@ function daysUntil(dateStr: string) {
 function MTLLogo({ height = 36 }: { height?: number }) {
   return (
     <Link href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
-      <Image
-        src="/logo.png"
-        alt="MyTripLooker"
-        width={150}
-        height={height}
-        style={{ width: "auto", height: height }}
-        priority
-      />
+      <img src="/logo.png" alt="MyTripLooker" style={{ height: height, width: "auto", display: "block" }} />
     </Link>
   );
 }
+
 
 const NAV_LINKS: [string,string][] = [
   ["/checklist","Destinations"],
@@ -96,7 +89,7 @@ const NAV_LINKS: [string,string][] = [
 
 function SharedNav({ current = "" }: { current?: string }) {
   return (
-    <nav style={{ height:64, background:"rgba(8,8,15,0.97)", backdropFilter:"blur(20px)", borderBottom:"1px solid rgba(212,175,106,0.12)", display:"flex", alignItems:"center", justifyContent:"space-between", padding:"0 40px", position:"sticky", top:0, zIndex:200 }}>
+    <nav style={{ height:64, background:"rgba(8,8,15,0.97)", backdropFilter:"blur(20px)", borderBottom:"1px solid rgba(212,175,106,0.12)", display:"flex", alignItems:"center", justifyContent:"space-between", padding:"0 clamp(16px,4vw,40px)", position:"sticky", top:0, zIndex:200 }}>
       <MTLLogo height={38} />
       <div style={{ display:"flex", alignItems:"center", gap:28 }}>
         {NAV_LINKS.map(([href,label]) => (
@@ -219,7 +212,33 @@ export default function TrackPage() {
         .ref-input { background: #141420; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 16px 20px; color: #F5F0E8; font-size: 18px; font-family: 'Outfit', sans-serif; outline: none; transition: border-color 0.2s; letter-spacing: 2px; text-transform: uppercase; width: 100%; }
         .ref-input:focus { border-color: rgba(212,175,106,0.5); }
         .ref-input::placeholder { letter-spacing: 1px; text-transform: none; color: #3A3A4E; font-size: 15px; }
-      `}</style>
+      
+        /* ── Mobile responsive ─────────────────────────────── */
+        @media (max-width:767px) {
+          .mtl-inner { padding-left:16px !important; padding-right:16px !important; }
+          .form-card { padding:20px 16px !important; }
+          .form-row-2 { grid-template-columns:1fr !important; }
+          .nav-desktop-links { display:none !important; }
+          .nav-desktop-cta { display:none !important; }
+          .mobile-menu-btn { display:flex !important; }
+          .sidebar-panel { display:none !important; }
+          .footer-inner { flex-direction:column !important; gap:20px !important; }
+          .footer-links { flex-wrap:wrap !important; gap:14px !important; }
+          .page-main { padding-left:16px !important; padding-right:16px !important; }
+          .stepper-wrap { padding:0 12px !important; }
+          .step-label { display:none !important; }
+          .hero-section { padding-left:16px !important; padding-right:16px !important; }
+          .cta-wrap { flex-direction:column !important; }
+          .track-card { padding:20px 16px !important; }
+          .auth-card { padding:28px 20px !important; }
+          .checklist-sidebar { display:none !important; }
+          .upload-zone { padding:32px 16px !important; }
+        }
+        @media (max-width:480px) {
+          .gender-row { grid-template-columns:1fr !important; }
+          .pay-method-grid { grid-template-columns:1fr 1fr !important; }
+          .stat-grid { grid-template-columns:1fr 1fr !important; }
+        }`}</style>
 
       <SharedNav current="/track" />
 
@@ -373,7 +392,7 @@ export default function TrackPage() {
                 onMouseLeave={e => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)")}>
                 📁 Upload Documents
               </a>
-              <a href="https://wa.me/919012222901" target="_blank" rel="noopener noreferrer"
+              <a href="https://wa.me/919999999999" target="_blank" rel="noopener noreferrer"
                 style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, background: "rgba(37,211,102,0.08)", border: "1px solid rgba(37,211,102,0.2)", borderRadius: 12, padding: "16px", textDecoration: "none", color: "#25D366", fontSize: 14, fontWeight: 600, transition: "border-color 0.2s" }}
                 onMouseEnter={e => (e.currentTarget.style.borderColor = "rgba(37,211,102,0.4)")}
                 onMouseLeave={e => (e.currentTarget.style.borderColor = "rgba(37,211,102,0.2)")}>

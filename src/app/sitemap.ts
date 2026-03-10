@@ -36,12 +36,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  // Static app pages
-  const staticPages: MetadataRoute.Sitemap = [
-    { url: `${BASE_URL}/apply`, lastModified: now, changeFrequency: "weekly" as const, priority: 0.9 },
-    { url: `${BASE_URL}/checklist`, lastModified: now, changeFrequency: "weekly" as const, priority: 0.7 },
-  ];
-
   // Individual destination pages
   const destinationPages: MetadataRoute.Sitemap = DESTINATIONS.map(
     (slug) => ({
@@ -52,5 +46,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })
   );
 
-  return [...homepage, ...staticPages, ...destinationPages];
+  return [...homepage, ...destinationPages];
 }
