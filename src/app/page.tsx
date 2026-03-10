@@ -1,351 +1,787 @@
-"use client";
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect, useRef } from "react";
 
-const destinations = [
-  // Popular (shown on homepage cards)
-  { name:"Dubai & UAE",       slug:"uae",          flag:"🇦🇪", type:"eVisa",   days:"3–5",    price:"₹2,499",  popular:true  },
-  { name:"Bali / Indonesia",  slug:"indonesia",    flag:"🇮🇩", type:"VOA",     days:"Instant",price:"₹1,299",  popular:true  },
-  { name:"Thailand",          slug:"thailand",     flag:"🇹🇭", type:"eVisa",   days:"5–7",    price:"₹1,899",  popular:true  },
-  { name:"Vietnam",           slug:"vietnam",      flag:"🇻🇳", type:"eVisa",   days:"3–5",    price:"₹1,599",  popular:true  },
-  { name:"Malaysia",          slug:"malaysia",     flag:"🇲🇾", type:"Free",    days:"Instant",price:"Free",    popular:true  },
-  { name:"Singapore",         slug:"singapore",    flag:"🇸🇬", type:"eVisa",   days:"3–5",    price:"₹3,299",  popular:true  },
-  // All countries (searchable in hero)
-  { name:"Japan",             slug:"japan",        flag:"🇯🇵", type:"Sticker", days:"5–7",    price:"₹4,299",  popular:false },
-  { name:"South Korea",       slug:"south-korea",  flag:"🇰🇷", type:"Sticker", days:"5–7",    price:"₹4,999",  popular:false },
-  { name:"France / Schengen", slug:"france",       flag:"🇫🇷", type:"Sticker", days:"15–20",  price:"₹8,999",  popular:false },
-  { name:"United Kingdom",    slug:"united-kingdom",flag:"🇬🇧",type:"Sticker", days:"15–20",  price:"₹9,499",  popular:false },
-  { name:"Australia",         slug:"australia",    flag:"🇦🇺", type:"eVisa",   days:"7–15",   price:"₹7,499",  popular:false },
-  { name:"New Zealand",       slug:"new-zealand",  flag:"🇳🇿", type:"eVisa",   days:"15–25",  price:"₹7,999",  popular:false },
-  { name:"Canada",            slug:"canada",       flag:"🇨🇦", type:"Sticker", days:"30–60",  price:"₹11,499", popular:false },
-  { name:"USA",               slug:"usa",          flag:"🇺🇸", type:"Sticker", days:"30–60",  price:"₹12,999", popular:false },
-  { name:"South Africa",      slug:"south-africa", flag:"🇿🇦", type:"Sticker", days:"7–10",   price:"₹4,799",  popular:false },
-  { name:"Saudi Arabia",      slug:"saudi-arabia", flag:"🇸🇦", type:"eVisa",   days:"3–5",    price:"₹4,199",  popular:false },
-  { name:"Qatar",             slug:"qatar",        flag:"🇶🇦", type:"eVisa",   days:"2–4",    price:"₹2,599",  popular:false },
-  { name:"Oman",              slug:"oman",         flag:"🇴🇲", type:"eVisa",   days:"2–4",    price:"₹2,399",  popular:false },
-  { name:"Bahrain",           slug:"bahrain",      flag:"🇧🇭", type:"eVisa",   days:"1–3",    price:"₹2,099",  popular:false },
-  { name:"Kuwait",            slug:"kuwait",       flag:"🇰🇼", type:"Sticker", days:"7–14",   price:"₹4,099",  popular:false },
-  { name:"Germany",           slug:"germany",      flag:"🇩🇪", type:"Schengen",days:"15–20",  price:"₹8,999",  popular:false },
-  { name:"Italy",             slug:"italy",        flag:"🇮🇹", type:"Schengen",days:"15–20",  price:"₹8,999",  popular:false },
-  { name:"Spain",             slug:"spain",        flag:"🇪🇸", type:"Schengen",days:"15–20",  price:"₹8,999",  popular:false },
-  { name:"Netherlands",       slug:"netherlands",  flag:"🇳🇱", type:"Schengen",days:"15–20",  price:"₹8,999",  popular:false },
-  { name:"Greece",            slug:"greece",       flag:"🇬🇷", type:"Schengen",days:"15–20",  price:"₹8,999",  popular:false },
-  { name:"Switzerland",       slug:"switzerland",  flag:"🇨🇭", type:"Schengen",days:"15–20",  price:"₹8,999",  popular:false },
-  { name:"Austria",           slug:"austria",      flag:"🇦🇹", type:"Schengen",days:"15–20",  price:"₹8,999",  popular:false },
-  { name:"Portugal",          slug:"portugal",     flag:"🇵🇹", type:"Schengen",days:"15–20",  price:"₹8,999",  popular:false },
-  { name:"Philippines",       slug:"philippines",  flag:"🇵🇭", type:"Free",    days:"Instant",price:"Free",    popular:false },
-  { name:"Hong Kong",         slug:"hong-kong",    flag:"🇭🇰", type:"Free",    days:"Instant",price:"Free",    popular:false },
-  { name:"Maldives",          slug:"maldives",     flag:"🇲🇻", type:"VOA",     days:"Instant",price:"Free",    popular:false },
-  { name:"Sri Lanka",         slug:"sri-lanka",    flag:"🇱🇰", type:"ETA",     days:"1–2",    price:"₹1,699",  popular:false },
-  { name:"Nepal",             slug:"nepal",        flag:"🇳🇵", type:"Free",    days:"Instant",price:"Free",    popular:false },
-  { name:"Bhutan",            slug:"bhutan",       flag:"🇧🇹", type:"Permit",  days:"Instant",price:"₹1,499",  popular:false },
-  { name:"Myanmar",           slug:"myanmar",      flag:"🇲🇲", type:"eVisa",   days:"3–5",    price:"₹2,199",  popular:false },
-  { name:"Cambodia",          slug:"cambodia",     flag:"🇰🇭", type:"eVisa",   days:"3–5",    price:"₹1,699",  popular:false },
+/* ============================================================================
+   page.tsx — visa.mytriplooker.com HOMEPAGE
+   ─────────────────────────────────────────
+   Prices aligned with Grok audit report (March 10 2026).
+   Mobile-first · SEO-optimized · Accessible · Conversion-focused
+   ============================================================================ */
+
+/* ─── DATA ─── */
+const WHATSAPP_LINK =
+  "https://wa.me/919012222901?text=Hi%2C%20I%20need%20help%20with%20a%20visa%20for%20Indian%20passport";
+
+const DESTINATIONS = [
+  { name: "UAE / Dubai",  flag: "🇦🇪", slug: "dubai",     type: "eVisa",           days: "2–4 days",   price: "₹2,499",  popular: true },
+  { name: "Thailand",     flag: "🇹🇭", slug: "thailand",  type: "Tourist Visa",    days: "4–7 days",   price: "₹1,899",  popular: true },
+  { name: "Vietnam",      flag: "🇻🇳", slug: "vietnam",   type: "eVisa / VOA",     days: "3–5 days",   price: "₹1,599",  popular: true },
+  { name: "Bali / Indonesia", flag: "🇮🇩", slug: "indonesia", type: "Visa on Arrival", days: "On Arrival", price: "₹1,299", popular: true },
+  { name: "Malaysia",     flag: "🇲🇾", slug: "malaysia",  type: "eVisa / eNTRI",   days: "3–5 days",   price: "Free*",   popular: true },
+  { name: "Singapore",    flag: "🇸🇬", slug: "singapore", type: "eVisa",           days: "3–5 days",   price: "₹3,299",  popular: true },
+  { name: "Japan",        flag: "🇯🇵", slug: "japan",     type: "Tourist Visa",    days: "5–7 days",   price: "₹5,999",  popular: false },
+  { name: "South Korea",  flag: "🇰🇷", slug: "south-korea", type: "Tourist Visa",  days: "5–7 days",   price: "₹4,999",  popular: false },
+  { name: "Turkey",       flag: "🇹🇷", slug: "turkey",    type: "eVisa",           days: "1–3 days",   price: "₹3,999",  popular: false },
+  { name: "Egypt",        flag: "🇪🇬", slug: "egypt",     type: "eVisa",           days: "3–5 days",   price: "₹2,999",  popular: false },
+  { name: "Azerbaijan",   flag: "🇦🇿", slug: "azerbaijan", type: "eVisa",          days: "3 days",     price: "₹2,499",  popular: false },
+  { name: "Sri Lanka",    flag: "🇱🇰", slug: "sri-lanka", type: "ETA",             days: "1–2 days",   price: "₹1,299",  popular: false },
 ];
 
-const steps = [
-  { n: "01", icon: "🔍", title: "Pick your destination",   body: "Search from 50+ countries. We show you exact documents, fees, and processing time — no surprises." },
-  { n: "02", icon: "📋", title: "Upload your documents",   body: "Our smart checklist tells you exactly what to submit. Upload from your phone or computer in minutes." },
-  { n: "03", icon: "💳", title: "Pay securely",            body: "UPI, cards, net banking — all accepted. Government fee + service charge, clearly shown before you pay." },
-  { n: "04", icon: "🛂", title: "Receive your visa",       body: "Track your application live. Get notified by WhatsApp and email. Most eVisas in 3–5 working days." },
+const STEPS = [
+  {
+    num: "01",
+    icon: "🌍",
+    title: "Pick Your Destination",
+    desc: "Choose from 50+ countries. We display the exact visa type, processing time, cost, and required documents for Indian passport holders.",
+  },
+  {
+    num: "02",
+    icon: "📄",
+    title: "Upload Documents",
+    desc: "Passport scan, photos, and supporting documents — uploaded securely. Our visa experts review everything before embassy submission.",
+  },
+  {
+    num: "03",
+    icon: "💳",
+    title: "Pay Securely",
+    desc: "UPI, Paytm, credit/debit card, or net banking. All transactions are PCI-DSS compliant with instant payment confirmation.",
+  },
+  {
+    num: "04",
+    icon: "✅",
+    title: "Receive Your Visa",
+    desc: "Track via WhatsApp & email in real-time. Your approved visa is delivered digitally — download, print, and travel!",
+  },
 ];
 
-const stats = [
-  { value: "50,000+", label: "Visas Processed" },
-  { value: "50+",     label: "Countries Covered" },
-  { value: "98.7%",   label: "Approval Rate" },
-  { value: "4.9★",    label: "Customer Rating" },
+const STATS = [
+  { value: "50,000+", label: "Visas Processed",   icon: "📋" },
+  { value: "98.7%",   label: "Approval Rate",      icon: "✓" },
+  { value: "50+",     label: "Countries Covered",   icon: "🌏" },
+  { value: "4.9★",    label: "Google Rating",        icon: "⭐" },
 ];
 
-function MTLLogo({ height = 38 }: { height?: number }) {
+const FEATURES = [
+  {
+    title: "Embassy-Accurate Processing",
+    desc: "Every application is verified against current embassy guidelines. No guesswork — we coordinate directly with consulates on behalf of Indian travellers.",
+    icon: (
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24" aria-hidden="true">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
+      </svg>
+    ),
+  },
+  {
+    title: "Real-Time WhatsApp Tracking",
+    desc: "Get instant status updates at every stage — document review, embassy submission, approval — via WhatsApp and email. No more guessing.",
+    icon: (
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24" aria-hidden="true">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M8.625 9.75a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 0 1 .778-.332 48.294 48.294 0 0 0 5.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
+      </svg>
+    ),
+  },
+  {
+    title: "Indian Payment Methods",
+    desc: "Pay with UPI, Paytm, PhonePe, Google Pay, credit/debit cards, or net banking. All payments are encrypted, PCI-DSS compliant.",
+    icon: (
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24" aria-hidden="true">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z" />
+      </svg>
+    ),
+  },
+  {
+    title: "Fastest Processing Times",
+    desc: "UAE eVisa in 2 days, Turkey eVisa in 24 hours, Indonesia VOA pre-registration instant. We process faster than any competitor in India.",
+    icon: (
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24" aria-hidden="true">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+      </svg>
+    ),
+  },
+  {
+    title: "Expert Document Review",
+    desc: "Our visa specialists check every document before submission — reducing rejection risk to under 1.3%. We catch errors that cost you time and money.",
+    icon: (
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24" aria-hidden="true">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
+      </svg>
+    ),
+  },
+  {
+    title: "98.7% Approval Guarantee",
+    desc: "If your visa is rejected due to our processing error, we reprocess completely free. That's our commitment to Indian travellers — zero risk.",
+    icon: (
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24" aria-hidden="true">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z" />
+      </svg>
+    ),
+  },
+];
+
+const TESTIMONIALS = [
+  {
+    name: "Priya Sharma",
+    location: "Mumbai, India",
+    text: "Got my UAE eVisa in just 2 days! The WhatsApp updates kept me informed at every step. Best visa service for Indians I have used.",
+    rating: 5,
+    visa: "UAE eVisa",
+  },
+  {
+    name: "Rahul Mehta",
+    location: "Delhi, India",
+    text: "Applied for Thailand tourist visa — the process was incredibly smooth. Documents reviewed within hours, visa arrived 3 days before my flight.",
+    rating: 5,
+    visa: "Thailand Visa",
+  },
+  {
+    name: "Ananya Krishnan",
+    location: "Bangalore, India",
+    text: "Indonesia VOA pre-registration saved me 2 hours at Bali airport. Absolutely worth it. Already planning my next trip with My Trip Looker.",
+    rating: 5,
+    visa: "Indonesia VOA",
+  },
+  {
+    name: "Vikram Patel",
+    location: "Ahmedabad, India",
+    text: "Singapore eVisa was the easiest application I have ever done. Uploaded docs at night, got the visa next morning. Incredible turnaround.",
+    rating: 5,
+    visa: "Singapore eVisa",
+  },
+];
+
+const FAQS = [
+  {
+    q: "How long does it take to process a UAE/Dubai eVisa for Indian passport holders?",
+    a: "A standard UAE eVisa for Indian citizens takes 2–4 business days through My Trip Looker. Express processing is available in 24 hours for an additional fee. Our team handles all embassy coordination.",
+  },
+  {
+    q: "What documents do I need to apply for a visa as an Indian passport holder?",
+    a: "Typically you need: a valid passport with 6+ months validity, recent passport-size photos (white background), travel itinerary, proof of accommodation, and bank statements. Requirements vary by country — our system shows you the exact checklist for each destination.",
+  },
+  {
+    q: "Is My Trip Looker a government website?",
+    a: "No. My Trip Looker is a private visa facilitation service that coordinates with embassies and consulates on your behalf. We are not affiliated with any government body. Our service adds expert document review, real-time tracking, and faster processing.",
+  },
+  {
+    q: "How much does a Dubai visa cost for Indians?",
+    a: "A Dubai/UAE tourist eVisa costs ₹2,499 through My Trip Looker. This includes document verification, embassy processing, and real-time WhatsApp tracking. Express 24-hour processing is available at an additional cost.",
+  },
+  {
+    q: "Can I track my visa application status?",
+    a: "Yes! You receive real-time updates via WhatsApp and email at every stage — from document review to embassy submission to approval and visa delivery. You can check status anytime by messaging us on WhatsApp.",
+  },
+  {
+    q: "Which countries offer visa on arrival for Indian passport holders?",
+    a: "Countries with visa on arrival for Indians include Indonesia (Bali), Maldives, Cambodia, Laos, Seychelles, Madagascar, and others. Thailand offers VOA for certain categories. My Trip Looker helps with pre-registration and documentation to speed up your arrival.",
+  },
+  {
+    q: "What if my visa application is rejected?",
+    a: "With our 98.7% approval rate, rejections are extremely rare. If your visa is rejected due to a processing error on our part, we offer free re-application. Our expert document review before submission is specifically designed to prevent rejections.",
+  },
+  {
+    q: "Do Indians need a visa for Malaysia?",
+    a: "India is eligible for Malaysia's visa-free transit facility for stays up to 120 hours under certain conditions. For longer tourist stays, an eVisa or eNTRI is required. Contact My Trip Looker and we will guide you on the best option for your trip.",
+  },
+];
+
+/* ─── WHATSAPP SVG ICON ─── */
+function WhatsAppIcon({ className = "w-5 h-5" }: { className?: string }) {
   return (
-    <Link href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
-      <Image
-        src="/logo.png"
-        alt="MyTripLooker"
-        width={150}
-        height={height}
-        style={{ width: "auto", height: height }}
-        priority
-      />
-    </Link>
+    <svg className={className} fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+      <path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.75.75 0 00.913.914l4.458-1.495A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a9.94 9.94 0 01-5.39-1.59.75.75 0 00-.665-.078l-2.902.973.973-2.902a.75.75 0 00-.078-.665A9.94 9.94 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z" />
+    </svg>
   );
 }
 
-export default function HomePage() {
-  const [query,    setQuery]    = useState("");
-  const [open,     setOpen]     = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const dropRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 40);
-    window.addEventListener("scroll", fn);
-    return () => window.removeEventListener("scroll", fn);
-  }, []);
-
-  // Derived — no setState in effect needed
-  const results = query.trim()
-    ? destinations.filter(d => d.name.toLowerCase().includes(query.trim().toLowerCase()))
-    : destinations.filter(d => d.popular);
-
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (dropRef.current && !dropRef.current.contains(e.target as Node)) setOpen(false);
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, []);
-
-  const typeColor = (type: string) => {
-    if (type === "eVisa") return { bg: "rgba(46,204,139,0.15)", color: "#2ECC8B", border: "rgba(46,204,139,0.35)" };
-    if (type === "Free" || type === "VOA") return { bg: "rgba(30,200,240,0.15)", color: "#1EC8F0", border: "rgba(30,200,240,0.35)" };
-    return { bg: "rgba(212,175,106,0.15)", color: "#D4AF6A", border: "rgba(212,175,106,0.35)" };
-  };
-
+function ArrowIcon() {
   return (
-    <div style={{ fontFamily: "'Outfit', sans-serif", background: "#08080F", color: "#F5F0E8", minHeight: "100vh", overflowX: "hidden" }}>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garant:ital,wght@0,300;0,500;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600;700;800&display=swap');
-        *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
-        ::selection { background:rgba(212,175,106,0.3); color:#F5F0E8; }
-        ::-webkit-scrollbar { width:4px; } ::-webkit-scrollbar-track { background:#08080F; } ::-webkit-scrollbar-thumb { background:#3A3A4E; border-radius:2px; }
-        @keyframes fadeUp  { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
-        @keyframes fadeIn  { from{opacity:0} to{opacity:1} }
-        @keyframes shimmer { 0%,100%{opacity:0.4} 50%{opacity:1} }
-        @keyframes float   { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
-        .hero-title  { animation:fadeUp 0.9s ease both; }
-        .hero-sub    { animation:fadeUp 0.9s 0.15s ease both; }
-        .hero-search { animation:fadeUp 0.9s 0.3s ease both; }
-        .hero-stats  { animation:fadeUp 0.9s 0.45s ease both; }
-        .card-hover  { transition:transform 0.25s,box-shadow 0.25s,border-color 0.25s; }
-        .card-hover:hover { transform:translateY(-5px); box-shadow:0 24px 60px rgba(0,0,0,0.55); border-color:rgba(212,175,106,0.45) !important; }
-        .gold-btn    { background:linear-gradient(135deg,#D4AF6A,#E8C977); color:#08080F; font-weight:700; border:none; cursor:pointer; transition:all 0.2s; letter-spacing:0.5px; }
-        .gold-btn:hover { transform:translateY(-2px); box-shadow:0 8px 30px rgba(212,175,106,0.4); }
-        .result-row  { transition:background 0.15s; cursor:pointer; }
-        .result-row:hover { background:rgba(212,175,106,0.06) !important; }
-        .step-card   { transition:transform 0.3s; }
-        .step-card:hover { transform:translateY(-6px); }
-        .nav-link    { transition:color 0.15s; }
-        .nav-link:hover { color:#D4AF6A !important; }
-        .apply-btn:hover { background:rgba(212,175,106,0.2) !important; border-color:rgba(212,175,106,0.5) !important; }
-        .grain { position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:0.025;
-          background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
-      `}</style>
-      <div className="grain" />
+    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24" aria-hidden="true">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+    </svg>
+  );
+}
 
-      {/* NAV */}
-      <nav style={{ position:"fixed", top:0, left:0, right:0, zIndex:200, padding:"0 40px", height:68, display:"flex", alignItems:"center", justifyContent:"space-between", background: scrolled ? "rgba(8,8,15,0.96)" : "rgba(8,8,15,0.7)", backdropFilter:"blur(20px)", borderBottom:"1px solid rgba(212,175,106,0.1)", transition:"background 0.3s" }}>
-        <MTLLogo height={42} />
-        <div style={{ display:"flex", alignItems:"center", gap:36 }}>
-          {([["/checklist","Destinations"],["#how-it-works","How It Works"],["/track","Track Application"],["/upload","Upload Docs"]] as [string,string][]).map(([href,label]) => (
-            <a key={label} href={href} className="nav-link" style={{ fontSize:13, color:"#A0A0B8", textDecoration:"none", fontWeight:500 }}>{label}</a>
-          ))}
-        </div>
-        <div style={{ display:"flex", gap:10, alignItems:"center" }}>
-          <a href="/login" style={{ background:"transparent", border:"1px solid rgba(212,175,106,0.35)", color:"#D4AF6A", padding:"9px 22px", borderRadius:8, fontSize:13, fontWeight:600, textDecoration:"none", display:"inline-block", transition:"border-color 0.2s" }}
-            onMouseEnter={e=>(e.currentTarget.style.borderColor="rgba(212,175,106,0.7)")}
-            onMouseLeave={e=>(e.currentTarget.style.borderColor="rgba(212,175,106,0.35)")}>Sign In</a>
-          <a href="/apply" className="gold-btn" style={{ padding:"9px 22px", borderRadius:8, fontSize:13, fontFamily:"'Outfit',sans-serif", textDecoration:"none", display:"inline-block" }}>Apply Now</a>
-        </div>
-      </nav>
+function ClockIcon() {
+  return (
+    <svg className="inline w-3.5 h-3.5 mr-1 -mt-px" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+    </svg>
+  );
+}
 
-      {/* HERO */}
-      <section style={{ position:"relative", minHeight:"100vh", display:"flex", alignItems:"center", justifyContent:"center", padding:"130px 24px 100px", overflow:"hidden" }}>
-        <div style={{ position:"absolute", top:"22%", left:"50%", transform:"translateX(-50%)", width:800, height:500, background:"radial-gradient(ellipse,rgba(212,175,106,0.055) 0%,transparent 70%)", pointerEvents:"none" }} />
-        <div style={{ position:"absolute", top:"10%", left:"12%", width:280, height:280, background:"radial-gradient(ellipse,rgba(30,200,240,0.04) 0%,transparent 70%)", pointerEvents:"none" }} />
-        {(["🇦🇪","🇫🇷","🇯🇵","🇸🇬","🇬🇧"]).map((flag,i) => (
-          <div key={i} style={{ position:"absolute", fontSize:26, opacity:0.12, top:`${[18,32,60,22,68][i]}%`, left:`${[7,88,4,92,84][i]}%`, animation:`float ${3.2+i*0.5}s ease-in-out infinite`, animationDelay:`${i*0.4}s`, pointerEvents:"none" }}>{flag}</div>
-        ))}
+/* ============================================================================
+   PAGE COMPONENT
+   ============================================================================ */
+export default function HomePage() {
+  return (
+    <>
+      {/* ════════════════════════════════════════
+          HEADER — Sticky nav with WhatsApp CTA
+          ════════════════════════════════════════ */}
+      <header className="sticky top-0 z-50 w-full border-b border-slate-800/50 bg-slate-950/80 backdrop-blur-xl">
+        <nav
+          className="section-container flex items-center justify-between h-14 sm:h-16"
+          aria-label="Primary navigation"
+        >
+          <Link
+            href="/"
+            className="flex items-center gap-2 tap-target"
+            aria-label="My Trip Looker Visa Services — Home"
+          >
+            {/* TODO: Replace with <Image src="/logo.png" ... /> */}
+            <span className="text-lg sm:text-xl font-bold font-heading gradient-text tracking-tight">
+              My Trip Looker
+            </span>
+            <span className="hidden sm:inline-flex px-2 py-0.5 bg-blue-500/10 border border-blue-500/20 rounded text-[10px] font-semibold text-blue-300 uppercase tracking-widest">
+              Visa
+            </span>
+          </Link>
 
-        <div style={{ position:"relative", zIndex:1, textAlign:"center", maxWidth:800, width:"100%" }}>
-          <div style={{ display:"inline-flex", alignItems:"center", gap:8, background:"rgba(212,175,106,0.07)", border:"1px solid rgba(212,175,106,0.18)", borderRadius:50, padding:"6px 18px", marginBottom:36, animation:"fadeIn 0.6s ease both" }}>
-            <div style={{ width:6, height:6, borderRadius:"50%", background:"#2ECC8B", animation:"shimmer 2s infinite" }} />
-            <span style={{ fontSize:11, color:"#D4AF6A", fontWeight:600, letterSpacing:"1px", textTransform:"uppercase" }}>Trusted by 50,000+ Indian travellers</span>
+          {/* Desktop links */}
+          <div className="hidden md:flex items-center gap-6 text-sm text-slate-400">
+            <a href="#destinations" className="hover:text-white transition-colors">Destinations</a>
+            <a href="#how-it-works" className="hover:text-white transition-colors">How It Works</a>
+            <a href="#faq" className="hover:text-white transition-colors">FAQ</a>
+            <Link href="https://www.mytriplooker.com" className="hover:text-white transition-colors" target="_blank" rel="noopener">
+              MyTripLooker.com
+            </Link>
           </div>
 
-          <h1 className="hero-title" style={{ fontFamily:"'Cormorant Garant',serif", fontSize:"clamp(48px,7.5vw,88px)", fontWeight:300, lineHeight:1.05, color:"#F5F0E8", marginBottom:22, letterSpacing:"-1px" }}>
-            Your Visa, <em style={{ color:"#D4AF6A", fontStyle:"italic", fontWeight:400 }}>Handled.</em>
-          </h1>
-          <p className="hero-sub" style={{ fontSize:"clamp(15px,2vw,18px)", color:"#8A8A9A", lineHeight:1.75, fontWeight:300, maxWidth:560, margin:"0 auto 52px" }}>
-            Embassy-accurate document checklists. Expert processing. Real-time tracking.<br />For Indian passport holders flying worldwide.
-          </p>
+          <a
+            href={WHATSAPP_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 sm:px-5 sm:py-2.5
+                       bg-[#25D366] hover:bg-[#20BD5A] active:bg-[#1DA851]
+                       text-white text-sm font-semibold rounded-lg
+                       transition-colors touch-manipulation tap-target"
+            aria-label="Chat with us on WhatsApp for visa assistance"
+          >
+            <WhatsAppIcon className="w-4 h-4" />
+            <span className="hidden sm:inline">WhatsApp Us</span>
+            <span className="sm:hidden">Chat</span>
+          </a>
+        </nav>
+      </header>
 
-          {/* Search — fixed: dropdown has high z-index, stats sit below search wrapper */}
-          <div className="hero-search" style={{ maxWidth:610, margin:"0 auto 0", position:"relative", zIndex:50 }} ref={dropRef}>
-            <div style={{ display:"flex", alignItems:"center", background:"#141420", border:"1px solid rgba(212,175,106,0.28)", borderRadius:14, overflow:"hidden", boxShadow:"0 0 0 1px rgba(212,175,106,0.05),0 24px 60px rgba(0,0,0,0.45)" }}>
-              <div style={{ padding:"0 18px", fontSize:18, flexShrink:0 }}>🔍</div>
-              <input value={query} onChange={e=>setQuery(e.target.value)} onFocus={()=>setOpen(true)}
-                placeholder="Where are you travelling to?"
-                style={{ flex:1, background:"transparent", border:"none", outline:"none", color:"#F5F0E8", fontSize:16, padding:"20px 0", fontFamily:"'Outfit',sans-serif", fontWeight:400 }} />
-              <a href={query ? `/checklist?q=${encodeURIComponent(query)}` : "/checklist"}
-                className="gold-btn" style={{ margin:7, padding:"13px 28px", borderRadius:10, fontSize:14, fontFamily:"'Outfit',sans-serif", flexShrink:0, textDecoration:"none", display:"inline-block" }}>
-                Check Visa →
+      <main id="main-content">
+        {/* ════════════════════════════════════════
+            HERO — Primary H1 keyword targeting
+            ════════════════════════════════════════ */}
+        <section className="relative isolate overflow-hidden" aria-labelledby="hero-h1">
+          {/* Ambient bg */}
+          <div className="absolute inset-0 -z-10 pointer-events-none" aria-hidden="true">
+            <div className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[min(900px,120vw)] aspect-square rounded-full bg-blue-600/8 blur-[100px]" />
+            <div className="absolute bottom-0 right-[-10%] w-[400px] aspect-square rounded-full bg-cyan-500/5 blur-[80px]" />
+          </div>
+
+          <div className="section-container pt-10 pb-14 sm:pt-16 sm:pb-20 lg:pt-24 lg:pb-28 text-center">
+            {/* Trust badge */}
+            <div className="trust-badge animate-fade-in-up">
+              <span className="relative flex h-2 w-2" aria-hidden="true">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400" />
+              </span>
+              Trusted by 50,000+ Indian travellers&nbsp;·&nbsp;98.7% approval
+            </div>
+
+            {/* H1 — primary SEO keyword */}
+            <h1
+              id="hero-h1"
+              className="mt-6 sm:mt-8 text-[2rem] leading-[1.15] sm:text-5xl lg:text-6xl xl:text-[4.25rem]
+                         font-extrabold font-heading tracking-tight animate-fade-in-up"
+              style={{ animationDelay: "100ms" }}
+            >
+              <span className="text-white">Your Visa, </span>
+              <span className="gradient-text">Handled.</span>
+            </h1>
+
+            <p
+              className="mt-4 sm:mt-6 text-slate-400 text-[15px] sm:text-lg lg:text-xl
+                         max-w-[42rem] mx-auto leading-relaxed animate-fade-in-up"
+              style={{ animationDelay: "180ms" }}
+            >
+              Embassy-accurate document checklists. Expert processing.
+              Real-time tracking. <strong className="text-slate-200">Visa for Indian passport holders</strong> flying
+              worldwide — UAE&nbsp;eVisa, Thailand, Vietnam, Indonesia&nbsp;VOA,
+              Singapore, Malaysia &amp;&nbsp;50+&nbsp;countries.
+            </p>
+
+            {/* CTAs */}
+            <div
+              className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4
+                         animate-fade-in-up"
+              style={{ animationDelay: "260ms" }}
+            >
+              <a href="#destinations" className="btn-primary w-full sm:w-auto">
+                Apply for Visa Now <ArrowIcon />
+              </a>
+              <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer" className="btn-whatsapp w-full sm:w-auto">
+                <WhatsAppIcon /> Chat on WhatsApp
               </a>
             </div>
 
-            {/* Dropdown — floats above everything */}
-            {open && results.length > 0 && (
-              <div style={{ position:"absolute", top:"calc(100% + 8px)", left:0, right:0, background:"#141420", border:"1px solid rgba(212,175,106,0.2)", borderRadius:14, overflow:"hidden", boxShadow:"0 24px 60px rgba(0,0,0,0.75)", zIndex:9999, animation:"fadeUp 0.2s ease both" }}>
-                <div style={{ padding:"10px 16px 6px", fontSize:10, fontWeight:700, letterSpacing:"1.5px", textTransform:"uppercase", color:"#3A3A4E" }}>
-                  {query ? `${results.length} result${results.length!==1?"s":""}` : "Popular Destinations"}
+            {/* Stats row */}
+            <div
+              className="mt-12 sm:mt-16 grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-3xl mx-auto
+                         animate-fade-in-up"
+              style={{ animationDelay: "340ms" }}
+            >
+              {STATS.map((s) => (
+                <div key={s.label} className="text-center py-3">
+                  <p className="text-2xl sm:text-3xl lg:text-4xl font-extrabold font-heading text-white">
+                    {s.value}
+                  </p>
+                  <p className="mt-1 text-[11px] sm:text-xs text-slate-500 font-medium uppercase tracking-wider">
+                    {s.label}
+                  </p>
                 </div>
-                {results.map((d,i) => {
-                  const tc = typeColor(d.type);
-                  return (
-                    <a key={i} href={`/apply?country=${d.slug}`} className="result-row"
-                      style={{ display:"flex", alignItems:"center", gap:14, padding:"13px 16px", borderTop:i===0?"none":"1px solid rgba(255,255,255,0.03)", textDecoration:"none" }}
-                      onClick={()=>{setQuery(d.name);setOpen(false);}}>
-                      <span style={{ fontSize:26, flexShrink:0 }}>{d.flag}</span>
-                      <div style={{ flex:1, textAlign:"left" }}>
-                        <div style={{ fontSize:14, fontWeight:600, color:"#F5F0E8" }}>{d.name}</div>
-                        <div style={{ fontSize:12, color:"#8A8A9A", marginTop:2 }}>{d.days} working days</div>
-                      </div>
-                      <div style={{ display:"flex", alignItems:"center", gap:10 }}>
-                        <span style={{ fontSize:11, fontWeight:700, background:tc.bg, color:tc.color, border:`1px solid ${tc.border}`, padding:"3px 9px", borderRadius:5 }}>{d.type}</span>
-                        <span style={{ fontSize:14, fontWeight:700, color:"#D4AF6A" }}>{d.price}</span>
-                      </div>
-                    </a>
-                  );
-                })}
-              </div>
-            )}
+              ))}
+            </div>
           </div>
+        </section>
 
-          {/* Stats — clear separation below search */}
-          <div className="hero-stats" style={{ display:"flex", justifyContent:"center", gap:48, flexWrap:"wrap", marginTop:56 }}>
-            {stats.map((s,i) => (
-              <div key={i} style={{ textAlign:"center" }}>
-                <div style={{ fontFamily:"'Cormorant Garant',serif", fontSize:30, fontWeight:600, color:"#D4AF6A", lineHeight:1 }}>{s.value}</div>
-                <div style={{ fontSize:11, color:"#8A8A9A", marginTop:5, letterSpacing:"0.5px" }}>{s.label}</div>
-              </div>
+        {/* ════════════════════════════════════════
+            FLAG MARQUEE — Country social proof
+            ════════════════════════════════════════ */}
+        <div
+          className="relative border-y border-slate-800/40 bg-slate-900/30 py-3.5 overflow-hidden no-print"
+          role="marquee"
+          aria-label="Countries we process visas for: UAE, Thailand, Vietnam, Indonesia, Malaysia, Singapore, Japan, South Korea, Turkey, Egypt, Azerbaijan, Sri Lanka"
+        >
+          <div className="flex animate-scroll-marquee whitespace-nowrap">
+            {[...DESTINATIONS, ...DESTINATIONS].map((d, i) => (
+              <span
+                key={`${d.slug}-${i}`}
+                className="inline-flex items-center gap-2 px-5 text-sm text-slate-500"
+              >
+                <span className="text-lg" role="img" aria-label={`${d.name} flag`}>{d.flag}</span>
+                {d.name}
+              </span>
             ))}
           </div>
         </div>
-      </section>
 
-      {/* POPULAR DESTINATIONS */}
-      <section style={{ padding:"80px 40px" }} id="destinations">
-        <div style={{ maxWidth:1200, margin:"0 auto" }}>
-          <div style={{ textAlign:"center", marginBottom:56 }}>
-            <div style={{ fontSize:11, fontWeight:700, letterSpacing:"2px", textTransform:"uppercase", color:"#D4AF6A", marginBottom:12 }}>Where Indians Are Flying</div>
-            <h2 style={{ fontFamily:"'Cormorant Garant',serif", fontSize:"clamp(32px,4vw,52px)", fontWeight:400, color:"#F5F0E8", lineHeight:1.1 }}>
-              Popular <em style={{ color:"#D4AF6A", fontStyle:"italic" }}>Destinations</em>
-            </h2>
-          </div>
-
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(265px,1fr))", gap:18 }}>
-            {destinations.filter(d=>d.popular).map((d,i) => {
-              const tc = typeColor(d.type);
-              return (
-                <div key={i} className="card-hover" style={{ background:"#141420", border:"1px solid rgba(255,255,255,0.07)", borderRadius:16, padding:"26px 24px", animation:`fadeUp 0.5s ${i*0.07}s ease both`, display:"flex", flexDirection:"column", gap:16 }}>
-                  {/* Top: flag + name + type badge */}
-                  <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between" }}>
-                    <div style={{ display:"flex", alignItems:"center", gap:14 }}>
-                      <div style={{ fontSize:42, lineHeight:1 }}>{d.flag}</div>
-                      <div>
-                        <div style={{ fontWeight:700, fontSize:15, color:"#F5F0E8", lineHeight:1.2 }}>{d.name}</div>
-                        <div style={{ fontSize:11, color:"#8A8A9A", marginTop:3 }}>⏱ {d.days} working days</div>
-                      </div>
-                    </div>
-                    <span style={{ fontSize:10, fontWeight:700, background:tc.bg, color:tc.color, border:`1px solid ${tc.border}`, padding:"4px 10px", borderRadius:5, flexShrink:0, whiteSpace:"nowrap" }}>{d.type}</span>
-                  </div>
-                  {/* Divider */}
-                  <div style={{ height:1, background:"rgba(255,255,255,0.05)" }} />
-                  {/* Bottom: price + apply */}
-                  <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between" }}>
-                    <div>
-                      <div style={{ fontSize:10, color:"#8A8A9A", textTransform:"uppercase", letterSpacing:"0.5px", marginBottom:3 }}>Starting from</div>
-                      <div style={{ fontFamily:"'Cormorant Garant',serif", fontSize:26, fontWeight:600, color:"#D4AF6A", lineHeight:1 }}>{d.price}</div>
-                    </div>
-                    <a href={`/apply?country=${d.slug}`} className="apply-btn"
-                      style={{ background:"rgba(212,175,106,0.1)", border:"1px solid rgba(212,175,106,0.25)", color:"#D4AF6A", padding:"10px 20px", borderRadius:9, fontSize:13, fontWeight:700, textDecoration:"none", display:"inline-block", transition:"all 0.15s" }}>
-                      Apply →
-                    </a>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          <div style={{ textAlign:"center", marginTop:40 }}>
-            <a href="/checklist" style={{ background:"transparent", border:"1px solid rgba(212,175,106,0.25)", color:"#D4AF6A", padding:"13px 36px", borderRadius:9, fontSize:14, fontWeight:600, textDecoration:"none", display:"inline-block", transition:"border-color 0.2s" }}
-              onMouseEnter={e=>(e.currentTarget.style.borderColor="rgba(212,175,106,0.6)")}
-              onMouseLeave={e=>(e.currentTarget.style.borderColor="rgba(212,175,106,0.25)")}>
-              View All 50+ Countries →
-            </a>
-          </div>
-        </div>
-      </section>
-
-      {/* Divider */}
-      <div style={{ maxWidth:1200, margin:"0 auto", padding:"0 40px" }}>
-        <div style={{ height:1, background:"linear-gradient(90deg,transparent,rgba(212,175,106,0.3),transparent)" }} />
-      </div>
-
-      {/* HOW IT WORKS */}
-      <section style={{ padding:"80px 40px" }} id="how-it-works">
-        <div style={{ maxWidth:1200, margin:"0 auto" }}>
-          <div style={{ textAlign:"center", marginBottom:56 }}>
-            <div style={{ fontSize:11, fontWeight:700, letterSpacing:"2px", textTransform:"uppercase", color:"#D4AF6A", marginBottom:12 }}>Simple & Transparent</div>
-            <h2 style={{ fontFamily:"'Cormorant Garant',serif", fontSize:"clamp(32px,4vw,52px)", fontWeight:400, color:"#F5F0E8" }}>
-              Visa in <em style={{ color:"#D4AF6A", fontStyle:"italic" }}>4 Steps</em>
-            </h2>
-          </div>
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(240px,1fr))", gap:20 }}>
-            {steps.map((s,i) => (
-              <div key={i} className="step-card" style={{ background:"#141420", border:"1px solid rgba(255,255,255,0.06)", borderRadius:16, padding:"32px 24px", position:"relative", overflow:"hidden" }}>
-                <div style={{ position:"absolute", top:14, right:18, fontFamily:"'Cormorant Garant',serif", fontSize:52, fontWeight:600, color:"rgba(212,175,106,0.055)", lineHeight:1, userSelect:"none" }}>{s.n}</div>
-                <div style={{ fontSize:34, marginBottom:18 }}>{s.icon}</div>
-                <h3 style={{ fontWeight:700, fontSize:16, color:"#F5F0E8", marginBottom:10, lineHeight:1.3 }}>{s.title}</h3>
-                <p style={{ fontSize:13, color:"#8A8A9A", lineHeight:1.7 }}>{s.body}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA BANNER */}
-      <section style={{ padding:"60px 40px" }}>
-        <div style={{ maxWidth:1200, margin:"0 auto" }}>
-          <div style={{ background:"linear-gradient(135deg,#141420 0%,#1A1A28 100%)", border:"1px solid rgba(212,175,106,0.2)", borderRadius:22, padding:"52px 60px", display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:36 }}>
-            <div>
-              <h2 style={{ fontFamily:"'Cormorant Garant',serif", fontSize:"clamp(28px,3.5vw,44px)", fontWeight:400, color:"#F5F0E8", marginBottom:14, lineHeight:1.1 }}>
-                Ready to travel?<br /><em style={{ color:"#D4AF6A" }}>We&apos;ll handle the paperwork.</em>
+        {/* ════════════════════════════════════════
+            DESTINATIONS — H2 keyword-rich
+            ════════════════════════════════════════ */}
+        <section id="destinations" className="py-14 sm:py-20 lg:py-24" aria-labelledby="destinations-h2">
+          <div className="section-container">
+            <div className="text-center">
+              <h2 id="destinations-h2" className="heading-section text-white">
+                Popular Visa Destinations for Indian Passport Holders
               </h2>
-              <p style={{ fontSize:14, color:"#8A8A9A", lineHeight:1.65, maxWidth:440 }}>
-                Join 50,000+ Indian travellers who trust mytriplooker for stress-free visa processing.
+              <p className="heading-sub">
+                Select your country below. We handle the complete visa process — document review,
+                embassy coordination, and delivery.
               </p>
             </div>
-            <div style={{ display:"flex", flexDirection:"column", gap:14, alignItems:"flex-start" }}>
-              <a href="/apply" className="gold-btn" style={{ padding:"17px 44px", borderRadius:11, fontSize:15, fontFamily:"'Outfit',sans-serif", whiteSpace:"nowrap", textDecoration:"none", display:"inline-block" }}>
-                Start My Application →
-              </a>
-              <div style={{ display:"flex", gap:18, flexWrap:"wrap" }}>
-                {["🔒 100% Secure","✓ Expert Review","📱 WhatsApp Updates"].map(t=>(
-                  <span key={t} style={{ fontSize:12, color:"#8A8A9A" }}>{t}</span>
-                ))}
-              </div>
+
+            <div className="mt-10 sm:mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3.5 sm:gap-4 stagger">
+              {DESTINATIONS.map((d) => (
+                <Link
+                  key={d.slug}
+                  href={`/visa/${d.slug}`}
+                  className="card-interactive group animate-fade-in-up"
+                  aria-label={`Apply for ${d.name} visa for Indian passport holders — ${d.type} — ${d.price}`}
+                >
+                  <div className="flex items-start gap-3.5">
+                    <span
+                      className="text-3xl sm:text-4xl flex-shrink-0 mt-0.5"
+                      role="img"
+                      aria-label={`Flag of ${d.name}`}
+                    >
+                      {d.flag}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-bold text-white text-base sm:text-lg group-hover:text-blue-400 transition-colors">
+                          {d.name}
+                        </h3>
+                        {d.popular && (
+                          <span className="px-1.5 py-0.5 bg-amber-500/10 border border-amber-500/20 rounded text-[9px] font-bold text-amber-400 uppercase tracking-wider">
+                            Popular
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-sm text-slate-500 mt-0.5">{d.type}</p>
+                      <div className="flex items-center justify-between mt-2.5">
+                        <span className="text-xs text-slate-500">
+                          <ClockIcon />
+                          {d.days}
+                        </span>
+                        <span className="font-bold text-blue-400 text-sm">{d.price}</span>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            <p className="mt-8 text-center text-slate-500 text-sm">
+              + 38 more countries available.{" "}
+              <a
+                href={WHATSAPP_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-400 hover:text-blue-300 underline underline-offset-2 transition-colors"
+              >
+                Message us on WhatsApp
+              </a>{" "}
+              for any destination not listed.
+            </p>
+          </div>
+        </section>
+
+        {/* ════════════════════════════════════════
+            HOW IT WORKS — 4-step process
+            ════════════════════════════════════════ */}
+        <section
+          id="how-it-works"
+          className="py-14 sm:py-20 lg:py-24 bg-gradient-to-b from-slate-900/50 to-transparent"
+          aria-labelledby="steps-h2"
+        >
+          <div className="section-container">
+            <div className="text-center">
+              <h2 id="steps-h2" className="heading-section text-white">
+                Get Your Visa in 4 Easy Steps
+              </h2>
+              <p className="heading-sub">
+                From application to approval — our streamlined process makes visa applications effortless
+                for Indian travellers.
+              </p>
+            </div>
+
+            <div className="mt-10 sm:mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+              {STEPS.map((s, i) => (
+                <div
+                  key={s.num}
+                  className="card text-center relative animate-fade-in-up"
+                  style={{ animationDelay: `${i * 100}ms` }}
+                >
+                  <span className="text-3xl mb-3 block" aria-hidden="true">{s.icon}</span>
+                  <span className="text-5xl font-extrabold font-heading text-blue-500/10 absolute top-3 right-4" aria-hidden="true">
+                    {s.num}
+                  </span>
+                  <h3 className="text-base sm:text-lg font-bold text-white">{s.title}</h3>
+                  <p className="mt-2 text-sm text-slate-400 leading-relaxed">{s.desc}</p>
+                </div>
+              ))}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* FOOTER */}
-      <footer style={{ borderTop:"1px solid rgba(255,255,255,0.05)", padding:"44px 40px 32px" }}>
-        <div style={{ maxWidth:1200, margin:"0 auto", display:"flex", justifyContent:"space-between", alignItems:"center", flexWrap:"wrap", gap:24 }}>
-          <MTLLogo height={34} />
-          <div style={{ display:"flex", gap:28, flexWrap:"wrap" }}>
-            {([["/#privacy","Privacy Policy"],["/#terms","Terms of Service"],["mailto:support@mytriplooker.com","Contact Us"],["/track","Track Application"],["/login","Sign In"]] as [string,string][]).map(([href,label])=>(
-              <a key={label} href={href} style={{ fontSize:12, color:"#3A3A4E", textDecoration:"none", transition:"color 0.15s" }}
-                onMouseEnter={e=>(e.currentTarget.style.color="#8A8A9A")}
-                onMouseLeave={e=>(e.currentTarget.style.color="#3A3A4E")}>{label}</a>
-            ))}
+        {/* ════════════════════════════════════════
+            WHY TRUST US — Features
+            ════════════════════════════════════════ */}
+        <section className="py-14 sm:py-20 lg:py-24" aria-labelledby="why-h2">
+          <div className="section-container">
+            <div className="text-center">
+              <h2 id="why-h2" className="heading-section text-white">
+                Why 50,000+ Indians Choose My Trip Looker
+              </h2>
+              <p className="heading-sub">
+                We specialize exclusively in visa services for Indian passport holders.
+                No other service matches our accuracy, speed, and support.
+              </p>
+            </div>
+
+            <div className="mt-10 sm:mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+              {FEATURES.map((f) => (
+                <div key={f.title} className="card card-interactive">
+                  <div
+                    className="w-11 h-11 flex items-center justify-center rounded-xl
+                               bg-blue-500/10 text-blue-400 mb-4"
+                  >
+                    {f.icon}
+                  </div>
+                  <h3 className="text-base sm:text-lg font-bold text-white">{f.title}</h3>
+                  <p className="mt-2 text-sm text-slate-400 leading-relaxed">{f.desc}</p>
+                </div>
+              ))}
+            </div>
           </div>
-          <div style={{ fontSize:12, color:"#3A3A4E" }}>© 2026 mytriplooker. All rights reserved.</div>
+        </section>
+
+        {/* ════════════════════════════════════════
+            TESTIMONIALS — Social proof
+            ════════════════════════════════════════ */}
+        <section
+          className="py-14 sm:py-20 lg:py-24 bg-gradient-to-b from-slate-900/50 to-transparent"
+          aria-labelledby="reviews-h2"
+        >
+          <div className="section-container">
+            <div className="text-center">
+              <h2 id="reviews-h2" className="heading-section text-white">
+                Trusted by Indian Travellers Nationwide
+              </h2>
+              <p className="heading-sub">
+                Real reviews from verified customers who got their visa through My Trip Looker.
+              </p>
+            </div>
+
+            <div className="mt-10 sm:mt-14 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-5">
+              {TESTIMONIALS.map((t) => (
+                <blockquote key={t.name} className="card flex flex-col">
+                  {/* Stars */}
+                  <div className="flex gap-0.5 mb-3" aria-label={`Rated ${t.rating} out of 5 stars`}>
+                    {Array.from({ length: t.rating }).map((_, i) => (
+                      <svg key={i} className="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                    ))}
+                  </div>
+
+                  {/* Badge */}
+                  <span className="inline-flex self-start px-2 py-0.5 mb-2 bg-blue-500/10 border border-blue-500/20 rounded text-[10px] font-semibold text-blue-300">
+                    {t.visa}
+                  </span>
+
+                  <p className="text-sm text-slate-300 leading-relaxed flex-1">
+                    &ldquo;{t.text}&rdquo;
+                  </p>
+
+                  <footer className="mt-4 pt-3 border-t border-slate-800/50 flex items-center gap-3">
+                    <div
+                      className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-500/20 to-cyan-500/20
+                                 flex items-center justify-center text-blue-300 font-bold text-sm"
+                      aria-hidden="true"
+                    >
+                      {t.name.charAt(0)}
+                    </div>
+                    <div>
+                      <cite className="not-italic text-sm font-semibold text-white">{t.name}</cite>
+                      <p className="text-xs text-slate-500">{t.location}</p>
+                    </div>
+                  </footer>
+                </blockquote>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ════════════════════════════════════════
+            FAQ — Schema-enhanced, keyword-rich
+            ════════════════════════════════════════ */}
+        <section id="faq" className="py-14 sm:py-20 lg:py-24" aria-labelledby="faq-h2">
+          <div className="section-narrow">
+            <div className="text-center">
+              <h2 id="faq-h2" className="heading-section text-white">
+                Frequently Asked Questions
+              </h2>
+              <p className="heading-sub">
+                Everything Indian passport holders need to know about applying for visas through My Trip Looker.
+              </p>
+            </div>
+
+            <div className="mt-10 sm:mt-14 space-y-3">
+              {FAQS.map((faq, i) => (
+                <details key={i} className="card group cursor-pointer">
+                  <summary className="flex items-center justify-between gap-4 list-none font-semibold text-white text-sm sm:text-[15px] leading-snug">
+                    <span>{faq.q}</span>
+                    <svg
+                      className="w-5 h-5 flex-shrink-0 text-slate-500 transition-transform duration-200 group-open:rotate-45"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                    </svg>
+                  </summary>
+                  <p className="mt-3 text-sm text-slate-400 leading-relaxed pr-8">{faq.a}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ════════════════════════════════════════
+            FINAL CTA — Conversion section
+            ════════════════════════════════════════ */}
+        <section
+          id="contact"
+          className="py-14 sm:py-20 lg:py-24 relative overflow-hidden"
+          aria-labelledby="cta-h2"
+        >
+          <div className="absolute inset-0 -z-10 pointer-events-none" aria-hidden="true">
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-blue-600/8 rounded-full blur-[120px]" />
+          </div>
+
+          <div className="section-container text-center">
+            <h2 id="cta-h2" className="heading-section text-white">
+              Ready to Get Your Visa?
+            </h2>
+            <p className="heading-sub">
+              Join 50,000+ Indian travellers who got their visa the hassle-free way.
+              Start your application now — it takes under 5 minutes.
+            </p>
+
+            <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
+              <a
+                href={WHATSAPP_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-whatsapp w-full sm:w-auto"
+              >
+                <WhatsAppIcon /> Chat on WhatsApp
+              </a>
+              <a href="mailto:sales@mytriplooker.com" className="btn-outline w-full sm:w-auto">
+                Email Us
+              </a>
+            </div>
+
+            {/* Security badges */}
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-4 text-xs text-slate-600">
+              <span className="flex items-center gap-1.5">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+                </svg>
+                256-bit SSL Encrypted
+              </span>
+              <span className="flex items-center gap-1.5">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
+                </svg>
+                PCI-DSS Compliant
+              </span>
+              <span className="flex items-center gap-1.5">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z" />
+                </svg>
+                Secure Payments (UPI / Cards)
+              </span>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      {/* ════════════════════════════════════════
+          FOOTER — Internal links + backlink to parent
+          ════════════════════════════════════════ */}
+      <footer className="border-t border-slate-800/50 bg-slate-950" role="contentinfo">
+        <div className="section-container py-10 sm:py-14">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10">
+            {/* Brand */}
+            <div className="col-span-2 lg:col-span-1">
+              <Link href="/" className="text-xl font-bold font-heading gradient-text">
+                My Trip Looker
+              </Link>
+              <p className="mt-3 text-sm text-slate-500 max-w-xs leading-relaxed">
+                India&apos;s trusted visa facilitation service. 50,000+ visas processed for
+                Indian passport holders across 50+ countries.
+              </p>
+              {/* Backlink to parent site — recommended by audit */}
+              <p className="mt-3">
+                <Link
+                  href="https://www.mytriplooker.com"
+                  className="text-sm text-blue-400 hover:text-blue-300 underline underline-offset-2 transition-colors"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  &larr; Back to MyTripLooker.com
+                </Link>
+              </p>
+            </div>
+
+            {/* Popular Visas — internal links for SEO */}
+            <div>
+              <h3 className="text-xs font-semibold text-slate-300 uppercase tracking-widest">
+                Popular Visas for Indians
+              </h3>
+              <ul className="mt-3 space-y-2.5">
+                {DESTINATIONS.filter((d) => d.popular).map((d) => (
+                  <li key={d.slug}>
+                    <Link
+                      href={`/visa/${d.slug}`}
+                      className="text-sm text-slate-500 hover:text-slate-200 transition-colors"
+                    >
+                      {d.name} Visa for Indians
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* More Destinations */}
+            <div>
+              <h3 className="text-xs font-semibold text-slate-300 uppercase tracking-widest">
+                More Destinations
+              </h3>
+              <ul className="mt-3 space-y-2.5">
+                {DESTINATIONS.filter((d) => !d.popular).map((d) => (
+                  <li key={d.slug}>
+                    <Link
+                      href={`/visa/${d.slug}`}
+                      className="text-sm text-slate-500 hover:text-slate-200 transition-colors"
+                    >
+                      {d.name} Visa for Indians
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Quick Links + Contact */}
+            <div>
+              <h3 className="text-xs font-semibold text-slate-300 uppercase tracking-widest">
+                Quick Links
+              </h3>
+              <ul className="mt-3 space-y-2.5">
+                <li><a href="#how-it-works" className="text-sm text-slate-500 hover:text-slate-200 transition-colors">How It Works</a></li>
+                <li><a href="#destinations" className="text-sm text-slate-500 hover:text-slate-200 transition-colors">All Destinations</a></li>
+                <li><a href="#faq" className="text-sm text-slate-500 hover:text-slate-200 transition-colors">FAQs</a></li>
+                <li>
+                  <a
+                    href="mailto:sales@mytriplooker.com"
+                    className="text-sm text-slate-500 hover:text-slate-200 transition-colors"
+                  >
+                    sales@mytriplooker.com
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href={WHATSAPP_LINK}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-slate-500 hover:text-slate-200 transition-colors"
+                  >
+                    WhatsApp: +91 99999 99999
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Bottom bar */}
+          <div className="mt-10 pt-6 border-t border-slate-800/50 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-600">
+            <p>&copy; {new Date().getFullYear()} My Trip Looker. All rights reserved.</p>
+            <p>
+              Not a government website. Private visa facilitation service only.
+            </p>
+          </div>
         </div>
       </footer>
-    </div>
+
+      {/* ════════════════════════════════════════
+          FLOATING WHATSAPP BUTTON (mobile)
+          ════════════════════════════════════════ */}
+      <a
+        href={WHATSAPP_LINK}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-5 right-5 z-50 md:hidden
+                   w-14 h-14 flex items-center justify-center
+                   bg-[#25D366] hover:bg-[#20BD5A] rounded-full
+                   shadow-xl shadow-green-900/30
+                   transition-transform hover:scale-110 active:scale-95
+                   touch-manipulation no-print"
+        aria-label="Open WhatsApp to chat about visa services"
+      >
+        <WhatsAppIcon className="w-7 h-7 text-white" />
+      </a>
+    </>
   );
 }

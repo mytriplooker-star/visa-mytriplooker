@@ -1,0 +1,4 @@
+{
+  "tailwindCSS.lint.recommendedVariantOrder": "ignore",
+  "tailwindCSS.lint.invalidTailwindDirective": "ignore"
+}

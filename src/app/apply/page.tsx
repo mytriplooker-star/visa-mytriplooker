@@ -1,6 +1,5 @@
 "use client";
 import Link from "next/link";
-import Image from "next/image";
 import React, { useState, useEffect, useRef, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { COUNTRIES, getTotalFee, formatINR } from "@/lib/visaData";
@@ -621,16 +620,22 @@ function ApplyPageInner() {
 
 /* ── Shared Components ──────────────────────────────────────────────── */
 function MTLLogo({ height = 36 }: { height?: number }) {
+  const s = height / 48;
+  const fsLarge = Math.round(26 * s);
+  const fsSmall = Math.round(17 * s);
   return (
-    <Link href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
-      <Image
-        src="/logo.png"
-        alt="MyTripLooker"
-        width={150}
-        height={height}
-        style={{ width: "auto", height: height }}
-        priority
-      />
+    <Link href="/" style={{display:"inline-flex",alignItems:"flex-end",textDecoration:"none",gap:0,lineHeight:1,paddingBottom:2}}>
+      <span style={{fontFamily:"'Outfit',sans-serif",fontWeight:900,fontSize:fsLarge,color:"#1EC8F0",letterSpacing:"-0.5px",lineHeight:1}}>MY</span>
+      <span style={{fontFamily:"'Outfit',sans-serif",fontWeight:900,fontSize:fsLarge,color:"#1EC8F0",letterSpacing:"-0.5px",lineHeight:1,marginLeft:3}}>TRIP</span>
+      <span style={{fontFamily:"'Outfit',sans-serif",fontWeight:900,fontSize:fsSmall,color:"#1EC8F0",letterSpacing:"-0.5px",lineHeight:1,marginLeft:2}}>L</span>
+      <svg width={Math.round(26*s)} height={Math.round(16*s)} viewBox="0 0 26 16" style={{flexShrink:0,marginBottom:Math.round(1*s),marginLeft:Math.round(1*s)}}>
+        <circle cx="6.5" cy="8" r="6.5" fill="#D4AF6A"/>
+        <circle cx="6.5" cy="8" r="3.8" fill="#08080F"/>
+        <rect x="11" y="6.5" width="4" height="3" rx="1.5" fill="#D4AF6A"/>
+        <circle cx="19.5" cy="8" r="6.5" fill="#D4AF6A"/>
+        <circle cx="19.5" cy="8" r="3.8" fill="#08080F"/>
+      </svg>
+      <span style={{fontFamily:"'Outfit',sans-serif",fontWeight:900,fontSize:fsSmall,color:"#1EC8F0",letterSpacing:"-0.5px",lineHeight:1,marginLeft:Math.round(1*s)}}>KER</span>
     </Link>
   );
 }
