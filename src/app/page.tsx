@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 
 const destinations = [
@@ -60,10 +61,13 @@ const stats = [
 function MTLLogo({ height = 38 }: { height?: number }) {
   return (
     <Link href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
-      <img
+      <Image
         src="/logo.png"
         alt="MyTripLooker"
-        style={{ height: height, width: "auto", display: "block" }}
+        width={150}
+        height={height}
+        style={{ width: "auto", height: height }}
+        priority
       />
     </Link>
   );

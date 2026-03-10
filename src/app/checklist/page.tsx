@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useMemo } from "react";
 import { COUNTRIES, COUNTRY_REGIONS, REGION_META, Region, Country } from "@/lib/visaData";
 
@@ -233,10 +234,13 @@ function CountryModal({ country, onClose }: { country: Country; onClose: () => v
 function MTLLogo({ height = 36 }: { height?: number }) {
   return (
     <Link href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
-      <img
+      <Image
         src="/logo.png"
         alt="MyTripLooker"
-        style={{ height: height, width: "auto", display: "block" }}
+        width={150}
+        height={height}
+        style={{ width: "auto", height: height }}
+        priority
       />
     </Link>
   );
