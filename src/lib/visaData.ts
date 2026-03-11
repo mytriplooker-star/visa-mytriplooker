@@ -589,6 +589,370 @@ export const COUNTRIES: Country[] = [
       ],
     }],
   },
+
+  // ── UK ─────────────────────────────────────────────────────────────────
+  {
+    name:"United Kingdom",slug:"united-kingdom",flag:"🇬🇧",isoCode:"GB",
+    tagline:"London, Edinburgh & beyond",
+    embassyInIndia:"UK Visa & Immigration (UKVI) / VFS Global",
+    officialUrl:"https://www.gov.uk/apply-uk-visa",
+    generalNotes:[
+      "Apply online at gov.uk then submit biometrics at VFS Global centre",
+      "Passport must be valid for entire duration of stay",
+      "Standard visitor visa allows up to 6 months stay",
+      "Apply at least 3 months before travel date",
+    ],
+    visaTypes:[
+      {id:"uk-standard",label:"Standard Visitor Visa — 6 Months",type:"sticker",embassyFee:7200,serviceFee:2299,processingDays:"15–20",validity:"6 months from issue",maxStay:"180 days",entries:"multiple",documents:[
+        {id:"uk-p",name:"Original Passport",category:"identity",required:true,icon:"📘",specs:["Valid throughout stay","Photocopy of all previous passports if applicable","At least 1 blank page for visa stamp"],acceptedFormats:["PDF","JPG"]},
+        {id:"uk-ph",name:"Photograph (2 copies)",category:"photo",required:true,icon:"📷",specs:["45mm × 35mm","White or off-white background","Biometric — neutral expression","Taken within last 6 months"],acceptedFormats:["JPG"]},
+        {id:"uk-bank",name:"Bank Statement (6 Months)",category:"financial",required:true,icon:"🏦",specs:["Last 6 months from all accounts","Must show sufficient funds for trip","Bank seal and authorised signature","Minimum ₹1,50,000 recommended"],notes:"Online statements must have official bank header. Savings accounts preferred over current accounts.",acceptedFormats:["PDF"]},
+        {id:"uk-itr",name:"Income Tax Returns (2 Years)",category:"financial",required:true,icon:"📊",specs:["Last 2 years ITR with acknowledgement","Demonstrates financial stability","Self-employed: business financials required"],acceptedFormats:["PDF"]},
+        {id:"uk-emp",name:"Employment Letter",category:"employment",required:true,icon:"💼",specs:["On company letterhead with official seal","States designation, salary, leave approval","Contact details of HR/employer"],notes:"Self-employed: Certificate of Incorporation + CA letter. Students: Bonafide certificate.",acceptedFormats:["PDF"]},
+        {id:"uk-flight",name:"Return Flight Tickets",category:"travel",required:true,icon:"✈️",specs:["Confirmed onward and return tickets","Dates must match your planned itinerary"],acceptedFormats:["PDF"]},
+        {id:"uk-hotel",name:"Hotel Booking Confirmation",category:"accommodation",required:true,icon:"🏨",specs:["Full stay accommodation booked","OR invitation letter from UK host with their ID proof","Hotel name, address, dates clearly shown"],acceptedFormats:["PDF"]},
+        {id:"uk-cover",name:"Cover Letter",category:"forms",required:true,icon:"📝",specs:["Typed letter explaining purpose of visit","Travel itinerary day by day","Mention your ties to India (job, family, property)"],acceptedFormats:["PDF"]},
+        {id:"uk-ins",name:"Travel Insurance",category:"insurance",required:false,icon:"🛡️",specs:["Minimum coverage £1,000,000 medical","Covers entire UK stay"],acceptedFormats:["PDF"]},
+      ]},
+    ],
+  },
+
+  // ── CHINA ──────────────────────────────────────────────────────────────
+  {
+    name:"China",slug:"china",flag:"🇨🇳",isoCode:"CN",
+    tagline:"Beijing, Shanghai & the Great Wall",
+    embassyInIndia:"Embassy of China / VFS Global",
+    officialUrl:"https://visaforchina.cn",
+    generalNotes:[
+      "Tourist visa (L type) required for Indian passport holders",
+      "Apply at Chinese Embassy or VFS Global in person",
+      "Submit original passport — processing takes 4–5 business days",
+      "China now offers group e-visas but individual tourist eVisa not yet available for Indians",
+    ],
+    visaTypes:[
+      {id:"cn-tourist",label:"Tourist Visa (L) — 30 Days",type:"sticker",embassyFee:5000,serviceFee:1999,processingDays:"15–20",validity:"3 months from issue",maxStay:"30 days",entries:"single",documents:[
+        {id:"cn-p",name:"Original Passport",category:"identity",required:true,icon:"📘",specs:["Valid for at least 6 months from travel date","At least 1 blank page for visa stamp","Photocopy of bio-data page required"],acceptedFormats:["PDF","JPG"]},
+        {id:"cn-ph",name:"Photograph (2 copies)",category:"photo",required:true,icon:"📷",specs:["48mm × 33mm (non-standard size — specific to China)","White background","Full frontal face — no shadows","Taken within last 6 months","Matte finish preferred"],notes:"China uses a specific photo size different from standard visa photos. Get photos taken at a photo studio specifying Chinese visa requirements.",acceptedFormats:["JPG"]},
+        {id:"cn-form",name:"Visa Application Form (V.2013A)",category:"forms",required:true,icon:"📋",specs:["Complete online at visaforchina.cn","Print and sign in black ink","All fields mandatory — no blanks allowed"],acceptedFormats:["PDF"]},
+        {id:"cn-flight",name:"Confirmed Return Flight Tickets",category:"travel",required:true,icon:"✈️",specs:["Both onward and return confirmed","Passenger name must match passport exactly"],acceptedFormats:["PDF"]},
+        {id:"cn-hotel",name:"Hotel Booking Confirmation",category:"accommodation",required:true,icon:"🏨",specs:["All nights booked and confirmed","Hotel must be registered in China — verify on hotel list","Your name must appear on booking"],acceptedFormats:["PDF"]},
+        {id:"cn-bank",name:"Bank Statement (3 Months)",category:"financial",required:true,icon:"🏦",specs:["Last 3 months statement","Minimum ₹1,00,000 balance","Bank seal and signature mandatory"],acceptedFormats:["PDF"]},
+        {id:"cn-itin",name:"Detailed Itinerary",category:"travel",required:true,icon:"🗺️",specs:["Day-by-day travel plan in China","Hotels and cities to be visited","Consistent with hotel bookings"],acceptedFormats:["PDF"]},
+      ]},
+    ],
+  },
+
+  // ── TURKEY ─────────────────────────────────────────────────────────────
+  {
+    name:"Turkey",slug:"turkey",flag:"🇹🇷",isoCode:"TR",
+    tagline:"Istanbul, Cappadocia & Antalya",
+    embassyInIndia:"Turkish Embassy / e-Visa portal",
+    officialUrl:"https://www.evisa.gov.tr",
+    generalNotes:[
+      "Turkey offers online e-Visa for Indian passport holders",
+      "Processing is quick — usually within 24 hours",
+      "Print e-Visa confirmation to show at arrival",
+    ],
+    visaTypes:[
+      {id:"tr-evisa",label:"e-Visa — 30 Days",type:"evisa",embassyFee:2800,serviceFee:1199,processingDays:"2–3",validity:"180 days from issue",maxStay:"30 days",entries:"single",documents:[
+        {id:"tr-p",name:"Passport Scan",category:"identity",required:true,icon:"📘",specs:["Valid for at least 6 months from entry date","Bio-data page scan — clear, no glare"],acceptedFormats:["PDF","JPG"]},
+        {id:"tr-ph",name:"Passport-size Photo",category:"photo",required:true,icon:"📷",specs:["White background","35mm × 45mm","Recent — within last 6 months"],acceptedFormats:["JPG","PNG"]},
+        {id:"tr-flight",name:"Return Ticket",category:"travel",required:false,icon:"✈️",specs:["Onward and return flight confirmation"],acceptedFormats:["PDF"]},
+        {id:"tr-hotel",name:"Hotel Booking",category:"accommodation",required:false,icon:"🏨",specs:["Accommodation confirmation for Turkey stay"],acceptedFormats:["PDF"]},
+      ]},
+    ],
+  },
+
+  // ── EGYPT ──────────────────────────────────────────────────────────────
+  {
+    name:"Egypt",slug:"egypt",flag:"🇪🇬",isoCode:"EG",
+    tagline:"Pyramids, Red Sea & Cairo",
+    embassyInIndia:"Egyptian Embassy / Visa on Arrival",
+    officialUrl:"https://visa2egypt.gov.eg",
+    generalNotes:[
+      "Indian passport holders can apply for eVisa online or get visa on arrival at major airports",
+      "eVisa is recommended — apply at least 7 days before travel",
+      "Single and multiple entry options available",
+    ],
+    visaTypes:[
+      {id:"eg-evisa",label:"eVisa — 30 Days",type:"evisa",embassyFee:1800,serviceFee:1199,processingDays:"3–5",validity:"90 days from issue",maxStay:"30 days",entries:"single",documents:[
+        {id:"eg-p",name:"Passport Scan",category:"identity",required:true,icon:"📘",specs:["Valid for at least 6 months from travel date","Clear scan of bio-data page"],acceptedFormats:["PDF","JPG"]},
+        {id:"eg-ph",name:"Passport-size Photo",category:"photo",required:true,icon:"📷",specs:["White background","35mm × 45mm","Recent"],acceptedFormats:["JPG","PNG"]},
+        {id:"eg-flight",name:"Flight Itinerary",category:"travel",required:false,icon:"✈️",specs:["Onward and return flight details"],acceptedFormats:["PDF"]},
+        {id:"eg-hotel",name:"Hotel Booking",category:"accommodation",required:false,icon:"🏨",specs:["Accommodation confirmation"],acceptedFormats:["PDF"]},
+      ]},
+    ],
+  },
+
+  // ── AZERBAIJAN ─────────────────────────────────────────────────────────
+  {
+    name:"Azerbaijan",slug:"azerbaijan",flag:"🇦🇿",isoCode:"AZ",
+    tagline:"Baku — City of Fire",
+    embassyInIndia:"ASAN Visa (e-Visa portal)",
+    officialUrl:"https://evisa.gov.az",
+    generalNotes:[
+      "Azerbaijan offers quick eVisa — processed in 3 business days",
+      "Apply online at evisa.gov.az — completely paperless",
+      "Single entry, stay up to 30 days",
+    ],
+    visaTypes:[
+      {id:"az-evisa",label:"eVisa — 30 Days",type:"evisa",embassyFee:1500,serviceFee:999,processingDays:"3",validity:"90 days from issue",maxStay:"30 days",entries:"single",documents:[
+        {id:"az-p",name:"Passport Scan",category:"identity",required:true,icon:"📘",specs:["Valid for 3 months beyond departure date","Bio-data page — clear scan"],acceptedFormats:["PDF","JPG"]},
+        {id:"az-ph",name:"Passport-size Photo",category:"photo",required:true,icon:"📷",specs:["White background","35mm × 45mm","Digital format — JPG only"],acceptedFormats:["JPG"]},
+        {id:"az-flight",name:"Flight Itinerary",category:"travel",required:false,icon:"✈️",specs:["Onward and return details"],acceptedFormats:["PDF"]},
+        {id:"az-hotel",name:"Hotel Booking",category:"accommodation",required:false,icon:"🏨",specs:["Accommodation confirmation in Azerbaijan"],acceptedFormats:["PDF"]},
+      ]},
+    ],
+  },
+
+  // ── KENYA ──────────────────────────────────────────────────────────────
+  {
+    name:"Kenya",slug:"kenya",flag:"🇰🇪",isoCode:"KE",
+    tagline:"Safari capital of the world",
+    embassyInIndia:"eCitizen Kenya Portal",
+    officialUrl:"https://immigration.ecitizen.go.ke",
+    generalNotes:[
+      "Kenya operates a fully online eVisa — no embassy visit required",
+      "East Africa Tourist Visa also available (covers Kenya, Uganda, Rwanda)",
+      "Processing time 2–3 business days",
+    ],
+    visaTypes:[
+      {id:"ke-evisa",label:"eVisa — Single Entry 90 Days",type:"evisa",embassyFee:2200,serviceFee:1099,processingDays:"3–5",validity:"90 days from issue",maxStay:"90 days",entries:"single",documents:[
+        {id:"ke-p",name:"Passport Scan",category:"identity",required:true,icon:"📘",specs:["Valid for 6 months beyond return date","Bio-data page — colour scan"],acceptedFormats:["PDF","JPG"]},
+        {id:"ke-ph",name:"Passport Photo",category:"photo",required:true,icon:"📷",specs:["White background","35mm × 45mm","Recent — within 6 months"],acceptedFormats:["JPG","PNG"]},
+        {id:"ke-flight",name:"Return Flight Tickets",category:"travel",required:true,icon:"✈️",specs:["Confirmed onward and return"],acceptedFormats:["PDF"]},
+        {id:"ke-hotel",name:"Hotel Booking",category:"accommodation",required:true,icon:"🏨",specs:["Accommodation for Kenya stay"],acceptedFormats:["PDF"]},
+        {id:"ke-yf",name:"Yellow Fever Certificate",category:"identity",required:true,icon:"💉",specs:["Valid Yellow Fever vaccination certificate","Required for travellers coming from endemic regions"],acceptedFormats:["PDF","JPG"]},
+      ]},
+    ],
+  },
+
+  // ── TANZANIA ───────────────────────────────────────────────────────────
+  {
+    name:"Tanzania",slug:"tanzania",flag:"🇹🇿",isoCode:"TZ",
+    tagline:"Kilimanjaro, Serengeti & Zanzibar",
+    embassyInIndia:"Tanzania Immigration eVisa Portal",
+    officialUrl:"https://eservices.immigration.go.tz",
+    generalNotes:[
+      "eVisa fully available for Indian passport holders",
+      "Processing within 3–5 business days",
+      "Valid for tourism, business, or transit",
+    ],
+    visaTypes:[
+      {id:"tz-evisa",label:"eVisa — Single Entry 90 Days",type:"evisa",embassyFee:2200,serviceFee:1099,processingDays:"3–5",validity:"90 days",maxStay:"90 days",entries:"single",documents:[
+        {id:"tz-p",name:"Passport Scan",category:"identity",required:true,icon:"📘",specs:["6 months validity from travel date","Colour scan — bio-data page"],acceptedFormats:["PDF","JPG"]},
+        {id:"tz-ph",name:"Passport Photo",category:"photo",required:true,icon:"📷",specs:["White background","35mm × 45mm"],acceptedFormats:["JPG","PNG"]},
+        {id:"tz-flight",name:"Return Flight Tickets",category:"travel",required:true,icon:"✈️",specs:["Confirmed return tickets"],acceptedFormats:["PDF"]},
+        {id:"tz-hotel",name:"Accommodation Proof",category:"accommodation",required:true,icon:"🏨",specs:["Hotel or lodge booking confirmation"],acceptedFormats:["PDF"]},
+        {id:"tz-yf",name:"Yellow Fever Certificate",category:"identity",required:true,icon:"💉",specs:["Mandatory for all arrivals","Valid international certificate"],acceptedFormats:["PDF","JPG"]},
+      ]},
+    ],
+  },
+
+  // ── JORDAN ─────────────────────────────────────────────────────────────
+  {
+    name:"Jordan",slug:"jordan",flag:"🇯🇴",isoCode:"JO",
+    tagline:"Petra, Wadi Rum & the Dead Sea",
+    embassyInIndia:"Jordan Tourism Board / Visa on Arrival",
+    officialUrl:"https://www.timatic.aero",
+    generalNotes:[
+      "Indian passport holders can get visa on arrival at Queen Alia International Airport",
+      "Visa on arrival valid for 30 days",
+      "Jordan Pass recommended — covers entry fee + 40+ attractions",
+    ],
+    visaTypes:[
+      {id:"jo-voa",label:"Visa on Arrival — 30 Days",type:"voa",embassyFee:1200,serviceFee:599,processingDays:"Instant",validity:"30 days",maxStay:"30 days",entries:"single",documents:[
+        {id:"jo-p",name:"Valid Passport",category:"identity",required:true,icon:"📘",specs:["Minimum 6 months validity from arrival date","At least 1 blank page"],acceptedFormats:["PDF","JPG"]},
+        {id:"jo-flight",name:"Return Flight Tickets",category:"travel",required:true,icon:"✈️",specs:["Confirmed return ticket"],acceptedFormats:["PDF"]},
+        {id:"jo-hotel",name:"Hotel Booking",category:"accommodation",required:false,icon:"🏨",specs:["Recommended to carry booking proof"],acceptedFormats:["PDF"]},
+        {id:"jo-funds",name:"Proof of Funds",category:"financial",required:false,icon:"💵",specs:["Credit card or USD 50/day equivalent"],acceptedFormats:["PDF"]},
+      ]},
+    ],
+  },
+
+  // ── UZBEKISTAN ─────────────────────────────────────────────────────────
+  {
+    name:"Uzbekistan",slug:"uzbekistan",flag:"🇺🇿",isoCode:"UZ",
+    tagline:"Silk Road — Samarkand & Tashkent",
+    embassyInIndia:"e-Visa Portal",
+    officialUrl:"https://evisa.mfa.uz",
+    generalNotes:[
+      "Uzbekistan offers fast eVisa for Indian passport holders",
+      "Apply online — no embassy visit required",
+      "Single entry for up to 30 days",
+    ],
+    visaTypes:[
+      {id:"uz-evisa",label:"eVisa — 30 Days",type:"evisa",embassyFee:1500,serviceFee:999,processingDays:"3–5",validity:"90 days from issue",maxStay:"30 days",entries:"single",documents:[
+        {id:"uz-p",name:"Passport Scan",category:"identity",required:true,icon:"📘",specs:["Valid 3 months beyond departure","Clear bio-data page scan"],acceptedFormats:["PDF","JPG"]},
+        {id:"uz-ph",name:"Passport-size Photo",category:"photo",required:true,icon:"📷",specs:["White background","35mm × 45mm"],acceptedFormats:["JPG"]},
+        {id:"uz-flight",name:"Flight Itinerary",category:"travel",required:false,icon:"✈️",specs:["Return flight details"],acceptedFormats:["PDF"]},
+        {id:"uz-hotel",name:"Hotel Booking",category:"accommodation",required:false,icon:"🏨",specs:["Accommodation confirmation"],acceptedFormats:["PDF"]},
+      ]},
+    ],
+  },
+
+  // ── GEORGIA ────────────────────────────────────────────────────────────
+  {
+    name:"Georgia",slug:"georgia",flag:"🇬🇪",isoCode:"GE",
+    tagline:"Tbilisi — Visa-free for Indians",
+    embassyInIndia:"No visa required",
+    officialUrl:"https://www.georgia.travel",
+    generalNotes:[
+      "India is visa-free for Georgia — no visa required",
+      "Indians can stay up to 365 days without a visa",
+      "Simply carry valid passport and travel",
+    ],
+    visaTypes:[
+      {id:"ge-free",label:"Visa-Free Entry — 365 Days",type:"free",embassyFee:0,serviceFee:499,processingDays:"Instant",validity:"No limit",maxStay:"365 days",entries:"multiple",documents:[
+        {id:"ge-p",name:"Valid Passport",category:"identity",required:true,icon:"📘",specs:["Minimum 6 months validity","No visa stamp required — just show at immigration"],acceptedFormats:["PDF","JPG"]},
+        {id:"ge-flight",name:"Return Flight Tickets",category:"travel",required:false,icon:"✈️",specs:["Recommended to carry"],acceptedFormats:["PDF"]},
+        {id:"ge-hotel",name:"Hotel Booking",category:"accommodation",required:false,icon:"🏨",specs:["Recommended for immigration"],acceptedFormats:["PDF"]},
+      ]},
+    ],
+  },
+
+  // ── MAURITIUS ──────────────────────────────────────────────────────────
+  {
+    name:"Mauritius",slug:"mauritius",flag:"🇲🇺",isoCode:"MU",
+    tagline:"Indian Ocean Paradise — Visa-free",
+    embassyInIndia:"No visa required",
+    officialUrl:"https://tourism.govmu.org",
+    generalNotes:[
+      "Indian passport holders are visa-free for Mauritius — up to 90 days",
+      "Simply carry valid passport, return ticket, and accommodation proof",
+    ],
+    visaTypes:[
+      {id:"mu-free",label:"Visa-Free — 90 Days",type:"free",embassyFee:0,serviceFee:499,processingDays:"Instant",validity:"90 days",maxStay:"90 days",entries:"multiple",documents:[
+        {id:"mu-p",name:"Valid Passport",category:"identity",required:true,icon:"📘",specs:["6 months validity beyond departure date"],acceptedFormats:["PDF","JPG"]},
+        {id:"mu-flight",name:"Return Flight Tickets",category:"travel",required:true,icon:"✈️",specs:["Confirmed return tickets"],acceptedFormats:["PDF"]},
+        {id:"mu-hotel",name:"Accommodation Proof",category:"accommodation",required:true,icon:"🏨",specs:["Hotel booking or host invitation"],acceptedFormats:["PDF"]},
+        {id:"mu-funds",name:"Proof of Sufficient Funds",category:"financial",required:false,icon:"💵",specs:["Credit card or equivalent"],acceptedFormats:["PDF"]},
+      ]},
+    ],
+  },
+
+  // ── MOROCCO ────────────────────────────────────────────────────────────
+  {
+    name:"Morocco",slug:"morocco",flag:"🇲🇦",isoCode:"MA",
+    tagline:"Marrakech, Sahara & Casablanca",
+    embassyInIndia:"No visa required",
+    officialUrl:"https://www.visitmorocco.com",
+    generalNotes:[
+      "Indian passport holders are visa-free for Morocco — up to 90 days",
+      "No prior visa application required",
+    ],
+    visaTypes:[
+      {id:"ma-free",label:"Visa-Free — 90 Days",type:"free",embassyFee:0,serviceFee:499,processingDays:"Instant",validity:"90 days",maxStay:"90 days",entries:"multiple",documents:[
+        {id:"ma-p",name:"Valid Passport",category:"identity",required:true,icon:"📘",specs:["6 months validity from travel date"],acceptedFormats:["PDF","JPG"]},
+        {id:"ma-flight",name:"Return Flight Tickets",category:"travel",required:true,icon:"✈️",specs:["Confirmed return tickets"],acceptedFormats:["PDF"]},
+        {id:"ma-hotel",name:"Accommodation Booking",category:"accommodation",required:true,icon:"🏨",specs:["Hotel booking confirmation"],acceptedFormats:["PDF"]},
+      ]},
+    ],
+  },
+
+  // ── SEYCHELLES ─────────────────────────────────────────────────────────
+  {
+    name:"Seychelles",slug:"seychelles",flag:"🇸🇨",isoCode:"SC",
+    tagline:"Pristine beaches — Visa-free",
+    embassyInIndia:"No visa required",
+    officialUrl:"https://seychelles.travel",
+    generalNotes:[
+      "Indian passport holders are visa-free — Visitor\'s Permit issued on arrival",
+      "Stay up to 90 days extendable",
+    ],
+    visaTypes:[
+      {id:"sc-free",label:"Visitor Permit on Arrival — 90 Days",type:"free",embassyFee:0,serviceFee:499,processingDays:"Instant",validity:"90 days",maxStay:"90 days",entries:"multiple",documents:[
+        {id:"sc-p",name:"Valid Passport",category:"identity",required:true,icon:"📘",specs:["6 months validity"],acceptedFormats:["PDF","JPG"]},
+        {id:"sc-flight",name:"Return Ticket",category:"travel",required:true,icon:"✈️",specs:["Confirmed return flights"],acceptedFormats:["PDF"]},
+        {id:"sc-hotel",name:"Accommodation Proof",category:"accommodation",required:true,icon:"🏨",specs:["Hotel confirmation"],acceptedFormats:["PDF"]},
+        {id:"sc-funds",name:"Proof of Funds",category:"financial",required:true,icon:"💵",specs:["Sufficient funds for stay duration — USD 150/day"],acceptedFormats:["PDF"]},
+      ]},
+    ],
+  },
+
+  // ── RWANDA ─────────────────────────────────────────────────────────────
+  {
+    name:"Rwanda",slug:"rwanda",flag:"🇷🇼",isoCode:"RW",
+    tagline:"Land of a Thousand Hills",
+    embassyInIndia:"iRembo Rwanda eVisa",
+    officialUrl:"https://irembo.gov.rw",
+    generalNotes:[
+      "Rwanda offers eVisa online for Indian passport holders",
+      "Indians can also get visa on arrival at Kigali airport",
+      "East Africa Tourist Visa covers Rwanda, Kenya & Uganda",
+    ],
+    visaTypes:[
+      {id:"rw-evisa",label:"eVisa — 30 Days",type:"evisa",embassyFee:1500,serviceFee:799,processingDays:"3–5",validity:"90 days from issue",maxStay:"30 days",entries:"single",documents:[
+        {id:"rw-p",name:"Passport Scan",category:"identity",required:true,icon:"📘",specs:["6 months validity","Clear bio-data page"],acceptedFormats:["PDF","JPG"]},
+        {id:"rw-ph",name:"Passport Photo",category:"photo",required:true,icon:"📷",specs:["White background","35mm × 45mm"],acceptedFormats:["JPG","PNG"]},
+        {id:"rw-flight",name:"Return Flight Tickets",category:"travel",required:true,icon:"✈️",specs:["Confirmed return"],acceptedFormats:["PDF"]},
+        {id:"rw-hotel",name:"Hotel Booking",category:"accommodation",required:true,icon:"🏨",specs:["Accommodation confirmation"],acceptedFormats:["PDF"]},
+        {id:"rw-yf",name:"Yellow Fever Certificate",category:"identity",required:true,icon:"💉",specs:["Valid Yellow Fever vaccination certificate"],acceptedFormats:["PDF","JPG"]},
+      ]},
+    ],
+  },
+
+  // ── LAOS ───────────────────────────────────────────────────────────────
+  {
+    name:"Laos",slug:"laos",flag:"🇱🇦",isoCode:"LA",
+    tagline:"Vientiane, Luang Prabang & Mekong",
+    embassyInIndia:"Visa on Arrival / eVisa",
+    officialUrl:"https://laoevisa.gov.la",
+    generalNotes:[
+      "Indians can get visa on arrival at Wattay Airport or apply eVisa online",
+      "30-day tourist visa available",
+    ],
+    visaTypes:[
+      {id:"la-voa",label:"Visa on Arrival — 30 Days",type:"voa",embassyFee:900,serviceFee:399,processingDays:"Instant",validity:"30 days",maxStay:"30 days",entries:"single",documents:[
+        {id:"la-p",name:"Valid Passport",category:"identity",required:true,icon:"📘",specs:["6 months validity","1 blank page"],acceptedFormats:["PDF","JPG"]},
+        {id:"la-ph",name:"Passport Photo (2 copies)",category:"photo",required:true,icon:"📷",specs:["35mm × 45mm","Colour","White background"],acceptedFormats:["JPG"]},
+        {id:"la-flight",name:"Return Ticket",category:"travel",required:false,icon:"✈️",specs:["Recommended to carry"],acceptedFormats:["PDF"]},
+        {id:"la-funds",name:"USD 50 per day (cash)",category:"financial",required:true,icon:"💵",specs:["Cash in USD recommended","USD 50 minimum shown at immigration"],acceptedFormats:["PDF"]},
+      ]},
+    ],
+  },
+
+  // ── ZAMBIA ─────────────────────────────────────────────────────────────
+  {
+    name:"Zambia",slug:"zambia",flag:"🇿🇲",isoCode:"ZM",
+    tagline:"Victoria Falls & Zambezi River",
+    embassyInIndia:"Zambia e-Visa",
+    officialUrl:"https://evisa.gov.zm",
+    generalNotes:[
+      "Zambia offers eVisa for Indian passport holders",
+      "KAZA Uni-Visa covers both Zambia and Zimbabwe — great for Victoria Falls",
+    ],
+    visaTypes:[
+      {id:"zm-evisa",label:"eVisa — Single Entry 90 Days",type:"evisa",embassyFee:2200,serviceFee:1099,processingDays:"3–5",validity:"90 days",maxStay:"90 days",entries:"single",documents:[
+        {id:"zm-p",name:"Passport Scan",category:"identity",required:true,icon:"📘",specs:["6 months validity","Clear bio-data scan"],acceptedFormats:["PDF","JPG"]},
+        {id:"zm-ph",name:"Passport Photo",category:"photo",required:true,icon:"📷",specs:["White background","35mm × 45mm"],acceptedFormats:["JPG","PNG"]},
+        {id:"zm-flight",name:"Return Flight Tickets",category:"travel",required:true,icon:"✈️",specs:["Confirmed return"],acceptedFormats:["PDF"]},
+        {id:"zm-hotel",name:"Accommodation Proof",category:"accommodation",required:true,icon:"🏨",specs:["Hotel/lodge booking"],acceptedFormats:["PDF"]},
+        {id:"zm-yf",name:"Yellow Fever Certificate",category:"identity",required:true,icon:"💉",specs:["Valid Yellow Fever vaccination certificate"],acceptedFormats:["PDF","JPG"]},
+      ]},
+    ],
+  },
+
+  // ── ZIMBABWE ───────────────────────────────────────────────────────────
+  {
+    name:"Zimbabwe",slug:"zimbabwe",flag:"🇿🇼",isoCode:"ZW",
+    tagline:"Victoria Falls — wonder of the world",
+    embassyInIndia:"Zimbabwe eVisa",
+    officialUrl:"https://www.evisa.gov.zw",
+    generalNotes:[
+      "Zimbabwe offers eVisa online for Indian passport holders",
+      "KAZA Uni-Visa available for combined Zambia + Zimbabwe visit",
+    ],
+    visaTypes:[
+      {id:"zw-evisa",label:"eVisa — Single Entry 30 Days",type:"evisa",embassyFee:1800,serviceFee:699,processingDays:"3–5",validity:"90 days from issue",maxStay:"30 days",entries:"single",documents:[
+        {id:"zw-p",name:"Passport Scan",category:"identity",required:true,icon:"📘",specs:["6 months validity","Bio-data page — colour scan"],acceptedFormats:["PDF","JPG"]},
+        {id:"zw-ph",name:"Passport Photo",category:"photo",required:true,icon:"📷",specs:["White background","35mm × 45mm"],acceptedFormats:["JPG","PNG"]},
+        {id:"zw-flight",name:"Return Flight Tickets",category:"travel",required:true,icon:"✈️",specs:["Confirmed return"],acceptedFormats:["PDF"]},
+        {id:"zw-hotel",name:"Accommodation Booking",category:"accommodation",required:true,icon:"🏨",specs:["Hotel or lodge confirmation"],acceptedFormats:["PDF"]},
+      ]},
+    ],
+  },
+
 ];
 
 // ── REGION MAP ────────────────────────────────────────────────────────────
@@ -635,10 +999,27 @@ export const COUNTRY_REGIONS: Record<string, Region> = {
   'australia':     'asia-pacific',
   'new-zealand':   'asia-pacific',
   'south-africa':  'africa',
+  'kenya':         'africa',
+  'tanzania':      'africa',
+  'rwanda':        'africa',
+  'mauritius':     'africa',
+  'morocco':       'africa',
+  'seychelles':    'africa',
+  'zambia':        'africa',
+  'zimbabwe':      'africa',
   'japan':         'asia',
   'south-korea':   'asia',
+  'turkey':        'asia',
+  'georgia':       'europe',
+  'jordan':        'middle-east',
+  'uzbekistan':    'asia',
+  'laos':          'asia-pacific',
+  'egypt':         'middle-east',
+  'azerbaijan':    'middle-east',
+  'china':         'asia',
   'usa':           'americas',
   'canada':        'americas',
+  'ecuador':       'americas',
   'nepal':         'indian-subcontinent',
   'sri-lanka':     'indian-subcontinent',
   'bhutan':        'indian-subcontinent',
