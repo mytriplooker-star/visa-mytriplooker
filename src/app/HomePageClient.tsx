@@ -314,7 +314,7 @@ export default function HomePage() {
                          animate-fade-in-up"
               style={{ animationDelay: "260ms" }}
             >
-              <a href="#destinations" className="btn-primary w-full sm:w-auto">
+              <a href="/apply" className="btn-primary w-full sm:w-auto">
                 Apply for Visa Now <ArrowIcon />
               </a>
               <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer" className="btn-whatsapp w-full sm:w-auto">
@@ -382,7 +382,7 @@ export default function HomePage() {
               {DESTINATIONS.map((d) => (
                 <Link
                   key={d.slug}
-                  href={`/visa/${d.slug}`}
+                  href={`/apply?country=${d.slug === "dubai" ? "uae" : d.slug}`}
                   className="card-interactive group animate-fade-in-up"
                   aria-label={`Apply for ${d.name} visa for Indian passport holders — ${d.type} — ${d.price}`}
                 >
@@ -695,7 +695,7 @@ export default function HomePage() {
                 {DESTINATIONS.filter((d) => d.popular).map((d) => (
                   <li key={d.slug}>
                     <Link
-                      href={`/visa/${d.slug}`}
+                      href={`/apply?country=${d.slug === "dubai" ? "uae" : d.slug}`}
                       className="text-sm text-slate-500 hover:text-slate-200 transition-colors"
                     >
                       {d.name} Visa for Indians
@@ -714,7 +714,7 @@ export default function HomePage() {
                 {DESTINATIONS.filter((d) => !d.popular).map((d) => (
                   <li key={d.slug}>
                     <Link
-                      href={`/visa/${d.slug}`}
+                      href={`/apply?country=${d.slug === "dubai" ? "uae" : d.slug}`}
                       className="text-sm text-slate-500 hover:text-slate-200 transition-colors"
                     >
                       {d.name} Visa for Indians
@@ -731,7 +731,7 @@ export default function HomePage() {
               </h3>
               <ul className="mt-3 space-y-2.5">
                 <li><a href="#how-it-works" className="text-sm text-slate-500 hover:text-slate-200 transition-colors">How It Works</a></li>
-                <li><a href="#destinations" className="text-sm text-slate-500 hover:text-slate-200 transition-colors">All Destinations</a></li>
+                <li><a href="/apply" className="text-sm text-slate-500 hover:text-slate-200 transition-colors">All Destinations</a></li>
                 <li><a href="#faq" className="text-sm text-slate-500 hover:text-slate-200 transition-colors">FAQs</a></li>
                 <li>
                   <a
