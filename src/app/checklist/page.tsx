@@ -82,14 +82,196 @@ function CountryCard({ country, onClick }: { country: Country; onClick: () => vo
   );
 }
 
+async function generateChecklistPDF(country: Country, visaTypeIndex: number) {
+  const { jsPDF } = await import("jspdf");
+  const vt = country.visaTypes[visaTypeIndex];
+  const totalFee = vt.embassyFee + vt.serviceFee;
+  const gst = Math.round(totalFee * 0.18);
+  const grandTotal = totalFee + gst;
+  const isFree = grandTotal === 0;
+
+  const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+  const W = 210, PL = 18, PR = 192;
+  let y = 0;
+
+  // ── Helper functions ──────────────────────────────────────────────
+  const hex = (h: string, a = 1) => {
+    const r = parseInt(h.slice(1,3),16), g = parseInt(h.slice(3,5),16), b = parseInt(h.slice(5,7),16);
+    return [r,g,b,a] as [number,number,number,number];
+  };
+  const setFill   = (h: string) => { const [r,g,b] = hex(h); doc.setFillColor(r,g,b); };
+  const setStroke = (h: string) => { const [r,g,b] = hex(h); doc.setDrawColor(r,g,b); };
+  const setTxt    = (h: string) => { const [r,g,b] = hex(h); doc.setTextColor(r,g,b); };
+
+  // ── HEADER BAND ───────────────────────────────────────────────────
+  setFill("#08080F"); doc.rect(0, 0, W, 42, "F");
+
+  // Load logo
+  try {
+    const resp = await fetch("/logo.png");
+    const blob = await resp.blob();
+    const b64: string = await new Promise(res => {
+      const r = new FileReader();
+      r.onload = () => res((r.result as string).split(",")[1]);
+      r.readAsDataURL(blob);
+    });
+    doc.addImage(b64, "PNG", PL, 8, 0, 20, undefined, "FAST");
+  } catch { /* logo optional */ }
+
+  // MTL tagline right-aligned
+  doc.setFont("helvetica","normal"); doc.setFontSize(8);
+  setTxt("#D4AF6A"); doc.text("visa.mytriplooker.com", PR, 16, { align: "right" });
+  setTxt("#8A8A9A"); doc.text("Your Visa. Handled.", PR, 22, { align: "right" });
+
+  // Gold divider
+  setFill("#D4AF6A"); doc.rect(0, 42, W, 1.2, "F");
+  y = 55;
+
+  // ── COUNTRY TITLE ────────────────────────────────────────────────
+  doc.setFont("helvetica","bold"); doc.setFontSize(26);
+  setTxt("#08080F"); doc.text(`${country.flag}  ${country.name}`, PL, y);
+  y += 7;
+  doc.setFont("helvetica","normal"); doc.setFontSize(10);
+  setTxt("#5A5A6E"); doc.text(country.tagline, PL + 2, y);
+  y += 5;
+  doc.setFont("helvetica","normal"); doc.setFontSize(9);
+  setTxt("#7A7A8A"); doc.text(`Visa Type: ${vt.label}`, PL + 2, y);
+  y += 10;
+
+  // ── FEE SUMMARY BOX ───────────────────────────────────────────────
+  setFill("#FFF8EC"); setStroke("#D4AF6A");
+  doc.setLineWidth(0.5); doc.roundedRect(PL, y, PR - PL, 28, 3, 3, "FD");
+  const cols = [PL + 10, PL + 50, PL + 95, PL + 130];
+  const labels = ["PROCESSING", "MAX STAY", "EMBASSY FEE", "SERVICE FEE"];
+  const vals = [
+    `${vt.processingDays} days`, vt.maxStay,
+    isFree ? "Free" : `Rs.${vt.embassyFee.toLocaleString("en-IN")}`,
+    isFree ? "Free" : `Rs.${vt.serviceFee.toLocaleString("en-IN")}`,
+  ];
+  labels.forEach((l, i) => {
+    doc.setFont("helvetica","bold"); doc.setFontSize(7); setTxt("#8A8A9A");
+    doc.text(l, cols[i], y + 8);
+    doc.setFont("helvetica","bold"); doc.setFontSize(12); setTxt("#1A1A28");
+    doc.text(vals[i], cols[i], y + 17);
+  });
+  y += 34;
+
+  // Total fee highlight
+  setFill(isFree ? "#E8F5E9" : "#FFF3CD"); setStroke(isFree ? "#2ECC8B" : "#D4AF6A");
+  doc.setLineWidth(0.4); doc.roundedRect(PL, y, PR - PL, 13, 2, 2, "FD");
+  doc.setFont("helvetica","normal"); doc.setFontSize(9); setTxt("#5A5A6E");
+  doc.text("Total (incl. 18% GST)", PL + 5, y + 5.5);
+  doc.setFont("helvetica","bold"); doc.setFontSize(14); setTxt(isFree ? "#1A7A4A" : "#B8860B");
+  doc.text(isFree ? "Free!" : `Rs.${grandTotal.toLocaleString("en-IN")}`, PL + 5, y + 11.5);
+  doc.setFont("helvetica","normal"); doc.setFontSize(8); setTxt("#5A5A6E");
+  doc.text("Apply at: visa.mytriplooker.com/apply?country=" + country.slug, PR - 5, y + 9, { align: "right" });
+  y += 20;
+
+  // ── IMPORTANT NOTES ───────────────────────────────────────────────
+  if (country.generalNotes.length > 0) {
+    setFill("#EEF4FF"); setStroke("#4A8FE8");
+    doc.setLineWidth(0.4);
+    const notesH = 10 + country.generalNotes.length * 6;
+    doc.roundedRect(PL, y, PR - PL, notesH, 2, 2, "FD");
+    doc.setFont("helvetica","bold"); doc.setFontSize(8); setTxt("#4A8FE8");
+    doc.text("IMPORTANT NOTES", PL + 5, y + 7);
+    country.generalNotes.forEach((note, i) => {
+      doc.setFont("helvetica","normal"); doc.setFontSize(8); setTxt("#333355");
+      doc.text(`• ${note}`, PL + 5, y + 13 + i * 6, { maxWidth: PR - PL - 10 });
+    });
+    y += notesH + 8;
+  }
+
+  // ── DOCUMENT CHECKLIST ────────────────────────────────────────────
+  doc.setFont("helvetica","bold"); doc.setFontSize(13); setTxt("#08080F");
+  doc.text(`Document Checklist  (${vt.documents.length} items)`, PL, y);
+  setFill("#D4AF6A"); doc.rect(PL, y + 2, 60, 0.6, "F");
+  y += 11;
+
+  vt.documents.forEach((docItem, idx) => {
+    // page break guard
+    if (y > 255) {
+      doc.addPage();
+      setFill("#08080F"); doc.rect(0, 0, W, 12, "F");
+      setFill("#D4AF6A"); doc.rect(0, 12, W, 0.8, "F");
+      doc.setFont("helvetica","bold"); doc.setFontSize(8); setTxt("#D4AF6A");
+      doc.text(`${country.name} Visa Checklist (cont.)`, PL, 9);
+      y = 22;
+    }
+
+    const required = docItem.required;
+    const boxH = 10 + docItem.specs.length * 5 + (docItem.notes ? 7 : 0);
+    setFill(required ? "#FFF8F8" : "#F8F8FF"); setStroke(required ? "#E85D4A" : "#AAAACC");
+    doc.setLineWidth(0.3); doc.roundedRect(PL, y, PR - PL, boxH, 2, 2, "FD");
+
+    // Index + name
+    doc.setFont("helvetica","bold"); doc.setFontSize(9.5);
+    setTxt("#1A1A28"); doc.text(`${idx + 1}.  ${docItem.icon} ${docItem.name}`, PL + 4, y + 7);
+
+    // Required badge
+    const badgeX = PR - 5;
+    doc.setFont("helvetica","bold"); doc.setFontSize(7);
+    setTxt(required ? "#E85D4A" : "#8A8A9A");
+    doc.text(required ? "REQUIRED" : "OPTIONAL", badgeX - (required ? 18 : 15), y + 7, { align: "left" });
+
+    // Specs
+    docItem.specs.forEach((spec, si) => {
+      doc.setFont("helvetica","normal"); doc.setFontSize(7.5); setTxt("#555566");
+      doc.text(`    – ${spec}`, PL + 6, y + 13 + si * 5, { maxWidth: PR - PL - 30 });
+    });
+
+    // Notes
+    if (docItem.notes) {
+      const noteY = y + 13 + docItem.specs.length * 5;
+      doc.setFont("helvetica","italic"); doc.setFontSize(7); setTxt("#B8860B");
+      doc.text(`⚠ ${docItem.notes}`, PL + 6, noteY, { maxWidth: PR - PL - 12 });
+    }
+
+    y += boxH + 4;
+  });
+
+  y += 6;
+
+  // ── EMBASSY INFO ─────────────────────────────────────────────────
+  if (y > 255) { doc.addPage(); y = 20; }
+  setFill("#F5F5F5"); setStroke("#CCCCCC");
+  doc.setLineWidth(0.3); doc.roundedRect(PL, y, PR - PL, 18, 2, 2, "FD");
+  doc.setFont("helvetica","bold"); doc.setFontSize(8); setTxt("#5A5A6E");
+  doc.text("EMBASSY IN INDIA", PL + 5, y + 6);
+  doc.setFont("helvetica","normal"); doc.setFontSize(9); setTxt("#1A1A28");
+  doc.text(country.embassyInIndia, PL + 5, y + 12);
+  doc.setFont("helvetica","normal"); doc.setFontSize(8); setTxt("#4A8FE8");
+  doc.text(country.officialUrl, PR - 5, y + 12, { align: "right" });
+  y += 24;
+
+  // ── FOOTER ────────────────────────────────────────────────────────
+  const pageCount = (doc as unknown as {internal:{getNumberOfPages:()=>number}}).internal.getNumberOfPages();
+  for (let p = 1; p <= pageCount; p++) {
+    doc.setPage(p);
+    setFill("#08080F"); doc.rect(0, 285, W, 12, "F");
+    doc.setFont("helvetica","normal"); doc.setFontSize(7); setTxt("#D4AF6A");
+    doc.text("MyTripLooker  •  visa.mytriplooker.com  •  sales@mytriplooker.com  •  +91 90122 22901", W / 2, 291, { align: "center" });
+    setTxt("#5A5A6E");
+    doc.text(`Generated: ${new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}   |   Page ${p} of ${pageCount}`, W / 2, 295, { align: "center" });
+  }
+
+  doc.save(`MTL-${country.name.replace(/\s+/g,"-")}-Visa-Checklist.pdf`);
+}
+
 function CountryModal({ country, onClose }: { country: Country; onClose: () => void }) {
   const [activeVisa, setActiveVisa] = useState(0);
+  const [pdfLoading, setPdfLoading] = useState(false);
   const vt = country.visaTypes[activeVisa];
   const totalFee = vt.embassyFee + vt.serviceFee;
   const gst = Math.round(totalFee * 0.18);
   const grandTotal = totalFee + gst;
   const isFree = grandTotal === 0;
 
+  const handleExportPDF = async () => {
+    setPdfLoading(true);
+    try { await generateChecklistPDF(country, activeVisa); }
+    finally { setPdfLoading(false); }
+  };
 
   return (
     <div
@@ -110,7 +292,29 @@ function CountryModal({ country, onClose }: { country: Country; onClose: () => v
               <div style={{ fontSize: 13, color: "#8A8A9A", marginTop: 2 }}>{country.tagline}</div>
             </div>
           </div>
-          <button onClick={onClose} style={{ background: "#2A2A3E", border: "none", borderRadius: 8, width: 36, height: 36, cursor: "pointer", color: "#8A8A9A", fontSize: 18, display: "flex", alignItems: "center", justifyContent: "center" }}>✕</button>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <button
+              onClick={handleExportPDF}
+              disabled={pdfLoading}
+              title="Export checklist as PDF"
+              style={{
+                background: pdfLoading ? "#2A2A3E" : "linear-gradient(135deg,#D4AF6A,#E8C977)",
+                border: "none", borderRadius: 8, padding: "8px 14px",
+                cursor: pdfLoading ? "not-allowed" : "pointer",
+                color: pdfLoading ? "#8A8A9A" : "#08080F",
+                fontSize: 12, fontWeight: 700, fontFamily: "'Outfit',sans-serif",
+                display: "flex", alignItems: "center", gap: 6, whiteSpace: "nowrap",
+                transition: "all 0.2s",
+              }}
+            >
+              {pdfLoading ? (
+                <><span style={{ display: "inline-block", width: 12, height: 12, border: "2px solid #8A8A9A", borderTopColor: "transparent", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />Generating…</>
+              ) : (
+                <>📥 Export PDF</>
+              )}
+            </button>
+            <button onClick={onClose} style={{ background: "#2A2A3E", border: "none", borderRadius: 8, width: 36, height: 36, cursor: "pointer", color: "#8A8A9A", fontSize: 18, display: "flex", alignItems: "center", justifyContent: "center" }}>✕</button>
+          </div>
         </div>
 
         <div style={{ padding: "24px 28px", display: "flex", flexDirection: "column", gap: 24 }}>
@@ -315,6 +519,7 @@ export default function ChecklistPageClient() {
         *,*::before,*::after{box-sizing:border-box;}
         ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:#08080F;}::-webkit-scrollbar-thumb{background:#3A3A4E;border-radius:2px;}
         input::placeholder{color:#3A3A4E;}
+        @keyframes spin{to{transform:rotate(360deg);}}
       
         /* ── Mobile responsive ─────────────────────────────── */
         @media (max-width:767px) {
