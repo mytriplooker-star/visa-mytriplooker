@@ -427,7 +427,33 @@ function ApplyPageInner() {
         .csearch{background:#1A1A28;border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px 14px;color:#F5F0E8;font-size:14px;font-family:'Outfit',sans-serif;outline:none;width:100%;}
         .csearch:focus{border-color:rgba(212,175,106,0.6);}
         .csearch::placeholder{color:#3A3A4E;}
-      `}</style>
+      
+        /* ── Mobile responsive ─────────────────────────────── */
+        @media (max-width:767px) {
+          .mtl-inner { padding-left:16px !important; padding-right:16px !important; }
+          .form-card { padding:20px 16px !important; }
+          .form-row-2 { grid-template-columns:1fr !important; }
+          .nav-desktop-links { display:none !important; }
+          .nav-desktop-cta { display:none !important; }
+          .mobile-menu-btn { display:flex !important; }
+          .sidebar-panel { display:none !important; }
+          .footer-inner { flex-direction:column !important; gap:20px !important; }
+          .footer-links { flex-wrap:wrap !important; gap:14px !important; }
+          .page-main { padding-left:16px !important; padding-right:16px !important; }
+          .stepper-wrap { padding:0 12px !important; }
+          .step-label { display:none !important; }
+          .hero-section { padding-left:16px !important; padding-right:16px !important; }
+          .cta-wrap { flex-direction:column !important; }
+          .track-card { padding:20px 16px !important; }
+          .auth-card { padding:28px 20px !important; }
+          .checklist-sidebar { display:none !important; }
+          .upload-zone { padding:32px 16px !important; }
+        }
+        @media (max-width:480px) {
+          .gender-row { grid-template-columns:1fr !important; }
+          .pay-method-grid { grid-template-columns:1fr 1fr !important; }
+          .stat-grid { grid-template-columns:1fr 1fr !important; }
+        }`}</style>
 
       <SharedNav current="/apply" />
 
@@ -620,25 +646,13 @@ function ApplyPageInner() {
 
 /* ── Shared Components ──────────────────────────────────────────────── */
 function MTLLogo({ height = 36 }: { height?: number }) {
-  const s = height / 48;
-  const fsLarge = Math.round(26 * s);
-  const fsSmall = Math.round(17 * s);
   return (
-    <Link href="/" style={{display:"inline-flex",alignItems:"flex-end",textDecoration:"none",gap:0,lineHeight:1,paddingBottom:2}}>
-      <span style={{fontFamily:"'Outfit',sans-serif",fontWeight:900,fontSize:fsLarge,color:"#1EC8F0",letterSpacing:"-0.5px",lineHeight:1}}>MY</span>
-      <span style={{fontFamily:"'Outfit',sans-serif",fontWeight:900,fontSize:fsLarge,color:"#1EC8F0",letterSpacing:"-0.5px",lineHeight:1,marginLeft:3}}>TRIP</span>
-      <span style={{fontFamily:"'Outfit',sans-serif",fontWeight:900,fontSize:fsSmall,color:"#1EC8F0",letterSpacing:"-0.5px",lineHeight:1,marginLeft:2}}>L</span>
-      <svg width={Math.round(26*s)} height={Math.round(16*s)} viewBox="0 0 26 16" style={{flexShrink:0,marginBottom:Math.round(1*s),marginLeft:Math.round(1*s)}}>
-        <circle cx="6.5" cy="8" r="6.5" fill="#D4AF6A"/>
-        <circle cx="6.5" cy="8" r="3.8" fill="#08080F"/>
-        <rect x="11" y="6.5" width="4" height="3" rx="1.5" fill="#D4AF6A"/>
-        <circle cx="19.5" cy="8" r="6.5" fill="#D4AF6A"/>
-        <circle cx="19.5" cy="8" r="3.8" fill="#08080F"/>
-      </svg>
-      <span style={{fontFamily:"'Outfit',sans-serif",fontWeight:900,fontSize:fsSmall,color:"#1EC8F0",letterSpacing:"-0.5px",lineHeight:1,marginLeft:Math.round(1*s)}}>KER</span>
+    <Link href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
+      <img src="/logo.png" alt="MyTripLooker" style={{ height: height, width: "auto", display: "block" }} />
     </Link>
   );
 }
+
 
 const NAV_LINKS: [string,string][] = [
   ["/checklist","Destinations"],["/track","Track"],["/upload","Upload Docs"],
@@ -646,7 +660,7 @@ const NAV_LINKS: [string,string][] = [
 
 function SharedNav({ current = "" }: { current?: string }) {
   return (
-    <nav style={{height:64,background:"rgba(8,8,15,0.97)",backdropFilter:"blur(20px)",borderBottom:"1px solid rgba(212,175,106,0.12)",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 40px",position:"sticky",top:0,zIndex:200}}>
+    <nav style={{height:64,background:"rgba(8,8,15,0.97)",backdropFilter:"blur(20px)",borderBottom:"1px solid rgba(212,175,106,0.12)",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 clamp(16px,4vw,40px)",position:"sticky",top:0,zIndex:200}}>
       <MTLLogo height={38} />
       <div style={{display:"flex",alignItems:"center",gap:28}}>
         {NAV_LINKS.map(([href,label]) => (
@@ -663,7 +677,7 @@ function SharedNav({ current = "" }: { current?: string }) {
 
 const FOOTER_LINKS: [string,string][] = [
   ["/#privacy","Privacy Policy"],["/#terms","Terms of Service"],
-  ["mailto:support@mytriplooker.com","Contact Us"],
+  ["mailto:sales@mytriplooker.com","Contact Us"],
   ["/track","Track Application"],["/login","Sign In"],
 ];
 
@@ -683,7 +697,7 @@ function SharedFooter() {
   );
 }
 
-export default function ApplyPage() {
+export default function ApplyPageClient() {
   return (
     <Suspense fallback={
       <div style={{background:"#08080F",minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center"}}>

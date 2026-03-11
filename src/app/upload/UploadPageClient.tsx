@@ -181,7 +181,7 @@ function SharedNav({ current = "" }: { current?: string }) {
 
 const FOOTER_LINKS: [string,string][] = [
   ["/#privacy","Privacy Policy"],["/#terms","Terms of Service"],
-  ["mailto:support@mytriplooker.com","Contact Us"],
+  ["mailto:sales@mytriplooker.com","Contact Us"],
   ["/track","Track Application"],["/login","Sign In"],
 ];
 
@@ -206,7 +206,7 @@ function SharedFooter() {
 }
 // ═══════════════════════════════════════════════════════════════════
 
-export default function UploadPage() {
+export default function UploadPageClient() {
   const [files, setFiles] = useState<Record<string, FileState>>(
     Object.fromEntries(DOC_SLOTS.map(s => [s.id, { ...EMPTY_FILE_STATE }]))
   );

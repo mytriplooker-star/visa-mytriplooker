@@ -102,7 +102,7 @@ function SharedNav({ current = "" }: { current?: string }) {
 
 const FOOTER_LINKS: [string,string][] = [
   ["/#privacy","Privacy Policy"],["/#terms","Terms of Service"],
-  ["mailto:support@mytriplooker.com","Contact Us"],
+  ["mailto:sales@mytriplooker.com","Contact Us"],
   ["/track","Track Application"],["/login","Sign In"],
 ];
 
@@ -127,7 +127,7 @@ function SharedFooter() {
 }
 // ═══════════════════════════════════════════════════════════════════
 
-export default function PaymentPage() {
+export default function PaymentPageClient() {
   const [order] = useState<OrderSummary>(MOCK_ORDER);
   const [payMethod, setPayMethod] = useState<"upi" | "card" | "netbanking" | "wallet">("upi");
   const [upiId, setUpiId] = useState("");

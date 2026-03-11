@@ -271,13 +271,13 @@ function SharedNav({ current = "" }: { current?: string }) {
 
 const FOOTER_LINKS: [string,string][] = [
   ["/#privacy","Privacy Policy"],["/#terms","Terms of Service"],
-  ["mailto:support@mytriplooker.com","Contact Us"],
+  ["mailto:sales@mytriplooker.com","Contact Us"],
   ["/track","Track Application"],["/login","Sign In"],
 ];
 
 // ═══════════════════════════════════════════════════════════════════
 
-export default function ChecklistPage() {
+export default function ChecklistPageClient() {
   const [activeRegion, setActiveRegion] = useState<Region | "all">("all");
   const [search, setSearch] = useState("");
   const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);

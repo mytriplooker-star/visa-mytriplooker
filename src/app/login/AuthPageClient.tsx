@@ -48,7 +48,7 @@ function SharedNav({ current = "" }: { current?: string }) {
 
 const FOOTER_LINKS: [string,string][] = [
   ["/#privacy","Privacy Policy"],["/#terms","Terms of Service"],
-  ["mailto:support@mytriplooker.com","Contact Us"],
+  ["mailto:sales@mytriplooker.com","Contact Us"],
   ["/track","Track Application"],["/login","Sign In"],
 ];
 
@@ -73,7 +73,7 @@ function SharedFooter() {
 }
 // ═══════════════════════════════════════════════════════════════════
 
-export default function AuthPage() {
+export default function AuthPageClient() {
   const [mode, setMode] = useState<Mode>("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

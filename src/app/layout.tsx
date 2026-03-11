@@ -1,381 +1,180 @@
 import type { Metadata, Viewport } from "next";
-import { DM_Sans, Outfit } from "next/font/google";
 import "./globals.css";
 
-/* ─── FONTS ─── */
-const outfit = Outfit({
-  subsets: ["latin"],
-  variable: "--font-heading",
-  display: "swap",
-  weight: ["400", "500", "600", "700", "800"],
-});
-
-const dmSans = DM_Sans({
-  subsets: ["latin"],
-  variable: "--font-body",
-  display: "swap",
-  weight: ["400", "500", "600", "700"],
-});
-
-/* ─── VIEWPORT (Next.js 14 — must be separate export) ─── */
-export const viewport: Viewport = {
-  width: "device-width",
-  initialScale: 1,
-  maximumScale: 5,
-  userScalable: true,
-  themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#020617" },
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-  ],
-};
-
-/* ─── METADATA ─── */
+/* ─────────────────────────────────────────────────────────────────────────
+   GLOBAL METADATA  — applies to every page unless a page overrides it
+───────────────────────────────────────────────────────────────────────── */
 export const metadata: Metadata = {
   metadataBase: new URL("https://visa.mytriplooker.com"),
   title: {
-    default:
-      "Visa for Indians | UAE, Thailand, Vietnam & 50+ Countries | My Trip Looker",
-    template: "%s | Visa for Indians — My Trip Looker",
+    default: "MyTripLooker — Visa Services for Indian Passport Holders",
+    template: "%s | MyTripLooker Visa",
   },
   description:
-    "Embassy-accurate visa for Indian passport holders. 50,000+ visas processed | 98.7% approval rate | Real-time WhatsApp & email tracking. UAE eVisa, Thailand, Vietnam, Indonesia VOA & more in 4 easy steps.",
+    "Fast, affordable visa processing for Indian travellers. Apply online for Dubai, Bali, Thailand, Singapore, UK, USA & 50+ countries. Track your application in real-time. 98.7% approval rate.",
   keywords: [
-    "visa for indians",
-    "uae visa for indians",
-    "dubai visa for indians",
-    "thailand visa for indians",
-    "vietnam visa for indians",
-    "evisa india",
-    "indian passport visa",
-    "visa on arrival for indians",
-    "singapore visa for indians",
-    "malaysia visa for indians",
-    "indonesia visa for indians",
-    "bali visa for indians",
-    "turkey visa for indians",
-    "japan visa for indians",
-    "online visa application india",
-    "dubai evisa",
-    "thailand evisa from india",
-    "my trip looker",
+    "visa for indian passport","online visa apply india","dubai visa india",
+    "bali visa india","thailand visa","singapore visa india","uk visa india",
+    "usa visa india","visa processing india","evisa india","mytriplooker",
+    "visa service india","visa agent india","passport visa",
   ],
-  authors: [{ name: "My Trip Looker", url: "https://visa.mytriplooker.com" }],
-  creator: "My Trip Looker",
-  publisher: "My Trip Looker",
+  authors: [{ name: "MyTripLooker", url: "https://visa.mytriplooker.com" }],
+  creator: "MyTripLooker",
+  publisher: "MyTripLooker",
   robots: {
     index: true,
     follow: true,
-    nocache: false,
-    googleBot: {
-      index: true,
-      follow: true,
-      noimageindex: false,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
-  alternates: {
-    canonical: "https://visa.mytriplooker.com",
+    googleBot: { index: true, follow: true, "max-snippet": -1, "max-image-preview": "large" },
   },
   openGraph: {
     type: "website",
     locale: "en_IN",
     url: "https://visa.mytriplooker.com",
-    siteName: "My Trip Looker — Visa Services for Indians",
-    title:
-      "Visa for Indians | UAE, Thailand, Vietnam & 50+ Countries | My Trip Looker",
+    siteName: "MyTripLooker",
+    title: "MyTripLooker — Visa Services for Indian Passport Holders",
     description:
-      "Embassy-accurate visa for Indian passport holders. 50,000+ visas processed | 98.7% approval rate. UAE eVisa, Thailand, Vietnam, Indonesia VOA & more.",
+      "Apply for Dubai, Bali, Thailand, UK & 50+ country visas online. Embassy-accurate checklists, expert processing, real-time tracking.",
     images: [
       {
-        url: "https://visa.mytriplooker.com/og-visa.jpg",
+        url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "My Trip Looker — Trusted Visa Services for Indian Passport Holders — 50+ Countries",
-        type: "image/jpeg",
+        alt: "MyTripLooker — Visa Services",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    site: "@mytriplooker",
-    creator: "@mytriplooker",
-    title: "Visa for Indians | UAE, Thailand, Vietnam & 50+ Countries",
+    title: "MyTripLooker — Visa Services for Indian Passport Holders",
     description:
-      "98.7% approval rate · 50,000+ visas processed · Real-time WhatsApp tracking. Apply in 4 steps.",
-    images: ["https://visa.mytriplooker.com/og-visa.jpg"],
+      "Fast visa processing for Indian travellers. 50+ countries, 98.7% approval rate.",
+    images: ["/og-image.jpg"],
+    creator: "@mytriplooker",
   },
-  icons: {
-    icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/icon.svg", type: "image/svg+xml" },
-      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-    ],
-    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+  alternates: {
+    canonical: "https://visa.mytriplooker.com",
   },
-  manifest: "/site.webmanifest",
-  category: "travel",
-  other: {
-    "google-site-verification": "YOUR_GOOGLE_VERIFICATION_CODE",
+  verification: {
+    google: "REPLACE_WITH_GOOGLE_SEARCH_CONSOLE_TOKEN",
   },
 };
 
-/* ─── JSON-LD STRUCTURED DATA ─── */
-const jsonLdOrganization = {
-  "@context": "https://schema.org",
-  "@type": "TravelAgency",
-  "@id": "https://visa.mytriplooker.com/#organization",
-  name: "My Trip Looker",
-  alternateName: "MyTripLooker Visa Services",
-  url: "https://visa.mytriplooker.com",
-  logo: {
-    "@type": "ImageObject",
-    url: "https://visa.mytriplooker.com/logo.png",
-    width: 512,
-    height: 512,
-  },
-  image: "https://visa.mytriplooker.com/og-visa.jpg",
-  description:
-    "India's trusted visa facilitation service. Embassy-accurate processing for Indian passport holders across 50+ countries.",
-  address: {
-    "@type": "PostalAddress",
-    addressCountry: "IN",
-    addressLocality: "India",
-  },
-  contactPoint: {
-    "@type": "ContactPoint",
-    contactType: "customer service",
-    availableLanguage: ["English", "Hindi"],
-  },
-  sameAs: [
-    "https://www.mytriplooker.com",
-  ],
-  aggregateRating: {
-    "@type": "AggregateRating",
-    ratingValue: "4.9",
-    reviewCount: "12400",
-    bestRating: "5",
-    worstRating: "1",
-  },
-  priceRange: "₹₹",
-  areaServed: {
-    "@type": "Country",
-    name: "India",
-  },
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: "#08080F",
 };
 
-const jsonLdService = {
+/* ─────────────────────────────────────────────────────────────────────────
+   STRUCTURED DATA (JSON-LD)
+───────────────────────────────────────────────────────────────────────── */
+const jsonLd = {
   "@context": "https://schema.org",
-  "@type": "Service",
-  "@id": "https://visa.mytriplooker.com/#service",
-  name: "Visa Processing Services for Indians",
-  description:
-    "Fast, embassy-accurate visa processing for Indian passport holders. UAE eVisa, Thailand, Vietnam, Indonesia VOA, Singapore, Malaysia & 50+ countries.",
-  provider: {
-    "@type": "TravelAgency",
-    name: "My Trip Looker",
-    url: "https://visa.mytriplooker.com",
-  },
-  serviceType: "Visa Facilitation",
-  areaServed: {
-    "@type": "Country",
-    name: "India",
-  },
-  hasOfferCatalog: {
-    "@type": "OfferCatalog",
-    name: "Visa Services",
-    itemListElement: [
-      {
-        "@type": "Offer",
-        itemOffered: {
-          "@type": "Service",
-          name: "UAE / Dubai eVisa for Indians",
-          description: "UAE eVisa processing in 2-4 business days",
-        },
-        price: "2499",
-        priceCurrency: "INR",
-      },
-      {
-        "@type": "Offer",
-        itemOffered: {
-          "@type": "Service",
-          name: "Thailand Tourist Visa for Indians",
-          description: "Thailand visa processing in 4-7 business days",
-        },
-        price: "1899",
-        priceCurrency: "INR",
-      },
-      {
-        "@type": "Offer",
-        itemOffered: {
-          "@type": "Service",
-          name: "Vietnam eVisa for Indians",
-          description: "Vietnam eVisa processing in 3-5 business days",
-        },
-        price: "1599",
-        priceCurrency: "INR",
-      },
-      {
-        "@type": "Offer",
-        itemOffered: {
-          "@type": "Service",
-          name: "Singapore eVisa for Indians",
-          description: "Singapore eVisa processing in 3-5 business days",
-        },
-        price: "3299",
-        priceCurrency: "INR",
-      },
-    ],
-  },
-};
-
-const jsonLdWebSite = {
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "@id": "https://visa.mytriplooker.com/#website",
-  name: "My Trip Looker Visa Services",
-  url: "https://visa.mytriplooker.com",
-  publisher: {
-    "@id": "https://visa.mytriplooker.com/#organization",
-  },
-  description:
-    "Visa services for Indian passport holders — 50+ countries, 98.7% approval rate.",
-  potentialAction: {
-    "@type": "SearchAction",
-    target: {
-      "@type": "EntryPoint",
-      urlTemplate:
-        "https://visa.mytriplooker.com/visa/{search_term_string}",
-    },
-    "query-input": "required name=search_term_string",
-  },
-};
-
-const jsonLdBreadcrumb = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: [
+  "@graph": [
     {
-      "@type": "ListItem",
-      position: 1,
-      name: "Home",
-      item: "https://www.mytriplooker.com",
+      "@type": "TravelAgency",
+      "@id": "https://visa.mytriplooker.com/#organization",
+      name: "MyTripLooker",
+      url: "https://visa.mytriplooker.com",
+      logo: "https://visa.mytriplooker.com/logo.png",
+      description:
+        "Online visa processing service for Indian passport holders. We handle Dubai, Bali, Thailand, UK, USA and 50+ country visas.",
+      address: {
+        "@type": "PostalAddress",
+        addressCountry: "IN",
+      },
+      contactPoint: {
+        "@type": "ContactPoint",
+        contactType: "customer support",
+        email: "sales@mytriplooker.com",
+        availableLanguage: ["English", "Hindi"],
+      },
+      sameAs: [
+        "https://www.instagram.com/mytriplooker",
+        "https://www.facebook.com/mytriplooker",
+      ],
     },
     {
-      "@type": "ListItem",
-      position: 2,
-      name: "Visa Services",
-      item: "https://visa.mytriplooker.com",
+      "@type": "WebSite",
+      "@id": "https://visa.mytriplooker.com/#website",
+      url: "https://visa.mytriplooker.com",
+      name: "MyTripLooker",
+      publisher: { "@id": "https://visa.mytriplooker.com/#organization" },
+      potentialAction: {
+        "@type": "SearchAction",
+        target: {
+          "@type": "EntryPoint",
+          urlTemplate: "https://visa.mytriplooker.com/checklist?q={search_term_string}",
+        },
+        "query-input": "required name=search_term_string",
+      },
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          name: "How long does visa processing take for Indian passport holders?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Processing times vary: Dubai/UAE eVisa takes 3-5 working days, Bali VOA is instant, Thailand eVisa 5-7 days, UK/USA visas take 15-60 days. We show exact timelines for each country.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "What documents do I need for a visa application?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Typically: valid Indian passport (6+ months validity), recent passport-size photo, travel dates, accommodation details, and financial proof. Our checklist shows exact requirements per country.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "Is MyTripLooker safe and legitimate?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Yes. MyTripLooker is a registered visa service with 50,000+ processed applications and a 98.7% approval rate. Payments are secured by Razorpay with 256-bit SSL encryption.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "What is the fee for visa processing?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Fees vary by country: Dubai from ₹2,499, Bali from ₹1,299, Thailand from ₹1,899. This includes embassy fee + our service fee + GST. All fees are shown transparently before payment.",
+          },
+        },
+      ],
     },
   ],
 };
 
-const jsonLdFaq = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: [
-    {
-      "@type": "Question",
-      name: "How do I apply for a UAE eVisa as an Indian passport holder?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Apply through My Trip Looker in 4 easy steps: choose UAE as your destination, upload your passport and photo, pay securely via UPI or card, and receive your eVisa via email in 2-4 business days. Our experts handle all embassy coordination.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "What is the visa approval rate for applications processed by My Trip Looker?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "My Trip Looker maintains a 98.7% approval rate across 50+ countries with over 50,000 visas processed for Indian passport holders. Our expert document review minimizes rejection risk.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Which countries offer visa on arrival for Indian passport holders?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Countries offering visa on arrival for Indians include Indonesia (Bali), Thailand (select categories), Maldives, Cambodia, Laos, Seychelles, and several others. My Trip Looker helps with pre-registration and required documentation.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "How much does a Dubai visa cost for Indians?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "A standard Dubai/UAE tourist eVisa for Indian passport holders costs ₹2,499 through My Trip Looker, with processing in 2-4 business days. Express 24-hour processing is available for an additional fee.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Do I need a visa for Malaysia as an Indian citizen?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "India is eligible for Malaysia's visa-free transit program for certain durations. For longer stays, an eVisa or eNTRI is required. My Trip Looker can guide you on the right option and handle the application.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Can I track my visa application status in real-time?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Yes. My Trip Looker provides real-time tracking via WhatsApp and email at every stage — from document review to embassy submission to visa approval and delivery.",
-      },
-    },
-  ],
-};
-
-/* ─── ROOT LAYOUT ─── */
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+/* ─────────────────────────────────────────────────────────────────────────
+   ROOT LAYOUT
+───────────────────────────────────────────────────────────────────────── */
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${outfit.variable} ${dmSans.variable}`}>
+    <html lang="en-IN">
       <head>
-        {/* Structured data — multiple JSON-LD blocks for rich results */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(jsonLdOrganization),
-          }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdService) }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdWebSite) }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(jsonLdBreadcrumb),
-          }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdFaq) }}
-        />
-        {/* Preconnect for performance */}
+        {/* Google Fonts */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
+          href="https://fonts.googleapis.com/css2?family=Cormorant+Garant:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Outfit:wght@300;400;500;600;700;800;900&display=swap"
+          rel="stylesheet"
+        />
+        {/* Favicons */}
+        <link rel="icon" type="image/png" href="/logo.png" />
+        <link rel="apple-touch-icon" href="/logo.png" />
+        {/* Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="font-body antialiased bg-slate-950 text-slate-100 overflow-x-hidden">
-        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[999] focus:px-4 focus:py-2 focus:bg-blue-600 focus:text-white focus:rounded-lg"
-        >
-          Skip to main content
-        </a>
+      <body style={{ margin: 0, padding: 0, background: "#08080F", color: "#F5F0E8" }}>
         {children}
       </body>
     </html>
