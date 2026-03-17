@@ -2,7 +2,7 @@
 import Link from "next/link";
 import React, { useState, useEffect, useRef, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { COUNTRIES, getTotalFee, formatINR } from "@/lib/visaData";
+import { COUNTRIES, getTotalFee, formatINR, competitorPricing, type DocRequirement } from "@/lib/visaData";
 
 /* ── Types ──────────────────────────────────────────────────────────── */
 interface FormData {
@@ -276,6 +276,189 @@ function resolveSlug(raw: string): string {
   return byName?.slug ?? "";
 }
 
+/* ── Helpers for right panel ─────────────────────────────────────── */
+function parseMaxDays(processingDays: string): number {
+  if (!processingDays || processingDays === "Instant") return 0;
+  const nums = processingDays.match(/\d+/g);
+  if (!nums) return 7;
+  return Math.max(...nums.map(Number));
+}
+function fmtEstDate(d: Date): string {
+  const days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  return `${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+/* ── DocRow ─────────────────────────────────────────────────────────── */
+function DocRow({ doc }: { doc: DocRequirement }) {
+  return (
+    <div style={{ display:"flex", alignItems:"flex-start", gap:10, padding:"8px 0", borderBottom:"1px solid rgba(255,255,255,0.04)" }}>
+      <span style={{ fontSize:18, flexShrink:0 }}>{doc.icon}</span>
+      <div style={{ flex:1, minWidth:0 }}>
+        <div style={{ display:"flex", alignItems:"center", gap:6, flexWrap:"wrap" }}>
+          <span style={{ fontSize:12, fontWeight:700, color:"#F5F0E8", lineHeight:1.3 }}>{doc.name}</span>
+          <span style={{ fontSize:9, fontWeight:700, padding:"1px 6px", borderRadius:3,
+            background: doc.required ? "rgba(232,93,74,0.1)" : "rgba(212,175,106,0.1)",
+            color: doc.required ? "#E85D4A" : "#D4AF6A",
+            border: `1px solid ${doc.required ? "rgba(232,93,74,0.2)" : "rgba(212,175,106,0.2)"}` }}>
+            {doc.required ? "REQUIRED" : "OPTIONAL"}
+          </span>
+        </div>
+        {doc.specs[0] && <div style={{ fontSize:11, color:"#8A8A9A", marginTop:2 }}>{doc.specs[0]}</div>}
+      </div>
+    </div>
+  );
+}
+
+/* ── DocChecklist ────────────────────────────────────────────────── */
+function DocChecklist({ country, visa }: { country: typeof COUNTRIES[0]; visa: typeof COUNTRIES[0]["visaTypes"][0] }) {
+  const required = visa.documents.filter(d => d.required);
+  const optional = visa.documents.filter(d => !d.required);
+  return (
+    <div style={{ background:"#0E0E1A", border:"1px solid rgba(212,175,106,0.18)", borderRadius:16, overflow:"hidden" }}>
+      <div style={{ padding:"14px 18px", borderBottom:"1px solid rgba(255,255,255,0.05)", background:"rgba(212,175,106,0.05)" }}>
+        <div style={{ fontSize:10, fontWeight:800, letterSpacing:"1.2px", textTransform:"uppercase", color:"#D4AF6A" }}>
+          📋 Checklist — {country.name}
+        </div>
+      </div>
+      <div style={{ padding:"10px 16px", maxHeight:280, overflowY:"auto" }}>
+        {required.length > 0 && <>
+          <div style={{ fontSize:9, fontWeight:700, letterSpacing:"1px", textTransform:"uppercase", color:"#E85D4A", marginBottom:6, marginTop:4 }}>MANDATORY</div>
+          {required.map(doc => <DocRow key={doc.id} doc={doc} />)}
+        </>}
+        {optional.length > 0 && <>
+          <div style={{ fontSize:9, fontWeight:700, letterSpacing:"1px", textTransform:"uppercase", color:"#8A8A9A", marginBottom:6, marginTop:10 }}>OPTIONAL</div>
+          {optional.map(doc => <DocRow key={doc.id} doc={doc} />)}
+        </>}
+      </div>
+    </div>
+  );
+}
+
+/* ── PricingTable ────────────────────────────────────────────────── */
+function PricingTable({ country, visa }: { country: typeof COUNTRIES[0]; visa: typeof COUNTRIES[0]["visaTypes"][0] }) {
+  const comp = competitorPricing[country.slug];
+  if (!comp) return null;
+  const mtlRaw = Math.min(comp.useteleport, comp.atlys) - 100;
+  const mtl = mtlRaw < 0 ? Math.min(comp.useteleport, comp.atlys) : mtlRaw;
+  const totalFee = getTotalFee(visa);
+  const displayMTL = totalFee > 0 ? formatINR(totalFee) : formatINR(mtl);
+  const fmt = (n: number) => `₹${n.toLocaleString("en-IN")}`;
+  return (
+    <div style={{ background:"#0E0E1A", border:"1px solid rgba(212,175,106,0.18)", borderRadius:16, overflow:"hidden" }}>
+      <div style={{ padding:"14px 18px", borderBottom:"1px solid rgba(255,255,255,0.05)", background:"rgba(212,175,106,0.05)" }}>
+        <div style={{ fontSize:10, fontWeight:800, letterSpacing:"1.2px", textTransform:"uppercase", color:"#D4AF6A" }}>Why choose MyTripLooker?</div>
+      </div>
+      <div style={{ padding:"12px 16px" }}>
+        <div style={{ display:"grid", gridTemplateColumns:"1fr 80px 80px", gap:8, padding:"6px 0", borderBottom:"1px solid rgba(255,255,255,0.08)", marginBottom:4 }}>
+          {["Service","Price","Speed"].map(h => (
+            <span key={h} style={{ fontSize:9, fontWeight:700, color:"#5A5A6E", textTransform:"uppercase", letterSpacing:"0.5px", textAlign: h==="Service"?"left":"right" }}>{h}</span>
+          ))}
+        </div>
+        {[
+          { name:"useteleport.com", price:comp.useteleport, speed:"standard" },
+          { name:"atlys.com",       price:comp.atlys,       speed:"standard" },
+        ].map(row => (
+          <div key={row.name} style={{ display:"grid", gridTemplateColumns:"1fr 80px 80px", gap:8, padding:"7px 0", borderBottom:"1px solid rgba(255,255,255,0.04)" }}>
+            <span style={{ fontSize:12, color:"#8A8A9A" }}>{row.name}</span>
+            <span style={{ fontSize:12, color:"#8A8A9A", textAlign:"right" }}>{fmt(row.price)}</span>
+            <span style={{ fontSize:11, color:"#5A5A6E", textAlign:"right" }}>{row.speed}</span>
+          </div>
+        ))}
+        <div style={{ display:"grid", gridTemplateColumns:"1fr 80px 80px", gap:8, padding:"10px 12px", background:"rgba(212,175,106,0.08)", border:"1px solid rgba(212,175,106,0.25)", borderRadius:8, marginTop:6 }}>
+          <span style={{ fontSize:12, fontWeight:700, color:"#D4AF6A" }}>✅ MyTripLooker</span>
+          <span style={{ fontSize:12, fontWeight:700, color:"#D4AF6A", textAlign:"right" }}>{displayMTL}</span>
+          <span style={{ fontSize:11, color:"#2ECC8B", textAlign:"right" }}>⚡ Fastest</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── VisaTimeline ────────────────────────────────────────────────── */
+function VisaTimeline({ visa }: { visa: typeof COUNTRIES[0]["visaTypes"][0] }) {
+  const maxDays = parseMaxDays(visa.processingDays);
+  const today = new Date();
+  const est = new Date(today);
+  est.setDate(today.getDate() + 1 + maxDays);
+  const tlSteps = [
+    { label:"Application Submitted", sub:"Today",             color:"#2ECC8B", green:true },
+    { label:"Document Review",       sub:"+1 day",            color:"#D4AF6A", green:false },
+    { label:"Embassy Processing",    sub:`+${maxDays} days`,  color:"#D4AF6A", green:false },
+    { label:"Visa Approved ✓",       sub:`Est: ${fmtEstDate(est)}`, color:"#2ECC8B", green:true },
+  ];
+  return (
+    <div style={{ background:"#0E0E1A", border:"1px solid rgba(212,175,106,0.18)", borderRadius:16, overflow:"hidden" }}>
+      <div style={{ padding:"14px 18px", borderBottom:"1px solid rgba(255,255,255,0.05)", background:"rgba(212,175,106,0.05)" }}>
+        <div style={{ fontSize:10, fontWeight:800, letterSpacing:"1.2px", textTransform:"uppercase", color:"#D4AF6A" }}>Expected Timeline</div>
+      </div>
+      <div style={{ padding:"16px 18px" }}>
+        {tlSteps.map((s, i) => (
+          <div key={i} style={{ display:"flex", gap:12 }}>
+            <div style={{ display:"flex", flexDirection:"column", alignItems:"center", flexShrink:0 }}>
+              <div style={{ width:22, height:22, borderRadius:"50%",
+                background: s.green ? s.color : "rgba(212,175,106,0.15)",
+                border: `2px solid ${s.green ? s.color : "rgba(212,175,106,0.35)"}`,
+                display:"flex", alignItems:"center", justifyContent:"center",
+                fontSize:10, color: s.green ? "#08080F" : "#D4AF6A", fontWeight:800 }}>
+                {s.green ? "✓" : String(i+1)}
+              </div>
+              {i < tlSteps.length-1 && <div style={{ width:2, height:24, background:"rgba(212,175,106,0.2)", margin:"3px 0" }} />}
+            </div>
+            <div style={{ paddingBottom: i < tlSteps.length-1 ? 14 : 0 }}>
+              <div style={{ fontSize:12, fontWeight:700, color: i===tlSteps.length-1 ? "#2ECC8B" : "#F5F0E8" }}>{s.label}</div>
+              <div style={{ fontSize:11, color:"#8A8A9A", marginTop:2 }}>{s.sub}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ── RightPanel ──────────────────────────────────────────────────── */
+function RightPanel({ country, visa, step, onEdit }: {
+  country: typeof COUNTRIES[0]|undefined;
+  visa: typeof COUNTRIES[0]["visaTypes"][0]|undefined;
+  step: number; onEdit: ()=>void;
+}) {
+  if (!country || !visa || step < 2) return null;
+  return (
+    <div style={{ width:360, flexShrink:0, position:"sticky", top:80, alignSelf:"flex-start", display:"flex", flexDirection:"column", gap:14 }}>
+      {/* Mini order header */}
+      <div style={{ background:"#0E0E1A", border:"1px solid rgba(212,175,106,0.18)", borderRadius:16, overflow:"hidden" }}>
+        <div style={{ background:"linear-gradient(135deg,rgba(212,175,106,0.12),rgba(212,175,106,0.04))", padding:"14px 18px", borderBottom:"1px solid rgba(212,175,106,0.1)" }}>
+          <div style={{ display:"flex", alignItems:"center", gap:10 }}>
+            <span style={{ fontSize:28 }}>{country.flag}</span>
+            <div>
+              <div style={{ fontFamily:"'Cormorant Garant',serif", fontSize:15, fontWeight:600, color:"#F5F0E8" }}>{country.name}</div>
+              <div style={{ fontSize:11, color:"#8A8A9A", marginTop:2 }}>{visa.label}</div>
+            </div>
+          </div>
+        </div>
+        <div style={{ padding:"10px 18px" }}>
+          {[
+            { icon:"⏱", label:"Processing", val:`${visa.processingDays} days` },
+            { icon:"📅", label:"Validity",   val:visa.validity },
+            { icon:"🔁", label:"Entries",    val:visa.entries },
+          ].map(r => (
+            <div key={r.label} style={{ display:"flex", justifyContent:"space-between", padding:"3px 0" }}>
+              <span style={{ fontSize:11, color:"#5A5A6E" }}>{r.icon} {r.label}</span>
+              <span style={{ fontSize:11, fontWeight:600, color:"#A0A0B8" }}>{r.val}</span>
+            </div>
+          ))}
+        </div>
+        <button onClick={onEdit} style={{ width:"100%", padding:"10px", background:"transparent", border:"none", borderTop:"1px solid rgba(255,255,255,0.05)", color:"#5A5A6E", fontSize:11, cursor:"pointer", fontFamily:"'Outfit',sans-serif" }}>
+          ✏️ Change destination
+        </button>
+      </div>
+      <DocChecklist country={country} visa={visa} />
+      <PricingTable country={country} visa={visa} />
+      <VisaTimeline visa={visa} />
+    </div>
+  );
+}
+
 /* ── Step 1 ─────────────────────────────────────────────────────────── */
 interface Step1Props {
   form: FormData; setForm: React.Dispatch<React.SetStateAction<FormData>>;
@@ -397,6 +580,13 @@ function ApplyPageInner() {
   const set = (field: keyof FormData) => (val: string) =>
     setForm(p => ({ ...p, [field]: val }));
 
+  // Save applicant name + country to localStorage for upload page
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (form.fullName)    localStorage.setItem("mtl_applicant_name", form.fullName);
+    if (form.countrySlug) localStorage.setItem("mtl_country_slug",   form.countrySlug);
+  }, [form.fullName, form.countrySlug]);
+
   const selectedCountry = COUNTRIES.find(c => c.slug === form.countrySlug);
   const selectedVisa    = selectedCountry?.visaTypes.find(v => v.id === form.visaTypeId);
   const totalFee        = selectedVisa ? getTotalFee(selectedVisa) : 0;
@@ -454,8 +644,6 @@ function ApplyPageInner() {
           .pay-method-grid { grid-template-columns:1fr 1fr !important; }
           .stat-grid { grid-template-columns:1fr 1fr !important; }
         }`}</style>
-
-      <SharedNav current="/apply" />
 
       {/* STEPPER */}
       <div style={{background:"#0E0E1A",borderBottom:"1px solid rgba(255,255,255,0.05)",padding:"0 32px"}}>
@@ -635,8 +823,8 @@ function ApplyPageInner() {
           </div>
         </div>
 
-        <OrderSidebar country={selectedCountry} visa={selectedVisa}
-          totalFee={totalFee} step={step} onEdit={()=>setStep(1)} />
+        <RightPanel country={selectedCountry} visa={selectedVisa}
+          step={step} onEdit={()=>setStep(1)} />
       </div>
 
       <SharedFooter />

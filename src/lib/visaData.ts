@@ -1057,3 +1057,22 @@ export const CATEGORY_ICONS: Record<DocCategory, string> = {
   photo:         "📷",
   forms:         "📋",
 };
+
+// ── COMPETITOR PRICING ────────────────────────────────────────────────────
+export const competitorPricing: Record<string, { useteleport: number; atlys: number }> = {
+  "uae":            { useteleport: 3299,  atlys: 2899  },
+  "thailand":       { useteleport: 2499,  atlys: 2199  },
+  "vietnam":        { useteleport: 2199,  atlys: 1899  },
+  "indonesia":      { useteleport: 1799,  atlys: 1599  },
+  "singapore":      { useteleport: 3999,  atlys: 3699  },
+  "malaysia":       { useteleport: 799,   atlys: 599   },
+  "japan":          { useteleport: 6999,  atlys: 6499  },
+  "south-korea":    { useteleport: 5999,  atlys: 5499  },
+  "turkey":         { useteleport: 4999,  atlys: 4499  },
+  "egypt":          { useteleport: 3799,  atlys: 3299  },
+  "azerbaijan":     { useteleport: 3199,  atlys: 2799  },
+  "united-kingdom": { useteleport: 9999,  atlys: 9499  },
+  "usa":            { useteleport: 12999, atlys: 11999 },
+  "australia":      { useteleport: 10999, atlys: 9999  },
+  "france":         { useteleport: 8999,  atlys: 8499  },
+};

@@ -1,7 +1,8 @@
 "use client";
 import Link from "next/link";
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { createClient } from "@/lib/supabase-client";
+import { COUNTRIES } from "@/lib/visaData";
 
 // ── Types ─────────────────────────────────────────────────────────────────
 type UploadStatus = "idle" | "uploading" | "done" | "error";
@@ -212,15 +213,34 @@ export default function UploadPageClient() {
   );
   const [uploading, setUploading] = useState(false);
   const [allDone, setAllDone] = useState(false);
+  const [countrySlug,   setCountrySlug]   = useState("");
+  const [applicantName, setApplicantName] = useState("");
+  const [docTicks, setDocTicks] = useState<Record<string, boolean>>({});
   const supabase = createClient();
+
+  // Read localStorage on mount
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setCountrySlug(localStorage.getItem("mtl_country_slug") || "");
+      setApplicantName(localStorage.getItem("mtl_applicant_name") || "");
+    }
+  }, []);
 
   const setFileState = (id: string, patch: Partial<FileState>) =>
     setFiles(p => ({ ...p, [id]: { ...p[id], ...patch } }));
 
   const handleFile = (slot: DocSlot, file: File) => {
+    // Validate type
+    const ext = file.name.split(".").pop()?.toLowerCase() ?? "";
+    const allowedExts = ["pdf","jpg","jpeg","png"];
+    const allowedMimes = ["application/pdf","image/jpeg","image/jpg","image/png"];
+    if (!allowedExts.includes(ext) && !allowedMimes.includes(file.type)) {
+      setFileState(slot.id, { file: null, status: "error", error: "Only PDF/JPG/PNG accepted", progress: 0, url: "" });
+      return;
+    }
     // Validate size
     if (file.size > slot.maxMB * 1024 * 1024) {
-      setFileState(slot.id, { file, status: "error", error: `File too large. Maximum size is ${slot.maxMB}MB.`, progress: 0 });
+      setFileState(slot.id, { file, status: "error", error: `File too large (max ${slot.maxMB}MB)`, progress: 0, url: "" });
       return;
     }
     setFileState(slot.id, { file, status: "idle", error: "", progress: 0, url: "" });
@@ -285,6 +305,12 @@ export default function UploadPageClient() {
   const readyToUpload = DOC_SLOTS.filter(s => files[s.id].file && files[s.id].status === "idle").length;
   const progress = totalRequired > 0 ? Math.round((uploadedRequired / totalRequired) * 100) : 0;
 
+  // Country-specific required docs
+  const countryData = COUNTRIES.find(c => c.slug === countrySlug);
+  const requiredDocs = countryData?.visaTypes[0]?.documents.filter(d => d.required) ?? [];
+  const allRequiredTicked = requiredDocs.length === 0 || requiredDocs.every(d => docTicks[d.id]);
+  const tickedCount = requiredDocs.filter(d => docTicks[d.id]).length;
+
   // Group by category
   const grouped = CATEGORY_ORDER.map(cat => ({
     category: cat,
@@ -329,8 +355,6 @@ export default function UploadPageClient() {
           .pay-method-grid { grid-template-columns:1fr 1fr !important; }
           .stat-grid { grid-template-columns:1fr 1fr !important; }
         }`}</style>
-
-      <SharedNav current="/upload" />
 
       <div style={{ maxWidth: 1000, margin: "0 auto", padding: "40px 24px 80px" }}>
 
@@ -377,6 +401,48 @@ export default function UploadPageClient() {
 
           {/* Right: Upload panel */}
           <div style={{ position: "sticky", top: 76 }}>
+
+          {/* Name match warning */}
+          {applicantName && (
+            <div style={{ background:"rgba(245,158,11,0.08)", border:"1px solid rgba(245,158,11,0.3)", borderRadius:12, padding:"12px 16px", marginBottom:14, display:"flex", gap:10, alignItems:"flex-start" }}>
+              <span style={{ fontSize:18, flexShrink:0 }}>⚠️</span>
+              <div style={{ fontSize:12, color:"#F5C842", lineHeight:1.5 }}>
+                Please ensure the name on your passport exactly matches what you entered: <strong>{applicantName}</strong>. Mismatch causes visa rejection.
+              </div>
+            </div>
+          )}
+
+          {/* Country-specific checklist */}
+          {requiredDocs.length > 0 && (
+            <div style={{ background:"#141420", border:"1px solid rgba(212,175,106,0.2)", borderRadius:16, padding:"18px", marginBottom:16 }}>
+              <div style={{ fontSize:10, fontWeight:700, letterSpacing:"1.5px", textTransform:"uppercase", color:"#D4AF6A", marginBottom:12 }}>
+                📋 {countryData?.name} Required Docs
+              </div>
+              {/* Progress bar */}
+              <div style={{ marginBottom:14 }}>
+                <div style={{ display:"flex", justifyContent:"space-between", marginBottom:6 }}>
+                  <span style={{ fontSize:12, color:"#8A8A9A" }}>Required documents</span>
+                  <span style={{ fontSize:12, fontWeight:700, color: allRequiredTicked ? "#2ECC8B" : "#D4AF6A" }}>{tickedCount} of {requiredDocs.length}</span>
+                </div>
+                <div style={{ height:6, background:"#0F0F1A", borderRadius:3, overflow:"hidden" }}>
+                  <div style={{ height:"100%", width:`${requiredDocs.length > 0 ? Math.round(tickedCount/requiredDocs.length*100) : 0}%`, background: allRequiredTicked ? "linear-gradient(90deg,#2ECC8B,#4EE8A0)" : "linear-gradient(90deg,#D4AF6A,#E8C977)", borderRadius:3, transition:"width 0.3s ease" }} />
+                </div>
+              </div>
+              {/* Doc rows */}
+              {requiredDocs.map(doc => (
+                <label key={doc.id} style={{ display:"flex", alignItems:"center", gap:10, padding:"8px 0", borderBottom:"1px solid rgba(255,255,255,0.04)", cursor:"pointer" }}>
+                  <input type="checkbox" checked={!!docTicks[doc.id]}
+                    onChange={e => setDocTicks(p => ({ ...p, [doc.id]: e.target.checked }))}
+                    style={{ accentColor:"#D4AF6A", width:15, height:15, cursor:"pointer", flexShrink:0 }} />
+                  <span style={{ fontSize:16, flexShrink:0 }}>{doc.icon}</span>
+                  <div style={{ flex:1, minWidth:0 }}>
+                    <div style={{ fontSize:12, fontWeight:600, color: docTicks[doc.id] ? "#2ECC8B" : "#F5F0E8", lineHeight:1.3 }}>{doc.name}</div>
+                    {doc.specs[0] && <div style={{ fontSize:10, color:"#8A8A9A", marginTop:1 }}>{doc.specs[0]}</div>}
+                  </div>
+                </label>
+              ))}
+            </div>
+          )}
 
             {/* Progress card */}
             <div style={{ background: "#141420", border: "1px solid rgba(212,175,106,0.2)", borderRadius: 16, padding: "24px", marginBottom: 16 }}>
@@ -437,9 +503,15 @@ export default function UploadPageClient() {
           <div style={{ fontSize: 13, color: "#8A8A9A" }}>Documents uploaded? Ready to pay?</div>
           <div style={{ fontSize: 11, color: "#5A5A6E", marginTop: 2 }}>You can also pay first and upload later from your dashboard</div>
         </div>
-        <a href="/pay" style={{ background: "linear-gradient(135deg,#D4AF6A,#E8C977)", color: "#08080F", padding: "12px 32px", borderRadius: 10, fontSize: 14, fontWeight: 800, textDecoration: "none", letterSpacing: "0.3px" }}>
-          🔒 Proceed to Payment →
-        </a>
+        {allRequiredTicked || requiredDocs.length === 0 ? (
+          <a href="/pay" style={{ background:"linear-gradient(135deg,#D4AF6A,#E8C977)", color:"#08080F", padding:"12px 32px", borderRadius:10, fontSize:14, fontWeight:800, textDecoration:"none", letterSpacing:"0.3px" }}>
+            🔒 Proceed to Payment →
+          </a>
+        ) : (
+          <button disabled style={{ background:"rgba(212,175,106,0.2)", color:"#5A5A6E", padding:"12px 32px", borderRadius:10, fontSize:14, fontWeight:800, border:"none", cursor:"not-allowed", letterSpacing:"0.3px", fontFamily:"'Outfit',sans-serif" }}>
+            ✓ Tick all required docs first
+          </button>
+        )}
       </div>
       <SharedFooter />
     </div>

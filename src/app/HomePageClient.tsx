@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 
 const destinations = [
   // Popular (shown on homepage cards)
@@ -93,17 +93,11 @@ function MTLLogo({ height = 38 }: { height?: number }) {
 }
 
 export default function HomePageClient() {
-  const [query,    setQuery]    = useState("");
-  const [open,     setOpen]     = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const [mobileMenu, setMobileMenu] = useState(false);
+  const [query,        setQuery]        = useState("");
+  const [open,         setOpen]         = useState(false);
+  const [cardSearch,   setCardSearch]   = useState("");
+  const [activeFilter, setActiveFilter] = useState("All");
   const dropRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 40);
-    window.addEventListener("scroll", fn);
-    return () => window.removeEventListener("scroll", fn);
-  }, []);
 
   // Derived — no setState in effect needed
   const results = query.trim()
@@ -117,6 +111,37 @@ export default function HomePageClient() {
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
+
+  const SCHENGEN_SLUGS = ["france","germany","italy","spain","netherlands","greece","austria","portugal","switzerland"];
+  const SEASON_SLUGS   = ["maldives","indonesia","thailand","sri-lanka","mauritius","seychelles"];
+
+  function parseMaxDays(days: string): number {
+    if (!days || days === "Instant" || days === "–") return 0;
+    const nums = days.match(/\d+/g);
+    if (!nums) return 999;
+    return Math.max(...nums.map(Number));
+  }
+  function parsePrice(price: string): number {
+    if (price === "Free" || !price) return 0;
+    return parseInt(price.replace(/[₹,]/g, "")) || 0;
+  }
+
+  const filteredDestinations = useMemo(() => {
+    let r = [...destinations];
+    if (cardSearch.trim()) {
+      const q = cardSearch.toLowerCase();
+      r = r.filter(d => d.name.toLowerCase().includes(q));
+    }
+    if (activeFilter === "Popular")         r = r.filter(d => d.popular);
+    else if (activeFilter === "Visa in a Week") r = r.filter(d => parseMaxDays(d.days) <= 7);
+    else if (activeFilter === "Fast Track") r = r.filter(d => parseMaxDays(d.days) <= 3);
+    else if (activeFilter === "Schengen")   r = r.filter(d => SCHENGEN_SLUGS.includes(d.slug));
+    else if (activeFilter === "Season")     r = r.filter(d => SEASON_SLUGS.includes(d.slug));
+    else if (activeFilter === "Visa Fee ↑") r = [...r].sort((a,b) => parsePrice(a.price)-parsePrice(b.price));
+    else if (activeFilter === "Visa Fee ↓") r = [...r].sort((a,b) => parsePrice(b.price)-parsePrice(a.price));
+    return r;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cardSearch, activeFilter]);
 
   const typeColor = (type: string) => {
     if (type === "eVisa") return { bg: "rgba(46,204,139,0.15)", color: "#2ECC8B", border: "rgba(46,204,139,0.35)" };
@@ -176,44 +201,8 @@ export default function HomePageClient() {
       `}</style>
       <div className="grain" />
 
-      {/* NAV */}
-      <nav style={{ position:"fixed", top:0, left:0, right:0, zIndex:200, padding:"0 var(--px,20px)", height:64, display:"flex", alignItems:"center", justifyContent:"space-between", background:"rgba(8,8,15,0.97)", backdropFilter:"blur(20px)", WebkitBackdropFilter:"blur(20px)", borderBottom:"1px solid rgba(212,175,106,0.12)", transition:"background 0.3s" }}>
-        <MTLLogo height={38} />
-        {/* Desktop nav links */}
-        <div className="nav-desktop" style={{ display:"flex", alignItems:"center", gap:28 }}>
-          {([["/checklist","Destinations"],["#how-it-works","How It Works"],["/track","Track"],["/upload","Upload Docs"]] as [string,string][]).map(([href,label]) => (
-            <a key={label} href={href} className="nav-link" style={{ fontSize:13, color:"#A0A0B8", textDecoration:"none", fontWeight:500 }}>{label}</a>
-          ))}
-        </div>
-        {/* Desktop CTA */}
-        <div className="nav-cta-desktop" style={{ display:"flex", gap:10, alignItems:"center" }}>
-          <a href="/login" className="btn-outline-gold" style={{ fontSize:13, fontWeight:600, color:"#D4AF6A", textDecoration:"none", padding:"8px 18px", borderRadius:8, border:"1px solid rgba(212,175,106,0.35)" }}>Sign In</a>
-          <a href="/apply" className="gold-btn" style={{ padding:"9px 20px", borderRadius:8, fontSize:13, fontFamily:"'Outfit',sans-serif", textDecoration:"none" }}>Apply Now</a>
-        </div>
-        {/* Hamburger — mobile only */}
-        <button className="hamburger" aria-label="Open menu" onClick={()=>setMobileMenu(m=>!m)}
-          style={{ background:"none", border:"none", cursor:"pointer", padding:8, display:"flex", flexDirection:"column", gap:5, zIndex:1001 }}>
-          <span style={{ display:"block", width:24, height:2, background: mobileMenu?"transparent":"#A0A0B8", borderRadius:2, transition:"all 0.3s", transform: mobileMenu?"none":"none" }}/>
-          <span style={{ display:"block", width:24, height:2, background:"#A0A0B8", borderRadius:2, transition:"all 0.3s", transform: mobileMenu?"rotate(45deg) translateY(-3px)":"none" }}/>
-          <span style={{ display:"block", width:24, height:2, background:"#A0A0B8", borderRadius:2, transition:"all 0.3s", transform: mobileMenu?"rotate(-45deg) translateY(3px)":"none" }}/>
-        </button>
-      </nav>
-      {/* Mobile drawer */}
-      {mobileMenu && (
-        <div style={{ position:"fixed", inset:"64px 0 0 0", background:"rgba(8,8,15,0.99)", backdropFilter:"blur(20px)", WebkitBackdropFilter:"blur(20px)", zIndex:199, display:"flex", flexDirection:"column", padding:"32px 24px", gap:0, overflowY:"auto" }}
-          onClick={()=>setMobileMenu(false)}>
-          {([["/checklist","🌍 Destinations"],["#how-it-works","ℹ️ How It Works"],["/track","📍 Track Application"],["/upload","📁 Upload Docs"]] as [string,string][]).map(([href,label]) => (
-            <a key={label} href={href} style={{ display:"block", padding:"18px 0", fontSize:18, fontWeight:600, color:"#A0A0B8", textDecoration:"none", borderBottom:"1px solid rgba(255,255,255,0.06)", fontFamily:"'Outfit',sans-serif" }}>{label}</a>
-          ))}
-          <div style={{ display:"flex", flexDirection:"column", gap:12, marginTop:28 }}>
-            <a href="/login" style={{ display:"block", textAlign:"center", padding:"14px", borderRadius:10, border:"1px solid rgba(212,175,106,0.4)", color:"#D4AF6A", fontSize:15, fontWeight:700, textDecoration:"none", fontFamily:"'Outfit',sans-serif" }}>Sign In</a>
-            <a href="/apply" className="gold-btn" style={{ display:"block", textAlign:"center", padding:"14px", borderRadius:10, fontSize:15, fontFamily:"'Outfit',sans-serif", textDecoration:"none" }}>Apply Now →</a>
-          </div>
-        </div>
-      )}
-
       {/* HERO */}
-      <section style={{ position:"relative", minHeight:"100vh", display:"flex", alignItems:"center", justifyContent:"center", padding:"130px 24px 100px", overflow:"hidden" }}>
+      <section style={{ position:"relative", minHeight:"100vh", display:"flex", alignItems:"center", justifyContent:"center", padding:"64px 24px 80px", overflow:"hidden" }}>
         <div style={{ position:"absolute", top:"22%", left:"50%", transform:"translateX(-50%)", width:800, height:500, background:"radial-gradient(ellipse,rgba(212,175,106,0.055) 0%,transparent 70%)", pointerEvents:"none" }} />
         <div style={{ position:"absolute", top:"10%", left:"12%", width:280, height:280, background:"radial-gradient(ellipse,rgba(30,200,240,0.04) 0%,transparent 70%)", pointerEvents:"none" }} />
         {(["🇦🇪","🇫🇷","🇯🇵","🇸🇬","🇬🇧"]).map((flag,i) => (
@@ -296,8 +285,35 @@ export default function HomePageClient() {
             </h2>
           </div>
 
+          {/* Search + Filter Bar */}
+          <div style={{ display:"flex", gap:14, marginBottom:28, alignItems:"center", flexWrap:"wrap" }}>
+            <input
+              value={cardSearch}
+              onChange={e => setCardSearch(e.target.value)}
+              placeholder="Search destination country..."
+              style={{ flex:"0 0 55%", background:"#141420", border:"1px solid rgba(212,175,106,0.28)", borderRadius:10, padding:"11px 16px", color:"#F5F0E8", fontSize:14, fontFamily:"'Outfit',sans-serif", outline:"none", transition:"border-color 0.2s", minWidth:200 }}
+              onFocus={e=>(e.currentTarget.style.borderColor="rgba(212,175,106,0.65)")}
+              onBlur={e=>(e.currentTarget.style.borderColor="rgba(212,175,106,0.28)")}
+            />
+            <div style={{ flex:1, overflowX:"auto", display:"flex", gap:8, paddingBottom:2, minWidth:0 }}>
+              {["All","Popular","Visa in a Week","Fast Track","Schengen","Season","Visa Fee ↑","Visa Fee ↓"].map(chip=>(
+                <button key={chip} onClick={()=>setActiveFilter(chip)}
+                  style={{ flexShrink:0, padding:"7px 14px", borderRadius:20, fontSize:12, fontWeight:600, fontFamily:"'Outfit',sans-serif", cursor:"pointer", transition:"all 0.15s", border:"1px solid rgba(212,175,106,0.35)",
+                    background:activeFilter===chip?"#D4AF6A":"transparent",
+                    color:activeFilter===chip?"#08080F":"#D4AF6A" }}>
+                  {chip}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(265px,1fr))", gap:18 }}>
-            {destinations.filter(d=>d.popular).map((d,i) => {
+            {filteredDestinations.length === 0 ? (
+              <div style={{gridColumn:"1/-1",textAlign:"center",padding:"60px 20px",color:"#5A5A6E"}}>
+                <div style={{fontSize:36,marginBottom:12}}>🔍</div>
+                <div style={{fontSize:16,fontWeight:600,color:"#8A8A9A"}}>No destinations match your search</div>
+              </div>
+            ) : filteredDestinations.map((d,i) => {
               const tc = typeColor(d.type);
               return (
                 <div key={i} className="card-hover" style={{ background:"#141420", border:"1px solid rgba(255,255,255,0.07)", borderRadius:16, padding:"26px 24px", animation:`fadeUp 0.5s ${i*0.07}s ease both`, display:"flex", flexDirection:"column", gap:16 }}>
@@ -308,6 +324,9 @@ export default function HomePageClient() {
                       <div>
                         <div style={{ fontWeight:700, fontSize:15, color:"#F5F0E8", lineHeight:1.2 }}>{d.name}</div>
                         <div style={{ fontSize:11, color:"#8A8A9A", marginTop:3 }}>⏱ {d.days} working days</div>
+                  {["maldives","indonesia","thailand","sri-lanka","mauritius","seychelles"].includes(d.slug) && (
+                    <div style={{ fontSize:10, fontWeight:700, color:"#1EC8F0", marginTop:3 }}>🌊 Season Pick</div>
+                  )}
                       </div>
                     </div>
                     <span style={{ fontSize:10, fontWeight:700, background:tc.bg, color:tc.color, border:`1px solid ${tc.border}`, padding:"4px 10px", borderRadius:5, flexShrink:0, whiteSpace:"nowrap" }}>{d.type}</span>

@@ -175,6 +175,41 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body style={{ margin: 0, padding: 0, background: "#08080F", color: "#F5F0E8" }}>
+        {/* ── Global Sticky Navbar ── */}
+        <nav style={{
+          position: "sticky", top: 0, zIndex: 50,
+          background: "#08080F",
+          borderBottom: "1px solid rgba(212,175,106,0.2)",
+          height: 64,
+          display: "flex", alignItems: "center", justifyContent: "space-between",
+          padding: "0 24px",
+          fontFamily: "'Outfit', system-ui, sans-serif",
+        }}>
+          <a href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none", gap: 10 }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.png" height={36} alt="MyTripLooker"
+              style={{ height: 36, width: "auto", display: "block" }} />
+          </a>
+          <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+            <a href="https://wa.me/919012222901?text=Hi%2C%20I%20need%20help%20with%20a%20visa"
+              style={{ background: "#25D366", color: "#fff", padding: "9px 16px", borderRadius: 8,
+                fontSize: 13, fontWeight: 700, textDecoration: "none",
+                display: "flex", alignItems: "center", gap: 6, whiteSpace: "nowrap" }}>
+              💬 Chat with us
+            </a>
+            <a href="/login"
+              style={{ background: "transparent", border: "1px solid rgba(212,175,106,0.35)",
+                color: "#D4AF6A", padding: "9px 18px", borderRadius: 8,
+                fontSize: 13, fontWeight: 600, textDecoration: "none", whiteSpace: "nowrap" }}>
+              Sign In
+            </a>
+            <a href="/login?signup=true"
+              style={{ background: "#D4AF6A", color: "#08080F", padding: "9px 18px", borderRadius: 8,
+                fontSize: 13, fontWeight: 700, textDecoration: "none", whiteSpace: "nowrap" }}>
+              Sign Up
+            </a>
+          </div>
+        </nav>
         {children}
       </body>
     </html>
